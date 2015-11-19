@@ -6,8 +6,8 @@
 
     <div>
         <input type="submit"
-               class="btn btn-material-blue btn-raised"
+               class="btn btn-lg btn-primary"
                value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}"/>
     </div>
-    <a href="/login">Already Have account?</a>
+    <a href="{{ url('fos_user_security_login') }}">Already Have account?</a>
 </form>
