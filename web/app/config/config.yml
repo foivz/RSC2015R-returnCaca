@@ -88,11 +88,11 @@ doctrine:
 swiftmailer:
     transport: accord_mandrill
 #    transport: "%mailer_transport%"
-    port: 587
+    port:       "587"
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
-    spool:     { type: memory }
+#    spool:     { type: memory }
 
 
 
