@@ -106,7 +106,7 @@ fos_user:
 
     registration:
             confirmation:
-                enabled: false
+                enabled: true
 
 liip_imagine:
     resolvers:
