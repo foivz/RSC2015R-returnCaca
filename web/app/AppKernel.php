@@ -30,6 +30,7 @@ class AppKernel extends Kernel
             new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            new Accord\MandrillSwiftMailerBundle\AccordMandrillSwiftMailerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

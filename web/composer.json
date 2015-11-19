@@ -21,7 +21,8 @@
         "zantolov/blogbundle" : "dev-master",
         "zantolov/appbundle" : "dev-master",
         "zantolov/mediabundle" : "dev-master",
-        "flow/jsonpath": "^0.3.1"
+        "flow/jsonpath": "^0.3.1",
+        "accord/mandrill-swiftmailer-bundle": "^1.2"
     },
     "require-dev": {
       "codeception/codeception": "*",
