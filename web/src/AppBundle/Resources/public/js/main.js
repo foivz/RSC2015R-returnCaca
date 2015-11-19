@@ -15,23 +15,15 @@ $(document).ready(function () {
             footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
 
             if (($(document.body).height() + footerHeight) < $(window).height()) {
-                $footer.css({
-                    position: "absolute"
-                }).animate({
-                    top: footerTop
-                })
+                $footer.css({position: "absolute"}).animate({top: footerTop},1,'linear').css({opacity: 1})
             } else {
-                $footer.css({
-                    position: "static"
-                })
+                $footer.css({position: "static", opacity: 1})
             }
-
         }
 
         $(window)
             .scroll(positionFooter)
             .resize(positionFooter)
-
     });
 
 });

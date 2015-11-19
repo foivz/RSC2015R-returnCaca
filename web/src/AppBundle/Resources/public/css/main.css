@@ -3,6 +3,13 @@
 footer {
   height: 50px;
   width: 100%;
-  vertical-align: middle; }
+  vertical-align: middle;
+  opacity: 0; }
+
+.login-body {
+  margin-bottom: 15px; }
+
+.modal-content {
+  padding: 10px; }
 
 /*# sourceMappingURL=main.css.map */
