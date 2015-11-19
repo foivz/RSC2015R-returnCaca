@@ -30,15 +30,6 @@ class SiteController extends Controller
     public function indexAction(Request $request)
     {
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('Hello Email')
-            ->setFrom('send@example.com')
-            ->setTo('zokadgo@gmail.com')
-            ->setBody('fooooo', 'text/html');
-        var_dump($this->get('mailer')->send($message));
-        exit;
-
-
         /** @var QueryBuilder $posts */
         $posts = $this->getDoctrine()->getRepository('ZantolovBlogBundle:Post')->getActivePostsQueryBuilder();
         $posts->setMaxResults(3);
