@@ -86,7 +86,9 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
+    transport: accord_mandrill
+#    transport: "%mailer_transport%"
+    port: 587
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
@@ -178,6 +180,3 @@ knp_paginator:
 
 accord_mandrill_swift_mailer:
     api_key: "DpULSMEVFHYppsuHscabVA"
-
-swiftmailer:
-    transport: accord_mandrill
