@@ -1,0 +1,13 @@
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }}
+      method="POST"
+      class="fos_user_registration_register">
+
+    {{ form_widget(form) }}
+
+    <div>
+        <input type="submit"
+               class="btn btn-material-blue btn-raised"
+               value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}"/>
+    </div>
+    <a href="/login">Already Have account?</a>
+</form>

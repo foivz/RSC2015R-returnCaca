@@ -1,0 +1,30 @@
+Imported_ZantolovAppBundle_routes:
+    resource: .
+    type: routes
+    prefix:   /
+
+zantolov_app:
+    resource: "../../vendor/zantolov/appbundle/src/Controller/"
+    type:     annotation
+
+media:
+    resource: "@ZantolovMediaBundle/Controller/"
+    type:     annotation
+    prefix:   media/
+
+blog:
+    resource: "@ZantolovBlogBundle/Controller/"
+    type:     annotation
+    prefix:   blog/
+
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.xml"
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+api:
+    resource: "@ApiBundle/Controller/"
+    type:     annotation

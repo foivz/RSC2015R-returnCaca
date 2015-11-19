@@ -1,0 +1,20 @@
+{
+  "name": "hakaton",
+  "version": "0.0.1",
+  "authors": [
+    "Lovro Predovan <lovro.predovan@gmail.com>"
+  ],
+  "description": "hakaton app",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "directory" : "components",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,27 @@
+{% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
+
+
+{% block body %}
+
+    <div id="loginPage1">
+        <div class="row-centered fullPageForm">
+            <div class="col-md-5 col-centered well">
+                <div class="col-md-10 col-centered">
+                    <h2>Tell us more about yourself</h2>
+
+                    <p class="col-sm-6">
+                        I am <strong>refugee</strong> and I need help
+                        <a href="{{ url('site.acc.setup', {type: 'refugee'}) }}" class="btn btn-primary">Click Here</a>
+                    </p>
+
+                    <p class="col-sm-6">
+                        I am <strong>good person</strong> and I want to help
+                        <a href="{{ url('site.acc.setup', {type: 'person'}) }}" class="btn btn-primary">Click Here</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock body %}
