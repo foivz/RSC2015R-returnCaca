@@ -37,7 +37,6 @@ import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.api.request.SocialLoginRequest;
 import andro.heklaton.rsc.gcm.RegistrationIntentService;
 import andro.heklaton.rsc.model.login.Data;
-import andro.heklaton.rsc.model.login.PostCategory;
 import andro.heklaton.rsc.model.login.User;
 import andro.heklaton.rsc.ui.activity.base.AccountActivity;
 import andro.heklaton.rsc.util.PrefsHelper;
@@ -186,7 +185,12 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
                 Toast.makeText(LoginActivity.this, R.string.no_username_or_password, Toast.LENGTH_SHORT).show();
 
             } else {
-                RestHelper.getRestApi().login(RestAPI.HEADER, new LoginRequest("user", "123456", PrefsHelper.getGcmToken(LoginActivity.this)), new Callback<User>() {
+                RestHelper.getRestApi().login(RestAPI.HEADER, new LoginRequest(
+                        etUsername.getText().toString(),
+                        etPassword.getText().toString(),
+                        PrefsHelper.getGcmToken(LoginActivity.this)),
+                        new Callback<User>() {
+
                     @Override
                     public void success(User user, Response response) {
                         saveUserData(user);
@@ -208,15 +212,11 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
 
             // delete existing data
             new Delete().from(User.class).execute();
-            new Delete().from(PostCategory.class).execute();
             new Delete().from(Data.class).execute();
 
             // Save user data locally
             user.save();
             user.getData().save();
-            for (PostCategory pc : user.getConfig().getPostCategories()) {
-                pc.save();
-            }
 
             PrefsHelper.saveEmail(LoginActivity.this, user.getData().getEmail());
             PrefsHelper.saveUsername(LoginActivity.this, user.getData().getUsername());

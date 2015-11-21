@@ -5,6 +5,6 @@ package andro.heklaton.rsc.util;
  */
 public class Constants {
 
-    public static String ENDPOINT = "http://188.166.59.214/api";
+    public static String ENDPOINT = "http://heklaton.xyz/api";
 
 }
