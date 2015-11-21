@@ -1,12 +1,22 @@
 package andro.heklaton.rsc.ui.activity;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -53,6 +63,11 @@ public class MapboxActivity extends DrawerActivity {
     private Timer timer;
     private Timer timer2;
 
+    private NfcAdapter mNfcAdapter;
+    private Tag detectedTag;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] readTagFilters;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +81,14 @@ public class MapboxActivity extends DrawerActivity {
 
         timer = new Timer();
         timer2 = new Timer();
+
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        detectedTag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected,filter2};
 
         ally = getResources().getDrawable(R.drawable.ally);
         enemy = getResources().getDrawable(R.drawable.enemy);
@@ -177,6 +200,43 @@ public class MapboxActivity extends DrawerActivity {
         }
     }
 
+    public void readFromTag(Intent intent){
+        Ndef ndef = Ndef.get(detectedTag);
+        try{
+            ndef.connect();
+
+            Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (messages != null) {
+                NdefMessage[] ndefMessages = new NdefMessage[messages.length];
+                for (int i = 0; i < messages.length; i++) {
+                    ndefMessages[i] = (NdefMessage) messages[i];
+                }
+                NdefRecord record = ndefMessages[0].getRecords()[0];
+
+                byte[] payload = record.getPayload();
+                String text = new String(payload);
+                String[] tag = text.split("-");
+                String zone = tag[1];
+                Toast.makeText(getApplicationContext(), zone, Toast.LENGTH_LONG).show();
+
+                ndef.close();
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        if(getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)){
+            detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            readFromTag(getIntent());
+        }
+    }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -220,6 +280,7 @@ public class MapboxActivity extends DrawerActivity {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        mNfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
     }
 
     @Override
