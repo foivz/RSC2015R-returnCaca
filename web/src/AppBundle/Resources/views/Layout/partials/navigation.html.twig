@@ -13,20 +13,20 @@
                 </button>
 
                 <a class="navbar-brand" href="#">
-                    <img src="{{ asset('bundles/app/img/logo-2.svg') }}" height="44">
+                    <img src="{{ asset('bundles/app/img/logo-2.svg') }}" class="hidden-xs hidden-sm" height="44">
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="#">Spectator</a>
+                        <a href="#">Spectate</a>
                     </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <div>
+                        <div class="col-xs-12">
                             <br>
                             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                 <a class="btn btn-warning" href="{{ url('fos_user_security_logout') }}">Logout</a>

@@ -16,6 +16,11 @@ li {
 .login-body {
   margin-bottom: 15px; }
 
+.navbar-default .navbar-nav > li > a {
+  color: #666666;
+  padding: 35px 0 0 40px;
+  font-size: 15px; }
+
 .modal-content {
   padding: 10px;
   margin: 2px; }

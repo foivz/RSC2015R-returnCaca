@@ -2,10 +2,26 @@
 
 
 {% block body %}
-    <video autoplay loop muted poster="{{ asset('bundles/app/img/wallpaper.png') }}" id="homepage-video">
-        <source src="{{ asset('bundles/app/img/video/Paintball-HD.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <div class="pattern">
+        <video autoplay loop muted poster="{{ asset('bundles/app/img/wallpaper.png') }}" id="homepage-video">
+            <source src="{{ asset('bundles/app/img/video/Paintball-HD.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="jumbotron text-center homepage-jumbotron">
+            <br>
+            <br>
+            <br>
+            <img src="{{ asset('bundles/app/img/logo-2-white.svg') }}" class="hidden-xs hidden-sm">
+            <br>
+
+            <h3>Modern paintball warfare league</h3>
+
+            <p>
+                <br>
+                <a class="btn btn-warning btn-lg">Spectate</a>
+            </p>
+        </div>
+    </div>
 {% endblock %}
 
 {% block footer %}{% endblock %}
