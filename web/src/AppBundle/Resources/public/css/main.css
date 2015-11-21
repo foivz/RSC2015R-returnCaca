@@ -4,6 +4,9 @@
 @import url(judge.css);
 @import url(homepage.css);
 @import url(login.css);
+body {
+  min-height: 100%; }
+
 footer {
   height: 50px;
   width: 100%;
@@ -14,8 +17,17 @@ footer {
 li {
   list-style: none; }
 
+.orange {
+  color: #ff9800; }
+
+.blue {
+  color: #2196f3; }
+
 .login-body {
   margin-bottom: 15px; }
+
+.user-page i {
+  color: #ff9800; }
 
 .navbar-default .navbar-nav > li > a {
   color: #666666;
