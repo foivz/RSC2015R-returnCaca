@@ -4,11 +4,14 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Delete;
@@ -30,16 +33,22 @@ import andro.heklaton.rsc.model.login.User;
 import andro.heklaton.rsc.ui.activity.base.AccountActivity;
 import andro.heklaton.rsc.util.Constants;
 import andro.heklaton.rsc.util.PrefsHelper;
+import andro.heklaton.rsc.util.VoiceControlHelper;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class LoginActivity extends AccountActivity {
+public class LoginActivity extends AccountActivity implements VoiceControlHelper.OnVoiceControlEnd {
 
     private LoginButton fbLogin;
     private CallbackManager callbackManager;
     private AccessToken fbAccessToken;
+    private TextView tvLogin;
+
+    private SpeechRecognizer mSpeechRecognizer;
+    private Intent mSpeechRecognizerIntent;
+    private boolean mIslistening = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +71,16 @@ public class LoginActivity extends AccountActivity {
         LinearLayout llRegister = (LinearLayout) findViewById(R.id.ll_register);
         llRegister.setOnClickListener(registrationClickListener);
 
+        tvLogin = (TextView) findViewById(R.id.tv_login);
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mIslistening) {
+                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                }
+            }
+        });
+
         fbLogin = (LoginButton) findViewById(R.id.fb_login);
         fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -82,6 +101,25 @@ public class LoginActivity extends AccountActivity {
             }
         });
 
+
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
+
+
+        VoiceControlHelper listener = new VoiceControlHelper(this);
+        mSpeechRecognizer.setRecognitionListener(listener);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSpeechRecognizer != null) {
+            mSpeechRecognizer.destroy();
+        }
     }
 
     @Override
@@ -163,4 +201,8 @@ public class LoginActivity extends AccountActivity {
         }
     };
 
+    @Override
+    public void onVoiceControlEnd(String text) {
+        tvLogin.setText(text);
+    }
 }
