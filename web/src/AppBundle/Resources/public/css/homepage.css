@@ -1,0 +1,13 @@
+#homepage-video {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVQImWNgYGD4z0AswK4SAFXuAf8EPy+xAAAAAElFTkSuQmCC) repeat center center !important;
+  -webkit-filter: grayscale(70%) blur(1px);
+  filter: grayscale(70%) blur(1px); }
+
+/*# sourceMappingURL=homepage.css.map */
