@@ -62,6 +62,13 @@
                         Register
                     </a>
 
+                    <hr>
+                    <h6>Login with:</h6>
+                    {% for owner in hwi_oauth_resource_owners() %}
+                        <a class="btn btn-xs btn-primary"
+                           href="{{ hwi_oauth_login_url(owner) }}">{{ owner | trans({}, 'HWIOAuthBundle') }}</a> <br/>
+                    {% endfor %}
+
                 {% endif %}
             </div>
         </div>

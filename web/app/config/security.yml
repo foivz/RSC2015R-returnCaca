@@ -62,7 +62,23 @@ security:
                 lifetime: 604800 # 1 week in seconds
                 path:     /
 
+            oauth:
+                resource_owners:
+                    facebook:           "/social-login/check-facebook"
+#                    google:             "/login/check-google"
+#                    my_custom_provider: "/login/check-custom"
+#                    my_github:          "/login/check-github"
+                login_path:        /social-login
+                use_forward:       true
+                failure_path:      /social-login
+
+                oauth_user_provider:
+                    service: app.oauth_provider
+
     access_control:
+        - { path: ^social/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         # profiling and other dev tools
         - { path: ^/(_(profiler|wdt)|css|images|js)/, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -18,4 +18,7 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    uploads_dir: sekr
+    uploads_dir: uploads
+
+    fb_client_secret: ~
+    fb_client_id: ~
