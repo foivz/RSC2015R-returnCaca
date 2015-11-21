@@ -131,7 +131,6 @@ var attentionAllyMarker = new google.maps.MarkerImage(
 // Function
 $(document).ready(function() {
     init();
-    window.setInterval(refreshMap, 500);
     window.setInterval(refreshLocations, 1000);
     showPing("attentionEnemy", 46.306390,16.339145);
 });
@@ -175,7 +174,6 @@ function init() {
 function refreshMap() {
     $.each(team1Markers, function(key,val) {
         team1Markers[key].setMap(null);
-        delete team1Markers[key];
     });
     team1Markers = [];
     $.each(team1Locations, function(key, location) {
@@ -190,7 +188,6 @@ function refreshMap() {
     });
     $.each(team2Markers, function(key,val) {
         team2Markers[key].setMap(null);
-        delete team2Markers[key];
     });
     team2Markers = [];
     $.each(team2Locations, function(key, location) {
@@ -217,6 +214,7 @@ function refreshLocations() {
                 team2Locations.push({lat: loc.location.lat, lng: loc.location.lng, alive: loc.isLive});
             }
         });
+        refreshMap();
     });
 }
 
