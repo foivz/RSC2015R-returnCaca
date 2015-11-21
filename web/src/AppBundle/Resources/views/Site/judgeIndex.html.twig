@@ -2,5 +2,79 @@
 
 
 {% block mainColumn %}
-    <h2>Testiram</h2>
+    <div class="col-md-12">
+        <h2 class="text-center">Prepare game</h2>
+
+        <div class="col-md-12 text-center modal-content">
+            <div class="col-md-4">
+                <a class="btn btn-primary">Select location</a>
+            </div>
+            <div class="col-md-4">
+                <a class="btn btn-primary">Game format</a>
+            </div>
+            <div class="col-md-4">
+                <a class="btn btn-danger">Save game</a>
+            </div>
+        </div>
+
+        {# Players #}
+        <div class="col-md-6">
+            <h4 class="text-center">Players</h4>
+
+            <ul class="col-md-12 player-scroll" id="sortable1">
+                {# kartica igraca #}
+                <li class="col-md-12 modal-content">
+                    <div class="col-md-2">
+                        <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
+                    </div>
+                    <div class="col-md-10">
+                        <h5>Player Name</h5>
+
+                        <p>Player Nickname</p>
+
+                        <p>Level</p>
+                    </div>
+                </li>
+
+                {# kartica igraca #}
+                <li class="col-md-12 modal-content">
+                    <div class="col-md-2">
+                        <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
+                    </div>
+                    <div class="col-md-10">
+                        <h5>Player Name</h5>
+
+                        <p>Player Nickname</p>
+
+                        <p>Level</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        {# Teams #}
+        <div class="col-md-6">
+            <h4 class="text-center">Teams</h4>
+
+            <div class="col-md-12 team-card">
+                <div class="modal-content">
+                    <h4 class="text-center">Team A</h4>
+                    <ul class="team-selection connectedSortable" id="sortable2">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="modal-content">
+                    <h4 class="text-center">Team B</h4>
+                    <ul class="team-selection connectedSortable" id="sortable3">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 {% endblock %}

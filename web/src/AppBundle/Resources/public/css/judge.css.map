@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,UAAU;EACR,MAAM,EAAE,MAAM;;AAIhB,eAAe;EACb,KAAK,EARA,IAAI;EAST,UAAU,EAAE,KAAK;EACjB,QAAQ,EAAE,IAAI;;AAEhB,kBAAkB;EAChB,cAAc,EAAE,GAAG",
+"sources": ["judge.sass"],
+"names": [],
+"file": "judge.css"
+}

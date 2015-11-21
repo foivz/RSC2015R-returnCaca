@@ -46,8 +46,13 @@ $(document).ready(function () {
 
         /// uncomment code for absolute positioning tweek see top comment in css
         //$('.absolute-wrapper').removeClass('slide-in');
-
     });
+
+
+    //sortable lists on judge
+    $("#sortable1, #sortable2, #sortable3").sortable({
+        connectWith: ".connectedSortable"
+    }).disableSelection();
 
 
 });

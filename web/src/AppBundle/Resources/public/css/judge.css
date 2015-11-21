@@ -1,0 +1,12 @@
+.team-card {
+  margin: 15px 0; }
+
+.team-selection {
+  color: #aaa;
+  min-height: 240px;
+  overflow: auto; }
+
+.connectedSortable {
+  padding-bottom: 5px; }
+
+/*# sourceMappingURL=judge.css.map */
