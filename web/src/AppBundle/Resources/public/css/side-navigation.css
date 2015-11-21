@@ -48,6 +48,8 @@
       z-index: 100;
       padding: 15px;
       font-size: 14px; }
+      .side-menu .navbar-nav li a:hover {
+        color: #ff9800; }
       .side-menu .navbar-nav li a .fa {
         padding-right: 10px; }
   .side-menu #dropdown {
