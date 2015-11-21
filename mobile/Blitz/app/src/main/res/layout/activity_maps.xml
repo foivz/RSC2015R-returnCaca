@@ -1,0 +1,28 @@
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <include layout="@layout/toolbar"
+        android:id="@+id/include" />
+
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="andro.heklaton.rsc.ui.activity.MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_below="@+id/include" />
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/progress_smooth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-7dp"
+        android:indeterminate="true"
+        android:layout_below="@id/include"
+        style="@style/GNowProgressBar" />
+
+</RelativeLayout>
