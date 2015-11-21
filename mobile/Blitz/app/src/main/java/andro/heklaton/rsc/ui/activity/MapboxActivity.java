@@ -1,14 +1,29 @@
 package andro.heklaton.rsc.ui.activity;
 
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.PolygonOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
+import com.mapbox.mapboxsdk.annotations.Sprite;
+import com.mapbox.mapboxsdk.annotations.SpriteFactory;
 import com.mapbox.mapboxsdk.constants.MyLocationTracking;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -27,6 +42,7 @@ import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
+import andro.heklaton.rsc.ui.util.ImageUtil;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
 import retrofit.Callback;
@@ -41,6 +57,19 @@ public class MapboxActivity extends DrawerActivity {
     private MapView mapView;
     private List<MarkerOptions> markers;
     private List<PolylineOptions> zones;
+    private SpriteFactory spriteFactory;
+
+    private Drawable ally;
+    private Drawable enemy;
+    private Timer timer;
+    private Timer timer2;
+
+    private NfcAdapter mNfcAdapter;
+    private Tag detectedTag;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] readTagFilters;
+
+    private List<PolygonOptions> takenZones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +80,28 @@ public class MapboxActivity extends DrawerActivity {
         mapView.setZoomLevel(16.8);
         mapView.onCreate(savedInstanceState);
         mapView.setMyLocationEnabled(true);
-        mapView.setMyLocationTrackingMode(MyLocationTracking.TRACKING_FOLLOW);
         mapView.setCompassEnabled(true);
+
+        timer = new Timer();
+        timer2 = new Timer();
+
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        detectedTag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected,filter2};
+
+        ally = getResources().getDrawable(R.drawable.ally);
+        enemy = getResources().getDrawable(R.drawable.enemy);
+
+        spriteFactory = new SpriteFactory(mapView);
 
         markers = new ArrayList<>();
 
         zones = MapsUtil.getZones();
+        takenZones = MapsUtil.getPolygonZones();
 
         startSendingLocation();
         startReceivingStats();
@@ -66,19 +111,18 @@ public class MapboxActivity extends DrawerActivity {
      * Send location every second
      */
     private void startSendingLocation() {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Location location = mapView.getMyLocation();
-                if (location != null) {
+        Location location = mapView.getMyLocation();
+        if (location != null) {
 
-                    // prepare request
-                    LocationSendRequest request = new LocationSendRequest();
-                    request.setGame(1);
-                    request.setLat(location.getLatitude());
-                    request.setLng(location.getLongitude());
+            // prepare request
+            final LocationSendRequest request = new LocationSendRequest();
+            request.setGame(1);
+            request.setLat(location.getLatitude());
+            request.setLng(location.getLongitude());
 
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     RestHelper.getRestApi().sendCurrentLocation(
                             RestAPI.HEADER,
                             PrefsHelper.getToken(MapboxActivity.this),
@@ -97,12 +141,11 @@ public class MapboxActivity extends DrawerActivity {
                             }
                     );
                 }
-            }
-        }, 1000, 1000);
+            });
+        }
     }
 
     private void startReceivingStats() {
-        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -123,7 +166,7 @@ public class MapboxActivity extends DrawerActivity {
         }, 1000, 1000);
     }
 
-    private void updateStats(List<Stat> stats) {
+    private void updateStats(final List<Stat> stats) {
         markers.clear();
         mapView.removeAllAnnotations();
 
@@ -159,6 +202,51 @@ public class MapboxActivity extends DrawerActivity {
 
             mapView.addPolyline(po);
         }
+    }
+
+    public void readFromTag(Intent intent){
+        Ndef ndef = Ndef.get(detectedTag);
+        try{
+            ndef.connect();
+
+            Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if (messages != null) {
+                NdefMessage[] ndefMessages = new NdefMessage[messages.length];
+                for (int i = 0; i < messages.length; i++) {
+                    ndefMessages[i] = (NdefMessage) messages[i];
+                }
+                NdefRecord record = ndefMessages[0].getRecords()[0];
+
+                byte[] payload = record.getPayload();
+                String text = new String(payload);
+                String[] tag = text.split("-");
+                String zone = tag[1];
+                Toast.makeText(getApplicationContext(), zone, Toast.LENGTH_LONG).show();
+                markZone(Integer.valueOf(zone));
+
+                ndef.close();
+            }
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        if(getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)){
+            detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+
+            readFromTag(getIntent());
+        }
+    }
+
+    private void markZone(int zone) {
+        PolygonOptions po = takenZones.get(zone);
+        po.fillColor(Color.parseColor("#00bb00"));
+        po.alpha(0.5f);
+        mapView.addPolygon(takenZones.get(zone));
     }
 
     @Override
@@ -204,6 +292,7 @@ public class MapboxActivity extends DrawerActivity {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        mNfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
     }
 
     @Override
