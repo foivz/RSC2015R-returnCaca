@@ -4,7 +4,7 @@
 {% block body %}
   <div id="loginPage">
     <div class="row-centered">
-      <div class="col-md-4 col-centered modal-content loginCard">
+      <div class="col-md-4 col-centered modal-content loginCard wow fadeInUp">
         <h1>{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</h1>
 
         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
