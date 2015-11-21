@@ -14,7 +14,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand hidden-sm hidden-xs" href="#">
+                <a class="navbar-brand hidden-sm hidden-xs" href="{{ url('homepage')  }}">
                     <img src="{{ asset('bundles/app/img/logo-2.svg') }}" height="70">
                 </a>
             </div>
@@ -26,7 +26,7 @@
                         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                             <a class="btn btn-primary" href="{{ url('fos_user_security_logout') }}">Logout</a>
                         {% else %}
-                            <a class="btn btn-warning" href="{{ url('fos_user_security_login') }}">Try it out</a>
+                            <a class="btn btn-primary" href="{{ url('fos_user_security_login') }}">Try it out</a>
                         {% endif %}
                     </div>
                 </li>
@@ -40,10 +40,8 @@
         <div class="col-md-2">
             <div class="side-menu">
                 <nav class="navbar navbar-default" role="navigation">
-                    <!-- Main Menu -->
                     <div class="side-menu-container">
                         <ul class="nav navbar-nav">
-
                             <li>
                                 <a href="{{ url('judge.new.game') }}">
                                     <span class="fa fa-plus fa-2x"></span>
