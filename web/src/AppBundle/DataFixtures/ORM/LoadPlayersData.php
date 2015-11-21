@@ -10,7 +10,7 @@ use Zantolov\AppBundle\Entity\User;
 class LoadPlayersData extends AbstractDbFixture
 {
 
-    const NUMBER = 50;
+    const NUMBER = 35;
 
     public function load(\Doctrine\Common\Persistence\ObjectManager $manager)
     {

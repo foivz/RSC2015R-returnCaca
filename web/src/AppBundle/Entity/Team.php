@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Zantolov\AppBundle\Entity\Traits\ActivableTrait;
 use Zantolov\AppBundle\Entity\Traits\BasicEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,10 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="teams")
  * @ORM\HasLifecycleCallbacks
  */
-class Team
+class Team implements \JsonSerializable
 {
     use BasicEntityTrait;
     use ActivableTrait;
+    use TimestampableEntity;
 
     /**
      * @var ArrayCollection
@@ -81,4 +83,15 @@ class Team
     {
         return $this->getName();
     }
+
+    function jsonSerialize()
+    {
+        return [
+            'id'      => $this->getId(),
+            'name'    => $this->getName(),
+            'players' => $this->getPlayers()->toArray(),
+        ];
+    }
+
+
 }

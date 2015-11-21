@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Zantolov\AppBundle\Entity\Traits\ActivableTrait;
 use Zantolov\AppBundle\Entity\Traits\BasicEntityTrait;
 use Zantolov\MediaBundle\Entity\Traits\ImageableTrait;
@@ -14,11 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Player
+class Player implements \JsonSerializable
 {
     use BasicEntityTrait;
     use ImageableTrait;
     use ActivableTrait;
+    use TimestampableEntity;
 
     /**
      * @var \Zantolov\AppBundle\Entity\User
@@ -191,9 +193,13 @@ class Player
     }
 
 
-    public function __toString()
+    function jsonSerialize()
     {
-        return $this->getAlias();
+        return [
+            'id'    => $this->getId(),
+            'alias' => $this->getAlias(),
+            'level' => $this->getLevel(),
+        ];
     }
 
 }
