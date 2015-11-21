@@ -1,35 +1,53 @@
 package andro.heklaton.rsc.ui.activity;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.TextView;
-
-import com.orangegangsters.github.lib.SensorStepCallback;
-import com.orangegangsters.github.lib.SensorStepService;
-import com.orangegangsters.github.lib.SensorStepServiceManager;
+import android.widget.Toast;
 
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
-import andro.heklaton.rsc.util.stepcounter.SensorStepServiceImpl;
 
 /**
  * Created by Andro on 11/21/2015.
  */
-public class StepCounterActivity extends DrawerActivity implements SensorStepCallback {
+public class StepCounterActivity extends DrawerActivity implements SensorEventListener {
 
-    private SensorStepServiceImpl mSensorService;
+    private SensorManager sensorManager;
     private TextView tvSteps;
+    boolean activityRunning;
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
-        SensorStepService.setCallback(this);
-        mSensorService = new SensorStepServiceImpl(this);
-        SensorStepServiceManager.startAutoUpdate(this);
-
         tvSteps = (TextView) findViewById(R.id.tv_steps);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activityRunning = true;
+        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (countSensor != null) {
+            sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_UI);
+        } else {
+            Toast.makeText(this, R.string.count_sensor_not_avail, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        activityRunning = false;
+        // if you unregister the last listener, the hardware will stop detecting step events
+//        sensorManager.unregisterListener(this);
     }
 
     @Override
@@ -48,8 +66,14 @@ public class StepCounterActivity extends DrawerActivity implements SensorStepCal
     }
 
     @Override
-    public void onUpdateSteps(int steps) {
-        Log.d("step", "step");
-        tvSteps.setText(mSensorService.getSteps());
+    public void onSensorChanged(SensorEvent event) {
+        if (activityRunning) {
+            tvSteps.setText(String.valueOf(event.values[0]));
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

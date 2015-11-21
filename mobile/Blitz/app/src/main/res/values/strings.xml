@@ -20,5 +20,6 @@
     <string name="no_username_or_password">Enter username and password</string>
     <string name="title_activity_maps">Map</string>
     <string name="notification_text">Counting your steps</string>
+    <string name="count_sensor_not_avail">Count sensor not available!</string>
 
 </resources>
