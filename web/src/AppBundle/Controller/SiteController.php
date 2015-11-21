@@ -159,4 +159,15 @@ class SiteController extends Controller
         return [];
     }
 
+    /**
+     * @Route("/leaderboard", name="leaderboard")
+     * @Template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function leaderboardAction(Request $request)
+    {
+        return [];
+    }
+
 }
