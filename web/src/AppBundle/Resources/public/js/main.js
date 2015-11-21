@@ -49,38 +49,87 @@ $(document).ready(function () {
     });
 
 
-    //sortable lists on judge
-    $("#sortable1, #sortable2, #sortable3").sortable({
-        connectWith: ".connectedSortable"
-    }).disableSelection();
+    if ($('#home').length > 0) {
 
-    $('#randomize').on('click',function(){
-        alert('clicked');
+        var initialPlayers = [];
+        var playerIds = [];
+        getPlayerId();
 
+        //sortable lists on judge
+        $("#sortable1, #sortable2, #sortable3").sortable({
+            connectWith: ".connectedSortable",
+            revert: true
+        }).disableSelection();
+
+
+        $('#randomize').on('click', function () {
+            $('#randomize').addClass('disabled');
+            shuffle(initialPlayers)
+        });
+
+        function getPlayerId() {
+            var listItems = $('#sortable1').find('li');
+            listItems.each(function (idx, li) {
+                var attribute = $(li);
+                var id = attribute.attr('data-id');
+                playerIds.push(id);
+                initialPlayers.push(id);
+            });
+            return true;
+        }
 
 
         function shuffle(array) {
-            var currentIndex = array.length, temporaryValue, randomIndex ;
-
-            // While there remain elements to shuffle...
+            $('#sortable1').empty();
+            var currentIndex = array.length, temporaryValue, randomIndex;
             while (0 !== currentIndex) {
-
-                // Pick a remaining element...
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex -= 1;
-
-                // And swap it with the current element.
                 temporaryValue = array[currentIndex];
                 array[currentIndex] = array[randomIndex];
                 array[randomIndex] = temporaryValue;
             }
+            splitArray(array)
+        }
 
-            return array;
+        function splitArray(array) {
+            var teamA = array;
+            var teamB = teamA.splice(0, Math.floor(initialPlayers.length / 2));
+            createTeamA(teamA);
+            createTeamB(teamB);
+
+        }
+
+        function createTeamA(teamA) {
+            $('#sortable2').empty();
+            createTeam(teamA, '#sortable2');
+        }
+
+        function createTeamB(teamB) {
+            $('#sortable3').empty()
+            createTeam(teamB, '#sortable3');
+        }
+
+        function createTeam(array, id) {
+            $.each(array, function (index, value) {
+                $(id).append(
+                    "<li class='col-md-12 player-card' data-id='" + value + "'>" +
+                    "<div class='col-md-2'>" +
+                    "<br>" +
+                    "<img class='img-responsive img-circle' src='/bundles/app/img/dan.jpeg'>" +
+                    "</div>" +
+                    "<div class='col-md-10'>" +
+                    "<h5>" + value + ". Player Name</h5>" +
+                    "<p>Player Nickname</p>" +
+                    "<p>Level</p>" +
+                    "</div>" +
+                    "</li>"
+                );
+            });
         }
 
 
-    })
-
+    }
 
 
 });
