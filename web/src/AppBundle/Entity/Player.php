@@ -23,7 +23,7 @@ class Player
     /**
      * @var \Zantolov\AppBundle\Entity\User
      * @ORM\OneToOne(targetEntity="Zantolov\AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 
@@ -36,31 +36,31 @@ class Player
 
     /**
      * @var float
-     * @ORM\Column(type="decimal", precision=18, scale=14)
+     * @ORM\Column(type="decimal", precision=18, scale=14, nullable=true)
      */
     private $score;
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      */
     private $alias;
 
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $level;
 
     /**
      * @var float
-     * @ORM\Column(type="decimal", precision=18, scale=14)
+     * @ORM\Column(type="decimal", precision=18, scale=14, nullable=true)
      */
     private $calories;
 
     /**
      * @var int
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $steps;
 
@@ -190,5 +190,10 @@ class Player
         $this->getTeams()->removeElement($team);
     }
 
+
+    public function __toString()
+    {
+        return $this->getAlias();
+    }
 
 }

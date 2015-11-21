@@ -64,6 +64,7 @@ class Team
     public function addPlayer(Player $p)
     {
         $this->getPlayers()->add($p);
+        $p->addTeam($this);
     }
 
     /**
@@ -72,6 +73,12 @@ class Team
     public function removePlayer(Player $p)
     {
         $this->getPlayers()->removeElement($p);
+        $p->removeTeam($this);
+    }
 
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

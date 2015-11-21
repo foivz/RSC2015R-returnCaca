@@ -1,0 +1,53 @@
+    {% extends 'AppBundle::baseAdmin.html.twig' %}
+
+    {% block body -%}
+    <h1>Player</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Score</th>
+                    <td>{{ entity.score }}</td>
+            </tr>
+            <tr>
+                <th>Alias</th>
+                    <td>{{ entity.alias }}</td>
+            </tr>
+            <tr>
+                <th>Level</th>
+                    <td>{{ entity.level }}</td>
+            </tr>
+            <tr>
+                <th>Calories</th>
+                    <td>{{ entity.calories }}</td>
+            </tr>
+            <tr>
+                <th>Steps</th>
+                    <td>{{ entity.steps }}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                    <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                    <td>{{ entity.active|fontAwesome() }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="list-inline">
+    <li>
+        <a class="btn btn-primary" href="{{ path('admin_players.index') }}">
+            <i class="fa fa-arrow-left"></i> Back to the list
+        </a>
+    </li>
+            <li>
+            <a class="btn btn-primary"
+               href="{{ path('admin_players.edit', { 'id': entity.id }) }}">
+                <i class="fa fa-edit"></i> Edit
+            </a>
+        </li>
+                <li>{{ form(delete_form) }}</li>
+    </ul>
+    {% endblock %}

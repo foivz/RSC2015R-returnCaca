@@ -17,18 +17,21 @@ class Game
     use ActivableTrait;
 
     /**
-     * @ORM\OneToOne(targetEntity="Team")
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(name="team1_id", referencedColumnName="id")
      */
     private $team1;
 
 
     /**
-     * @ORM\OneToOne(targetEntity="Team")
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(name="team2_id", referencedColumnName="id")
      */
     private $team2;
 
     /**
      * @ORM\OneToOne(targetEntity="Team")
+     * @ORM\JoinColumn(name="winner_id", referencedColumnName="id")
      */
     private $winner;
 
