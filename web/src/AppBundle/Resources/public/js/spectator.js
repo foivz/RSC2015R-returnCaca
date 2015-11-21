@@ -81,6 +81,8 @@ var team2Locations = [];
 var team1Markers = [];
 var team2Markers = [];
 
+var notifications = [];
+
 // Settings
 var allyMarker = new google.maps.MarkerImage(
     "bundles/app/images/markers/ally.png",
@@ -110,13 +112,28 @@ var deadEnemyMarker = new google.maps.MarkerImage(
     null,
     new google.maps.Size(32, 32)
 );
+var attentionEnemyMarker = new google.maps.MarkerImage(
+    "bundles/app/images/markers/attentionEnemy.png",
+    null,
+    null,
+    null,
+    new google.maps.Size(32, 32)
+);
+var attentionAllyMarker = new google.maps.MarkerImage(
+    "bundles/app/images/markers/attentionAlly.png",
+    null,
+    null,
+    null,
+    new google.maps.Size(32, 32)
+);
+
 
 // Function
 $(document).ready(function() {
     init();
-    //window.setInterval(refreshLocations, 1000);
-    refreshLocations();
-    refreshMap();
+    window.setInterval(refreshMap, 50);
+    window.setInterval(refreshLocations, 1000);
+    showPing("attentionEnemy", 46.306390,16.339145);
 });
 
 function init() {
@@ -158,7 +175,6 @@ function init() {
 function refreshMap() {
     team1Markers = [];
     $.each(team1Locations, function(key, location) {
-        console.log("run");
         var mark = allyMarker;
         if(location.died == true) mark = deadAllyMarker;
         team1Markers.push(new google.maps.Marker({
@@ -182,11 +198,10 @@ function refreshMap() {
 }
 
 function refreshLocations() {
-    $.get( "/api/locations?game=3", function(data) {
+    $.get( "/api/locations?game=1", function(data) {
         team1Locations = [];
         team2Locations = [];
         $.each(data.data, function(key, loc) {
-            console.log(loc);
             team1Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
             if(loc.team == 1) {
                 team1Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
@@ -195,6 +210,25 @@ function refreshLocations() {
                 team2Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
             }
         });
-        refreshMap();
     });
+}
+
+function showPing(marker, lat, lng) {
+    var audio = new Audio('/bundles/app/sounds/ping.mp3');
+    audio.play();
+    notifications[Math.floor(Date.now()/1000)] = new RichMarker({
+        position: new google.maps.LatLng(lat, lng),
+        map: map,
+        shadow: 'none',
+        content: '<div class="ring ping"></div><div class="marker"><img src="/bundles/app/images/markers/' + marker + '.png"></img></a>'
+    });
+    setTimeout(function() {
+        for(var key in notifications) {
+            console.log(Math.floor(Date.now()/1000) - key);
+            if(Math.floor(Date.now()/1000) - key > 10) {
+                notifications[key].setMap(null);
+                delete notifications[key];
+            }
+        }
+    }, 11000);
 }
