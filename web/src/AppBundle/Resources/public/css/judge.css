@@ -1,3 +1,6 @@
+#myTabContent {
+  z-index: 10; }
+
 .team-card {
   margin: 15px 0;
   background: #F3F0F0; }

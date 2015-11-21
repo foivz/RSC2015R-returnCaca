@@ -40,10 +40,12 @@
     margin-right: -1px;
     border-right: 5px solid #e7e7e7; }
   .side-menu .navbar-nav li {
+    z-index: 100;
     display: block;
     width: 100%;
     border-bottom: 1px solid #e7e7e7; }
     .side-menu .navbar-nav li a {
+      z-index: 100;
       padding: 15px;
       font-size: 14px; }
       .side-menu .navbar-nav li a .fa {
@@ -183,6 +185,7 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d; }
     .side-menu-container > .navbar-nav.slide-in {
+      z-index: 100;
       -moz-animation: slidein 300ms forwards;
       -o-animation: slidein 300ms forwards;
       -webkit-animation: slidein 300ms forwards;
