@@ -68,9 +68,9 @@ security:
 #                    google:             "/login/check-google"
 #                    my_custom_provider: "/login/check-custom"
 #                    my_github:          "/login/check-github"
-                login_path:        /social-login
+                login_path:        /login
                 use_forward:       true
-                failure_path:      /social-login
+                failure_path:      /login
 
                 oauth_user_provider:
                     service: app.oauth_provider
