@@ -22,4 +22,14 @@
   min-height: 800px;
   background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAEklEQVQImWNgYGD4z0AswK4SAFXuAf8EPy+xAAAAAElFTkSuQmCC) repeat center center !important; }
 
+.leaderboard-table i {
+  color: #e08600; }
+.leaderboard-table td {
+  font-size: 16px;
+  vertical-align: middle !important; }
+
+.leaderboard-icon {
+  color: #e08600;
+  margin: 15px 0; }
+
 /*# sourceMappingURL=homepage.css.map */
