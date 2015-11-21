@@ -1,0 +1,77 @@
+body {
+	width: 100%;
+	height: 100%;
+}
+#map {
+	width: 100%;
+	height: 100%;
+}
+
+.marker {
+	height: 50px;
+	width: 50px;
+}
+.marker > img {
+	height: 50px;
+	width: 50px;
+}
+
+div.ring {
+	display: block;
+	float: left;
+	position: absolute;
+	border-radius: 55px;
+	padding: 50px;
+	transform: scale(.25);
+	-ms-transform: scale(.25);
+	/* IE 9 */
+	-webkit-transform: scale(.25);
+	/* Safari and Chrome */
+	-o-transform: scale(.25);
+	/* Opera */
+	-moz-transform: scale(.25);
+	/* Firefox */
+	-webkit-transform-origin: center;
+	animation-iteration-count: infinite;
+	/* W3C and Opera */
+	-moz-animation-iteration-count: infinite;
+	/* Firefox */
+	-webkit-animation-iteration-count: infinite;
+	/*Safari and Chrome*/
+	-webkit-transform-origin: center;
+}
+.ping {
+	top: -28px;
+	left: -28px;
+	border: solid #FFF 3px;
+	-moz-animation-duration: 3s;
+	-webkit-animation-duration: 3s;
+	-moz-animation-name: ping;
+	-webkit-animation-name: ping;
+}
+@-webkit-keyframes ping {
+	from {
+		transform: scale(.25);
+		-ms-transform: scale(.25);
+		/* IE 9 */
+		-webkit-transform: scale(.25);
+		/* Safari and Chrome */
+		-o-transform: scale(.25);
+		/* Opera */
+		-moz-transform: scale(.25);
+		/* Firefox */
+		opacity: 1;
+	}
+	to {
+		transform: scale(1);
+		-ms-transform: scale(1);
+		/* IE 9 */
+		-webkit-transform: scale(1);
+		/* Safari and Chrome */
+		-o-transform: scale(1);
+		/* Opera */
+		-moz-transform: scale(1);
+		/* Firefox */
+		opacity: 0;
+	}
+}

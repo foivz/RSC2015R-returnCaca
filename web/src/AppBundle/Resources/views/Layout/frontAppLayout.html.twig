@@ -8,7 +8,12 @@
 
         {#Đavaskriptovi#}
         {% block customJsPlugins %}
-            <script src="https://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+            <!--<script src="https://maps.google.com/maps/api/js?sensor=false&language=en"></script>-->
+
+          <script type="text/javascript"
+                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCv-5XXOAI1kdllaD73qEc1yS-9zxcI1s&sensor=false&libraries=drawing&dummy=.js">
+          </script>
+
             <script src="{{ asset('bundles/app/js/components/gmaps.js') }}"></script>
             <script src="{{ asset('bundles/app/js/components/jquery.matchHeight.js') }}"></script>
             <script src="{{ asset('bundles/app/js/components/jquery-ui.js') }}"></script>

@@ -29,4 +29,26 @@
 .connectedSortable {
   padding-bottom: 10px; }
 
+/* Map builder */
+#map-canvas {
+  margin: 5px 0;
+  height: 400px; }
+
+#points {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 300px;
+  height: 200px;
+  border: 1px solid #000;
+  background: #fff;
+  z-index: 9999999; }
+
+#inputMap {
+  width: 50%;
+  margin: 15px 0; }
+
+.saveButton {
+  margin: 5px 0; }
+
 /*# sourceMappingURL=judge.css.map */
