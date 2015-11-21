@@ -2,77 +2,83 @@
 
 
 {% block body %}
-    <div id="loginPage">
-        <div class="row-centered">
-            <div class="col-md-4 col-centered modal-content">
-                <h1>{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</h1>
+  <div id="loginPage">
+    <div class="row-centered">
+      <div class="col-md-4 col-centered modal-content loginCard wow fadeInUp">
+        <h1>{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</h1>
 
-                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                    <p>
-                        {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
-                    </p>
-                    <a href="{{ path('fos_user_security_logout') }}" class="btn btn-danger">
-                        {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-                    </a>
-                {% else %}
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+          <p>
+            {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+          </p>
+          <a href="{{ path('fos_user_security_logout') }}" class="btn btn-danger">
+            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+          </a>
+        {% else %}
 
-                    {% if error %}
-                        <div class="alert alert-danger">{{ error|trans({}, 'FOSUserBundle') }}</div>
-                    {% endif %}
+          {% if error %}
+            <div class="alert alert-danger">{{ error|trans({}, 'FOSUserBundle') }}</div>
+          {% endif %}
 
-                    <div class="col-md-10 col-md-offset-1 login-body">
-                        <form action="{{ path("fos_user_security_check") }}" method="post">
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+          <div class="col-md-10 col-md-offset-1 login-body">
+            <form action="{{ path("fos_user_security_check") }}" method="post">
+              <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
 
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="username" name="_username"
-                                       value="{{ last_username }}"
-                                       placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}"
-                                       required="required"/>
-                            </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="username" name="_username"
+                       value="{{ last_username }}"
+                       placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}"
+                       required="required"/>
+              </div>
 
-                            <div class="form-group">
-                                <input type="password"
-                                       class="form-control"
-                                       id="password"
-                                       name="_password"
-                                       placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}"
-                                       required="required"/>
-                            </div>
+              <div class="form-group">
+                <input type="password"
+                       class="form-control"
+                       id="password"
+                       name="_password"
+                       placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}"
+                       required="required"/>
+              </div>
 
-                            <div class="checkbox">
-                                <label for="remember_me">
-                                    <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
-                                    {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
-                                </label>
-                            </div>
-                            <br>
-                            <input
-                                    type="submit"
-                                    id="_submit"
-                                    name="_submit"
-                                    class="btn btn-primary btn-lg"
-                                    value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}"/>
-                            <br>
-                        </form>
-                    </div>
-                    <div class="col-md-12">
-                        <a href="{{ path('fos_user_resetting_request') }}">{{ 'security.login.reset'|trans({}, 'FOSUserBundle') }}
-                        </a>
-                        <a href="{{ path('fos_user_registration_register') }}">
-                            Register
-                        </a>
-                    </div>
+              <div class="checkbox">
+                <label for="remember_me">
+                  <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+                  {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+                </label>
+              </div>
+              <br>
+              <input
+                      type="submit"
+                      id="_submit"
+                      name="_submit"
+                      class="btn btn-primary btn-lg"
+                      value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}"/>
+              <br>
+            </form>
+          </div>
+          <div class="col-md-12">
+            <a href="{{ path('fos_user_resetting_request') }}">{{ 'security.login.reset'|trans({}, 'FOSUserBundle') }}
+            </a>
+            <a href="{{ path('fos_user_registration_register') }}">
+              Register
+            </a>
+          </div>
 
-                    <hr>
-                    <h6>Login with:</h6>
-                    {% for owner in hwi_oauth_resource_owners() %}
-                        <a class="btn btn-xs btn-primary"
-                           href="{{ hwi_oauth_login_url(owner) }}">{{ owner | trans({}, 'HWIOAuthBundle') }}</a> <br/>
-                    {% endfor %}
+          <hr>
+          <div class="col-md-12">
+            <h6>Login with:</h6>
+            {% for owner in hwi_oauth_resource_owners() %}
+              <a
+                      href="{{ hwi_oauth_login_url(owner) }}">
+                {{ owner | trans({}, 'HWIOAuthBundle') }}
+                <i class="fa fa-facebook"></i>
+              </a>
+              <br/>
+            {% endfor %}
+          </div>
 
-                {% endif %}
-            </div>
-        </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
 {% endblock body %}
