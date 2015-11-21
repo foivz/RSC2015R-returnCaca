@@ -83,7 +83,7 @@ class ApiGameStatController extends \Zantolov\AppBundle\Controller\API\ApiLoginC
 
         return $this->createResponse([
             self::KEY_STATUS => self::STATUS_OK,
-            self::KEY_DATA   => $stat,
+            self::KEY_DATA   => ['stats' => $stat, 'game' => $game],
         ]);
     }
 
