@@ -25,6 +25,7 @@ import com.facebook.login.widget.LoginButton;
 
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
+import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.gcm.RegistrationIntentService;
 import andro.heklaton.rsc.model.login.Data;
@@ -138,12 +139,7 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
                 Toast.makeText(LoginActivity.this, R.string.no_username_or_password, Toast.LENGTH_SHORT).show();
 
             } else {
-                RestAdapter adapter = new RestAdapter.Builder()
-                        .setEndpoint(Constants.ENDPOINT)
-                        .build();
-
-                RestAPI api = adapter.create(RestAPI.class);
-                api.login(RestAPI.HEADER, new LoginRequest("user", "123456", PrefsHelper.getGcmToken(LoginActivity.this)), new Callback<User>() {
+                RestHelper.getRestApi().login(RestAPI.HEADER, new LoginRequest("user", "123456", PrefsHelper.getGcmToken(LoginActivity.this)), new Callback<User>() {
                     @Override
                     public void success(User user, Response response) {
                         if (user.getStatus().equals("ok")) {

@@ -4,6 +4,7 @@ import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.model.login.User;
 import retrofit.Callback;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
 
@@ -20,5 +21,10 @@ public interface RestAPI {
             @Body LoginRequest email,
             Callback<User> response
     );
+
+    @GET("/positions")
+    void getPositions(
+            @Header("Content-Type") String contentType
+            );
 
 }
