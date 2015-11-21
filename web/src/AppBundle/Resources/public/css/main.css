@@ -2,17 +2,24 @@
 @import url(bootstrap.min.css);
 @import url(side-navigation.css);
 @import url(judge.css);
+@import url(homepage.css);
 footer {
   height: 50px;
   width: 100%;
   vertical-align: middle;
-  opacity: 0; }
+  opacity: 0;
+  z-index: 10000; }
 
 li {
   list-style: none; }
 
 .login-body {
   margin-bottom: 15px; }
+
+.navbar-default .navbar-nav > li > a {
+  color: #666666;
+  padding: 35px 0 0 40px;
+  font-size: 15px; }
 
 .modal-content {
   padding: 10px;
