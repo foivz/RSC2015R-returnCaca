@@ -23,7 +23,7 @@ class LoadLocationsData extends AbstractDbFixture
             $latLng = LatLngHelper::getRandomLatLngNear(46.308245, 16.337884);
 
             $location = new Location();
-            $location->setPlayer($this->getReference('player' . (rand(1, LoadPlayersData::NUMBER) - 1)));
+            $location->setPlayer($this->getReference('player' . (rand(2, LoadPlayersData::NUMBER) - 1)));
             $location->setLat($latLng['lat']);
             $location->setLng($latLng['lng']);
             $manager->persist($location);
