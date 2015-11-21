@@ -18,4 +18,13 @@ li {
   padding: 10px;
   margin: 2px; }
 
+.nav-tabs > li > a {
+  font-size: 16px; }
+
+.navbar {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none !important;
+  background: transparent !important; }
+
 /*# sourceMappingURL=main.css.map */
