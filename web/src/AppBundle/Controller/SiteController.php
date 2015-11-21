@@ -160,6 +160,17 @@ class SiteController extends Controller
     }
 
     /**
+     * @Route("/judge/map-drawer", name="judge.map.drawer")
+     * @Template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function judgeDrawerAction(Request $request)
+    {
+        return [];
+    }
+
+    /**
      * @Route("/leaderboard", name="leaderboard")
      * @Template
      * @param Request $request
