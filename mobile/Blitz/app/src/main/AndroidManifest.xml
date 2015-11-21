@@ -50,7 +50,6 @@
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:noHistory="true"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

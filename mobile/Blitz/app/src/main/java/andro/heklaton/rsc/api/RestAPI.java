@@ -1,6 +1,7 @@
 package andro.heklaton.rsc.api;
 
 import andro.heklaton.rsc.api.request.LoginRequest;
+import andro.heklaton.rsc.api.request.SocialLoginRequest;
 import andro.heklaton.rsc.model.login.User;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -19,6 +20,13 @@ public interface RestAPI {
     void login(
             @Header("Content-Type") String contentType,
             @Body LoginRequest email,
+            Callback<User> response
+    );
+
+    @POST("/login")
+    void login(
+            @Header("Content-Type") String contentType,
+            @Body SocialLoginRequest email,
             Callback<User> response
     );
 

@@ -18,11 +18,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+
+import java.util.List;
 
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
+import andro.heklaton.rsc.ui.util.MapsUtil;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MapsActivity extends DrawerActivity implements OnMapReadyCallback, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -74,10 +78,15 @@ public class MapsActivity extends DrawerActivity implements OnMapReadyCallback, 
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
 
+        // Add zones to map
+        List<PolygonOptions> polygons = MapsUtil.getZones();
+        for (PolygonOptions po : polygons) {
+            mMap.addPolygon(po);
+        }
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng zone = new LatLng(46.3063688, 16.3381327);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zone, 18.5f));
 
         mMap.setOnMyLocationChangeListener(myLocationChangeListener);
         startUpdatingUserLocations();
@@ -124,6 +133,11 @@ public class MapsActivity extends DrawerActivity implements OnMapReadyCallback, 
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
+        if (e.getPointerCount() == 2) {
+            Log.d("two finger tap", "confirmed");
+        } else if (e.getPointerCount() == 3) {
+            Log.d("three finger tap", "confirmed");
+        }
         Log.d("single tap", "confirmed");
         return false;
     }
