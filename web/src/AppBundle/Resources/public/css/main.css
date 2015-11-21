@@ -1,15 +1,20 @@
 @import url(animate.css);
 @import url(bootstrap.min.css);
+@import url(side-navigation.css);
+
 footer {
-  height: 50px;
-  width: 100%;
-  vertical-align: middle;
-  opacity: 0; }
+    height: 50px;
+    width: 100%;
+    vertical-align: middle;
+    opacity: 0;
+}
 
 .login-body {
-  margin-bottom: 15px; }
+    margin-bottom: 15px;
+}
 
 .modal-content {
-  padding: 10px; }
+    padding: 10px;
+}
 
 /*# sourceMappingURL=main.css.map */
