@@ -22,7 +22,7 @@ use Zantolov\BlogBundle\Repository\PostRepository;
 class SpectatorController extends Controller
 {
     /**
-     * @Route("/spectate", name="homepage")
+     * @Route("/spectate", name="spectate")
      * @Template
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
