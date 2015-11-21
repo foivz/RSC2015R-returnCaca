@@ -3,13 +3,18 @@
     package="andro.heklaton.rsc" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.NFC" />
     <permission android:name="com.example.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
 
     <application
         android:name="com.activeandroid.app.Application"
@@ -24,7 +29,8 @@
             android:value="rsc.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="5" />
+            android:value="6" />
+
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -50,7 +56,6 @@
         </activity>
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:noHistory="true"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
@@ -76,8 +81,12 @@
 
         <activity
             android:name=".ui.activity.MapsActivity"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_maps" >
         </activity>
+
+        <activity android:name=".ui.activity.MapboxActivity"
+            android:screenOrientation="landscape"/>
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
