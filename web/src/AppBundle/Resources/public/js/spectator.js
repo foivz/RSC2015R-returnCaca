@@ -75,10 +75,7 @@ var zone4 = [
     new google.maps.LatLng(46.30594541114172, 16.33934267033817)
 ];
 
-var team1Locations = [
-    {lat: 46.30585513089814, lng: 16.33860781788826, died: false},
-    {lat: 46.30594541114172, lng: 16.33934267033817, died: true},
-];
+var team1Locations = [];
 var team2Locations = [];
 
 var team1Markers = [];
@@ -117,15 +114,16 @@ var deadEnemyMarker = new google.maps.MarkerImage(
 // Function
 $(document).ready(function() {
     init();
+    //window.setInterval(refreshLocations, 1000);
+    refreshLocations();
     refreshMap();
-    // window.setInterval(refreshMap, 1000);
 });
 
 function init() {
     var mapOptions = {
         center: new google.maps.LatLng(46.306390,16.339145),
         zoom: 19,
-        zoomControl: false,
+        zoomControl: true,
         disableDoubleClickZoom: true,
         mapTypeControl: false,
         scaleControl: false,
@@ -160,6 +158,7 @@ function init() {
 function refreshMap() {
     team1Markers = [];
     $.each(team1Locations, function(key, location) {
+        console.log("run");
         var mark = allyMarker;
         if(location.died == true) mark = deadAllyMarker;
         team1Markers.push(new google.maps.Marker({
@@ -183,8 +182,19 @@ function refreshMap() {
 }
 
 function refreshLocations() {
-    $.get( "/api/locations", function() {
-
+    $.get( "/api/locations?game=3", function(data) {
+        team1Locations = [];
+        team2Locations = [];
+        $.each(data.data, function(key, loc) {
+            console.log(loc);
+            team1Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
+            if(loc.team == 1) {
+                team1Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
+            }
+            else if(loc.team == 1) {
+                team2Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
+            }
+        });
+        refreshMap();
     });
-
 }
