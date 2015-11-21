@@ -23,6 +23,7 @@ import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.ui.activity.MainActivity;
 import andro.heklaton.rsc.ui.activity.MapsActivity;
 import andro.heklaton.rsc.ui.activity.SettingsActivity;
+import andro.heklaton.rsc.ui.activity.StepCounterActivity;
 
 /**
  * Abstract activity that contains DrawerLayout. Any activity that needs to have visible drawer needs
@@ -111,7 +112,7 @@ public abstract class DrawerActivity extends AppCompatActivity implements
                     break;
                 }
                 case R.id.nav_info:
-                    intent.setClass(DrawerActivity.this, MainActivity.class);
+                    intent.setClass(DrawerActivity.this, StepCounterActivity.class);
                     startActivity(intent);
                     break;
             }
