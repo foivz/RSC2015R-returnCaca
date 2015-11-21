@@ -1,7 +1,7 @@
 package andro.heklaton.rsc.ui.util;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolygonOptions;
+import com.mapbox.mapboxsdk.annotations.PolylineOptions;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,13 @@ import java.util.List;
  */
 public class MapsUtil {
 
-    public static List<PolygonOptions> getZones() {
+    /**
+     * Get zones for map
+     * @return list with zones (polygon lines)
+     */
+    public static List<PolylineOptions> getZones() {
 
-        PolygonOptions zone1 = new PolygonOptions();
+        PolylineOptions zone1 = new PolylineOptions();
         zone1.add(
                 new LatLng(46.30585513089814, 16.33860781788826),
                 new LatLng(46.305797691189404, 16.33825644850731),
@@ -27,9 +31,11 @@ public class MapsUtil {
                 new LatLng(46.30632020502972, 16.33889749646187),
                 new LatLng(46.30617382754188, 16.338841170072556),
                 new LatLng(46.30604597852974, 16.33871242403984),
-                new LatLng(46.30594036390321, 16.338621228933334));
+                new LatLng(46.30594036390321, 16.338621228933334),
+                new LatLng(46.30585513089814, 16.33860781788826)
+                );
 
-        PolygonOptions zone2 = new PolygonOptions();
+        PolylineOptions zone2 = new PolylineOptions();
         zone2.add(
                 new LatLng(46.30584216064658, 16.33861653506756),
                 new LatLng(46.3059236878909, 16.339091286063194),
@@ -50,9 +56,11 @@ public class MapsUtil {
                 new LatLng(46.3061682688954, 16.33888140320778),
                 new LatLng(46.3060867420153, 16.338776797056198),
                 new LatLng(46.30598668613292, 16.338680237531662),
-                new LatLng(46.30593109945254, 16.338631957769394));
+                new LatLng(46.30593109945254, 16.338631957769394),
+                new LatLng(46.30584216064658, 16.33861653506756)
+        );
 
-        PolygonOptions zone3 = new PolygonOptions();
+        PolylineOptions zone3 = new PolylineOptions();
         zone3.add(
                 new LatLng(46.306527726873306, 16.33835032582283),
                 new LatLng(46.306496228072696, 16.338425427675247),
@@ -73,9 +81,11 @@ public class MapsUtil {
                 new LatLng(46.30671301356885, 16.339101344347),
                 new LatLng(46.30665928049171, 16.33894845843315),
                 new LatLng(46.306596283023765, 16.338704377412796),
-                new LatLng(46.30656663713139, 16.338422745466232));
+                new LatLng(46.30656663713139, 16.338422745466232),
+                new LatLng(46.306527726873306, 16.33835032582283)
+        );
 
-        PolygonOptions zone4 = new PolygonOptions();
+        PolylineOptions zone4 = new PolylineOptions();
         zone4.add(
                 new LatLng(46.30592554078143, 16.339104026556015),
                 new LatLng(46.30603300832342, 16.33910670876503),
@@ -88,9 +98,11 @@ public class MapsUtil {
                 new LatLng(46.306103417977944, 16.340343207120895),
                 new LatLng(46.30605339007484, 16.34031906723976),
                 new LatLng(46.30599039190959, 16.339871138334274),
-                new LatLng(46.30594541114172, 16.33934267033817));
+                new LatLng(46.30594541114172, 16.33934267033817),
+                new LatLng(46.30592554078143, 16.339104026556015)
+        );
 
-        List<PolygonOptions> polygons = new ArrayList<>();
+        List<PolylineOptions> polygons = new ArrayList<>();
         polygons.add(zone1);
         polygons.add(zone2);
         polygons.add(zone3);
