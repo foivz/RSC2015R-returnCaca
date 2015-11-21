@@ -1,7 +1,5 @@
 $(document).ready(function () {
 
-
-
     //sticky footer
     $(window).bind("load", function () {
 
@@ -127,9 +125,63 @@ $(document).ready(function () {
                 );
             });
         }
-
-
     }
 
+    //map builder
+    if ($('#map-canvas').length > 0) {
+        var iw = new google.maps.InfoWindow(); // Global declaration of the infowindow
+        var lat_longs = [];
+        var markers = [];
+        var drawingManager;
 
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng(46.301406, 16.341476),
+                zoom: 11
+            };
+            var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+            drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+                },
+                polygonOptions: {
+                    editable: true
+                }
+            });
+            drawingManager.setMap(map);
+
+            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+                var newShape = event.overlay;
+                newShape.type = event.type;
+            });
+
+            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+
+                var path = event.overlay.getPath().getArray();
+                var vertices = event.overlay.getPath();
+                var value = [];
+                var points = [];
+                var contentString = [];
+
+                // Iterate over the vertices.
+                for (var i = 0; i < vertices.getLength(); i++) {
+                    var xy = vertices.getAt(i);
+                    value.push({lat: xy.lat()});
+                    value.push({lng: xy.lng()});
+
+                    points.push(value);
+                    value = [];
+
+                }
+                contentString.push(points);
+                var json = JSON.stringify(contentString);
+                $('#map-values').val(json);
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
 });
