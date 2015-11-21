@@ -1,115 +1,135 @@
 $(document).ready(function () {
 
-    if ($('#homepageMap').length > 0) {
-        var lat = 43.3312865;
-        var lng = 21.8922792;
-        var map;
 
 
-        function getLocation() {
+    //sticky footer
+    $(window).bind("load", function () {
 
-            map = new GMaps({
-                div: '#homepageMap',
-                lat: lat,
-                lng: lng,
-                zoom: 9
+        var footerHeight = 0,
+            footerTop = 0,
+            $footer = $("#footer");
+
+        positionFooter();
+
+        function positionFooter() {
+
+            footerHeight = $footer.height();
+            footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
+
+            if (($(document.body).height() + footerHeight) < $(window).height()) {
+                $footer.css({position: "absolute"}).animate({top: footerTop}, 1, 'linear').css({opacity: 1})
+            } else {
+                $footer.css({position: "static", opacity: 1})
+            }
+        }
+
+        $(window)
+            .scroll(positionFooter)
+            .resize(positionFooter)
+    });
+
+    //side navigation
+    $('.navbar-toggle').click(function () {
+        $('.navbar-nav').toggleClass('slide-in');
+        $('.side-body').toggleClass('body-slide-in');
+        $('#search').removeClass('in').addClass('collapse').slideUp(200);
+
+        /// uncomment code for absolute positioning tweek see top comment in css
+        //$('.absolute-wrapper').toggleClass('slide-in');
+
+    });
+
+    // Remove menu for searching
+    $('#search-trigger').click(function () {
+        $('.navbar-nav').removeClass('slide-in');
+        $('.side-body').removeClass('body-slide-in');
+
+        /// uncomment code for absolute positioning tweek see top comment in css
+        //$('.absolute-wrapper').removeClass('slide-in');
+    });
+
+
+    if ($('#home').length > 0) {
+
+        var initialPlayers = [];
+        var playerIds = [];
+        getPlayerId();
+
+        //sortable lists on judge
+        $("#sortable1, #sortable2, #sortable3").sortable({
+            connectWith: ".connectedSortable",
+            revert: true
+        }).disableSelection();
+
+
+        $('#randomize').on('click', function () {
+            $('#randomize').addClass('disabled');
+            shuffle(initialPlayers)
+        });
+
+        function getPlayerId() {
+            var listItems = $('#sortable1').find('li');
+            listItems.each(function (idx, li) {
+                var attribute = $(li);
+                var id = attribute.attr('data-id');
+                playerIds.push(id);
+                initialPlayers.push(id);
             });
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            }
-        }
-
-        function showPosition(position) {
-            lat = position.coords.latitude;
-            lng = position.coords.longitude;
-            setMap();
+            return true;
         }
 
 
-        function setMap() {
-
-            $('loaderMap').empty();
-
-            for (i = 0; i < mapData.offers.length; i++) {
-                map.addMarker({
-                    lat: mapData.offers[i].latitude,
-                    lng: mapData.offers[i].longitude,
-                    icon: 'bundles/app/img/logo_blue.png',
-                    title: mapData.offers[i].title,
-                    infoWindow: {
-                        content: '<h3>' + mapData.offers[i].title + '</h3><p>' + mapData.offers[i].description + '</p>'
-                    }
-                });
+        function shuffle(array) {
+            $('#sortable1').empty();
+            var currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
             }
-
-            for (i = 0; i < mapData.requests.length; i++) {
-                map.addMarker({
-                    lat: mapData.requests[i].latitude,
-                    lng: mapData.requests[i].longitude,
-                    icon: 'bundles/app/img/logo_red.png',
-                    title: mapData.requests[i].title,
-                    infoWindow: {
-                        content: '<h3>' + mapData.requests[i].title + '</h3><p>' + mapData.requests[i].description + '</p>'
-                    }
-                });
-            }
-
-            // Disabling mouse wheel scroll zooming
-            map.map.setOptions({scrollwheel: false});
-            map.refresh();
-            map.fitZoom();
+            splitArray(array)
         }
 
-        getLocation();
-    }
+        function splitArray(array) {
+            var teamA = array;
+            var teamB = teamA.splice(0, Math.floor(initialPlayers.length / 2));
+            createTeamA(teamA);
+            createTeamB(teamB);
 
-    $('#carousel-example-captions').carousel({
-        interval: 5000
-    });
+        }
 
+        function createTeamA(teamA) {
+            $('#sortable2').empty();
+            createTeam(teamA, '#sortable2');
+        }
 
-    /* Does your browser support geolocation? */
-    if ("geolocation" in navigator) {
-        $('.js-geolocation').show();
-    } else {
-        $('.js-geolocation').hide();
-    }
+        function createTeamB(teamB) {
+            $('#sortable3').empty()
+            createTeam(teamB, '#sortable3');
+        }
 
-    /* Where in the world are you? */
-    $('.js-geolocation').on('click', function () {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            loadWeather(position.coords.latitude + ',' + position.coords.longitude); //load weather using your lat/lng coordinates
-        });
-    });
+        function createTeam(array, id) {
+            $.each(array, function (index, value) {
+                $(id).append(
+                    "<li class='col-md-12 player-card' data-id='" + value + "'>" +
+                    "<div class='col-md-2'>" +
+                    "<br>" +
+                    "<img class='img-responsive img-circle' src='/bundles/app/img/dan.jpeg'>" +
+                    "</div>" +
+                    "<div class='col-md-10'>" +
+                    "<h5>" + value + ". Player Name</h5>" +
+                    "<p>Player Nickname</p>" +
+                    "<p>Level</p>" +
+                    "</div>" +
+                    "</li>"
+                );
+            });
+        }
 
-
-    function loadWeather(location, woeid) {
-        $.simpleWeather({
-            location: location,
-            woeid: woeid,
-            unit: 'c',
-            success: function (weather) {
-                html = '<h2><i class="icon-' + weather.code + '"></i> ' + weather.temp + '&deg;' + weather.units.temp + '</h2>';
-                html += '<ul><li class="city">' + weather.city + ', ' + weather.region + '</li>';
-                html += '<li class="currently">' + weather.currently + '</li></ul>';
-
-                $('#loaderWeather').empty();
-                $("#weather").html(html);
-            },
-            error: function (error) {
-                $("#weather").html('<p>' + error + '</p>');
-            }
-        });
-    }
-
-    loadWeather('Beograd', ''); //@params location
-
-
-    if ($('.postItem').length > 0) {
-        $('postItem').matchHeight();
 
     }
 
-})
-;
+
+});

@@ -27,7 +27,7 @@ class RoleService implements ContainerAwareInterface
     }
 
 
-    public function getUserRole(User $user)
+    public function getPlayerByUser(User $user)
     {
         $return = [
             'profile_refugee'   => null,

@@ -33,7 +33,7 @@ class LoadUserData extends AbstractDbFixture
         $this->addReference('user' . 2, $user);
         $userManager->updateUser($user, true);
 
-        for ($i = 3; $i < 50; $i++) {
+        for ($i = 3; $i < 10; $i++) {
             $user = $userManager->createUser();
             $user->setUsername($faker->userName);
             $user->setEmail($faker->email);
