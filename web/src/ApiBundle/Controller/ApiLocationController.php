@@ -63,7 +63,19 @@ class ApiLocationController extends \Zantolov\AppBundle\Controller\API\ApiLoginC
 //            'player' => $player
 //        ]);
 
-        $locations = $this->getDoctrine()->getManager()->getRepository('AppBundle:Location')->findAll();
+        $filters = [];
+        foreach (['player', 'game',] as $filter) {
+            $value = $request->get($filter);
+            if (!empty($value)) {
+                $filters[$filter] = $value;
+            }
+        }
+
+        if (!empty($filters)) {
+            $locations = $this->getDoctrine()->getManager()->getRepository('AppBundle:Location')->findBy($filters);
+        } else {
+            $locations = $this->getDoctrine()->getManager()->getRepository('AppBundle:Location')->findAll();
+        }
 
         return $this->createResponse([
             self::KEY_STATUS => self::STATUS_OK,

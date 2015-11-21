@@ -47,13 +47,8 @@ class ApiLocationTest extends \Codeception\TestCase\Test
 
     }
 
-    public function testGetLocations()
+    private function checkLocationList()
     {
-        $token = $this->doLogin('player1@mailinator.com', '123456');
-        $this->tester->haveHttpHeader('Content-type', 'application/json');
-        $this->tester->haveHttpHeader('X-Api-token', $token);
-        $this->tester->sendGET('/api/locations');
-
         $this->tester->seeResponseCodeIs(200);
         $this->tester->seeResponseIsJson();
 
@@ -63,5 +58,30 @@ class ApiLocationTest extends \Codeception\TestCase\Test
         $this->tester->seeResponseJsonMatchesJsonPath('$.data[0].lat');
         $this->tester->seeResponseJsonMatchesJsonPath('$.data[0].lng');
         $this->tester->seeResponseJsonMatchesJsonPath('$.data[0].game');
+    }
+
+    public function testGetLocations()
+    {
+        $token = $this->doLogin('player1@mailinator.com', '123456');
+        $this->tester->haveHttpHeader('Content-type', 'application/json');
+        $this->tester->haveHttpHeader('X-Api-token', $token);
+        $this->tester->sendGET('/api/locations');
+        $this->checkLocationList();
+    }
+
+
+    public function testGetLocationsWithFilters()
+    {
+        $token = $this->doLogin('player1@mailinator.com', '123456');
+        $this->tester->haveHttpHeader('Content-type', 'application/json');
+        $this->tester->haveHttpHeader('X-Api-token', $token);
+        $filter = ['game' => rand(1, \AppBundle\DataFixtures\ORM\LoadGamesData::NUMBER - 1)];
+        $this->tester->sendGET('/api/locations', $filter);
+        $this->checkLocationList();
+
+        $data = json_decode($this->tester->grabResponse(), true);
+        foreach ($data['data'] as $item) {
+            $this->assertEquals($filter['game'], $item['game']);
+        }
     }
 }

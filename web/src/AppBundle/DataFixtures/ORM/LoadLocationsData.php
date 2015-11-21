@@ -13,7 +13,7 @@ use Zantolov\AppBundle\Entity\User;
 
 class LoadLocationsData extends AbstractDbFixture
 {
-    const NUMBER = 100;
+    const NUMBER = 200;
 
     public function load(\Doctrine\Common\Persistence\ObjectManager $manager)
     {
