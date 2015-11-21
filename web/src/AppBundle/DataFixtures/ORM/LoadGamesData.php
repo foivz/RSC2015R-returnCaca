@@ -44,7 +44,7 @@ class LoadGamesData extends AbstractDbFixture
             $game->setTeam1($team1);
             $game->setTeam2($team2);
             $game->setActive(true);
-            $this->addReference('game' . $j);
+            $this->addReference('game' . $j, $game);
 
             $manager->persist($team1);
             $manager->persist($team2);
