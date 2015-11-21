@@ -20,8 +20,8 @@ class LoadPlayersData extends AbstractDbFixture
         for ($i = 1; $i < self::NUMBER; $i++) {
             /** @var User $user */
             $user = $userManager->createUser();
-            $user->setUsername($faker->userName);
-            $user->setEmail($faker->email);
+            $user->setUsername('player' . $i);
+            $user->setEmail('player' . $i . '@mailinator.com');
             $user->setPlainPassword('123456');
             $user->setEnabled(true);
             $user->setRoles(array('ROLE_USER', 'ROLE_PLAYER'));

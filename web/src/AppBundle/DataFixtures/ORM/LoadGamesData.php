@@ -11,12 +11,13 @@ use Zantolov\AppBundle\Entity\User;
 
 class LoadGamesData extends AbstractDbFixture
 {
+    const NUMBER = 20;
 
     public function load(\Doctrine\Common\Persistence\ObjectManager $manager)
     {
         $faker = \Faker\Factory::create();
 
-        for ($j = 1; $j < 20; $j++) {
+        for ($j = 1; $j < self::NUMBER; $j++) {
             $team1 = new Team();
             $team1->setActive(true);
             $team1->setName($faker->word);
