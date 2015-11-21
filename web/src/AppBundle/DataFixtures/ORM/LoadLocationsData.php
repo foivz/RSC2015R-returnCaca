@@ -20,7 +20,7 @@ class LoadLocationsData extends AbstractDbFixture
         $faker = \Faker\Factory::create();
 
         for ($j = 1; $j < self::NUMBER; $j++) {
-            $latLng = LatLngHelper::getRandomLatLngNear(46.308245, 16.337884);
+            $latLng = LatLngHelper::getRandomLatLngNear(46.306390, 16.339145);
 
             $location = new Location();
             $location->setPlayer($this->getReference('player' . (rand(2, LoadPlayersData::NUMBER) - 1)));
