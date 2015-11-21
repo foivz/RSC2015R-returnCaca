@@ -6,12 +6,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.mapbox.mapboxsdk.annotations.Annotation;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.constants.MyLocationTracking;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.views.MapView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +24,8 @@ import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.stats.Stat;
+import andro.heklaton.rsc.model.stats.Stats;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
@@ -34,6 +39,8 @@ import retrofit.client.Response;
 public class MapboxActivity extends DrawerActivity {
 
     private MapView mapView;
+    private List<MarkerOptions> markers;
+    private List<PolylineOptions> zones;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,29 +54,12 @@ public class MapboxActivity extends DrawerActivity {
         mapView.setMyLocationTrackingMode(MyLocationTracking.TRACKING_FOLLOW);
         mapView.setCompassEnabled(true);
 
-        List<PolylineOptions> zones = MapsUtil.getZones();
-        for (int i = 0; i < zones.size(); i++) {
-            PolylineOptions po = zones.get(i);
-            po.width(4);
+        markers = new ArrayList<>();
 
-            switch (i) {
-                case 0:
-                    po.color(Color.parseColor("#FF0000"));
-                    break;
-                case 1:
-                    po.color(Color.parseColor("#0077FF"));
-                    break;
-                case 2:
-                    po.color(Color.parseColor("#FFDD00"));
-                    break;
-                case 3:
-                    po.color(Color.parseColor("#9900FF"));
-            }
-
-            mapView.addPolyline(po);
-        }
+        zones = MapsUtil.getZones();
 
         startSendingLocation();
+        startReceivingStats();
     }
 
     /**
@@ -102,13 +92,73 @@ public class MapboxActivity extends DrawerActivity {
 
                                 @Override
                                 public void failure(RetrofitError error) {
-                                    Log.d("Error", error.getMessage());
+                                    //Log.d("Error", error.getMessage());
                                 }
                             }
                     );
                 }
             }
         }, 1000, 1000);
+    }
+
+    private void startReceivingStats() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                RestHelper.getRestApi().getCurrentStats(
+                        RestAPI.HEADER,
+                        new Callback<Stats>() {
+                            @Override
+                            public void success(Stats stats, Response response) {
+                                Log.d("Success", response.getReason());
+                                updateStats(stats.getData().getStats());
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                            }
+                        });
+            }
+        }, 1000, 1000);
+    }
+
+    private void updateStats(List<Stat> stats) {
+        markers.clear();
+        mapView.removeAllAnnotations();
+
+        redrawPolygons();
+
+        for (Stat s : stats) {
+            MarkerOptions marker = new MarkerOptions();
+            marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+            markers.add(marker);
+        }
+
+        mapView.addMarkers(markers);
+    }
+
+    private void redrawPolygons() {
+        for (int i = 0; i < zones.size(); i++) {
+            PolylineOptions po = zones.get(i);
+            po.width(4);
+
+            switch (i) {
+                case 0:
+                    po.color(Color.parseColor("#FF0000"));
+                    break;
+                case 1:
+                    po.color(Color.parseColor("#0077FF"));
+                    break;
+                case 2:
+                    po.color(Color.parseColor("#FFDD00"));
+                    break;
+                case 3:
+                    po.color(Color.parseColor("#9900FF"));
+            }
+
+            mapView.addPolyline(po);
+        }
     }
 
     @Override

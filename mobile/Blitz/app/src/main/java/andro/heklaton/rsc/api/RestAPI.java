@@ -5,6 +5,7 @@ import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.api.request.SocialLoginRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.login.User;
+import andro.heklaton.rsc.model.stats.Stats;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -43,6 +44,12 @@ public interface RestAPI {
             @Header("X-Api-Token") String token,
             @Body LocationSendRequest request,
             Callback<LocationSendResponse> response
+    );
+
+    @GET("/stats/1")
+    void getCurrentStats(
+            @Header("Content-Type") String contentType,
+            Callback<Stats> response
     );
 
 }
