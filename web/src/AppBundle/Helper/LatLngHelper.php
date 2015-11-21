@@ -4,7 +4,7 @@ namespace AppBundle\Helper;
 
 class LatLngHelper
 {
-    public static function getRandomLatLngNear($longitude, $latitude)
+    public static function getRandomLatLngNear($latitude, $longitude)
     {
 //        $longitude = (float)18.695897;
 //        $latitude = (float)45.554386;
