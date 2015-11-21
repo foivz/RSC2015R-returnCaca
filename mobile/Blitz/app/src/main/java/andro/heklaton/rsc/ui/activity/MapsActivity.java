@@ -1,8 +1,11 @@
 package andro.heklaton.rsc.ui.activity;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,12 +49,24 @@ public class MapsActivity extends DrawerActivity implements OnMapReadyCallback {
         progressBar.setVisibility(View.GONE);
 
         mMap = googleMap;
+        mMap.setMyLocationEnabled(true);
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap.setOnMyLocationChangeListener(myLocationChangeListener);
     }
+
+    private GoogleMap.OnMyLocationChangeListener myLocationChangeListener = new GoogleMap.OnMyLocationChangeListener() {
+        @Override
+        public void onMyLocationChange(Location location) {
+            Log.d("Location", String.valueOf(location.getLatitude()) + String.valueOf(location.getLongitude()));
+            Toast.makeText(MapsActivity.this, String.valueOf(location.getLatitude()) + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+            // todo send data to web
+        }
+    };
 
     @Override
     protected Toolbar getToolbar() {
