@@ -59,19 +59,24 @@ class UserProviderService implements OAuthAwareUserProviderInterface, ContainerA
         try {
             $user = $this->fosService->loadUserByUsername($response->getUsername());
         } catch (UsernameNotFoundException $e) {
-
-            $userManager = $this->container->get('fos_user.user_manager');
-
-            /** @var User $user */
-            $user = $userManager->createUser();
-            $user->setUsername($response->getUsername());
-            $user->setEmail($response->getEmail());
-            $user->setPlainPassword('fejsbukLogin');
-            $user->setEnabled(true);
-            $user->setRoles(array('ROLE_USER'));
-            $userManager->updateUser($user, true);
+            $user = $this->createNewUser($response->getUsername(), $response->getEmail());
         }
 
+        return $user;
+    }
+
+    public function createNewUser($token, $email)
+    {
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        /** @var User $user */
+        $user = $userManager->createUser();
+        $user->setUsername($token);
+        $user->setEmail($email);
+        $user->setPlainPassword('fejsbukLogin');
+        $user->setEnabled(true);
+        $user->setRoles(array('ROLE_USER'));
+        $userManager->updateUser($user, true);
         return $user;
     }
 
