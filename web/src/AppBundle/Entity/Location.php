@@ -111,6 +111,7 @@ class Location implements \JsonSerializable
     function jsonSerialize()
     {
         return [
+            'player' => $this->getPlayer()->getId(),
             'lat'  => $this->getLat(),
             'lng'  => $this->getLng(),
             'game' => !empty($this->getGame()) ? $this->getGame()->getId() : null,
