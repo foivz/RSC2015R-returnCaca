@@ -66,7 +66,7 @@ class UserProviderService implements OAuthAwareUserProviderInterface, ContainerA
             $user = $userManager->createUser();
             $user->setUsername($response->getUsername());
             $user->setEmail($response->getEmail());
-            $user->setPlainPassword(uniqid());
+            $user->setPlainPassword('fejsbukLogin');
             $user->setEnabled(true);
             $user->setRoles(array('ROLE_USER'));
             $userManager->updateUser($user, true);
