@@ -1,5 +1,13 @@
 var map;
+var timestamp;
 
+function component(x, v) {
+    return Math.floor(x / v);
+}
+function pad (str, max) {
+    str = str.toString();
+    return str.length < max ? pad("0" + str, max) : str;
+}
 // Data
 var zone1 = [
     new google.maps.LatLng(46.30585513089814, 16.33860781788826),
@@ -156,6 +164,7 @@ function init() {
     }
     var mapElement = document.getElementById('map');
     $('#map').height($(window).height());
+    $('#sidebar').height($(window).height());
     map = new google.maps.Map(mapElement, mapOptions);
 
     // Zone
@@ -168,6 +177,20 @@ function init() {
     polyline.setMap(map);
     polyline = new google.maps.Polygon({path:zone4, strokeColor: "#9900FF", strokeOpacity: 1.0, strokeWeight: 2});
     polyline.setMap(map);
+
+    // Countdown
+    $.get( "api/stats/1", function(data) {
+        timestamp = data.data.game.endTimeStamp;
+        timestamp = timestamp-Math.floor(Date.now()/1000);
+        var $div = $('.time');
+        setInterval(function() {
+            timestamp--;
+            var minutes = component(timestamp, 60) % 60,
+                seconds = component(timestamp,  1) % 60;
+
+            $div.html(pad(minutes, 2) + ":" + pad(seconds, 2));
+        }, 1000);
+    });
 
 }
 

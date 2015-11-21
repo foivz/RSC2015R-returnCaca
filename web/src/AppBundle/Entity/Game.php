@@ -61,6 +61,12 @@ class Game implements \JsonSerializable
      */
     private $ownerRegion4;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
+     */
+    protected $endTimestamp;
+
 
     public function __construct()
     {
@@ -178,6 +184,22 @@ class Game implements \JsonSerializable
         $this->ownerRegion4 = $ownerRegion4;
     }
 
+    /**
+     * @return EndTimestamp
+     */
+    public function getEndTimestamp()
+    {
+        return $this->endTimestamp;
+    }
+
+    /**
+     * @param mixed $endTimestamp
+     */
+    public function setEndTimeStamp($endTimestamp)
+    {
+        $this->endTimestamp = $endTimestamp;
+    }
+
     function jsonSerialize()
     {
         return [
@@ -189,6 +211,7 @@ class Game implements \JsonSerializable
             'ownerRegion2' => $this->getOwnerRegion2(),
             'ownerRegion3' => $this->getOwnerRegion3(),
             'ownerRegion4' => $this->getOwnerRegion4(),
+            'endTimeStamp' => $this->getEndTimestamp()->getTimestamp(),
         ];
     }
 

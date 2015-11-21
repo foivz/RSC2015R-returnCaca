@@ -6,6 +6,8 @@ use AppBundle\Entity\Game;
 use AppBundle\Entity\Player;
 use AppBundle\Entity\Team;
 use Zantolov\AppBundle\DataFixtures\ORM\AbstractDbFixture;
+use DateTime;
+use DateInterval;
 
 use Zantolov\AppBundle\Entity\User;
 
@@ -44,6 +46,9 @@ class LoadGamesData extends AbstractDbFixture
             $game->setTeam1($team1);
             $game->setTeam2($team2);
             $game->setActive(true);
+            $endTime = new DateTime();
+            $endTime->add(new DateInterval('PT15M'));
+            $game->setEndTimeStamp($endTime);
             $this->addReference('game' . $j, $game);
 
             $manager->persist($team1);
