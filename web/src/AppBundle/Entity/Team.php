@@ -20,7 +20,7 @@ class Team implements \JsonSerializable
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Player", mappedBy="teams")
+     * @ORM\OneToMany(targetEntity="Player", mappedBy="team")
      */
     private $players;
 
@@ -29,6 +29,12 @@ class Team implements \JsonSerializable
      * @ORM\Column(type="string")
      */
     private $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Game")
+     * @ORM\JoinColumn(name="game_id", referencedColumnName="id")
+     */
+    private $game;
 
 
     public function __construct()
@@ -66,7 +72,7 @@ class Team implements \JsonSerializable
     public function addPlayer(Player $p)
     {
         $this->getPlayers()->add($p);
-        $p->addTeam($this);
+        $p->setTeam($this);
     }
 
     /**
@@ -75,7 +81,7 @@ class Team implements \JsonSerializable
     public function removePlayer(Player $p)
     {
         $this->getPlayers()->removeElement($p);
-        $p->removeTeam($this);
+        $p->setTeam(null);
     }
 
 
@@ -93,5 +99,20 @@ class Team implements \JsonSerializable
         ];
     }
 
+    /**
+     * @return mixed
+     */
+    public function getGame()
+    {
+        return $this->game;
+    }
+
+    /**
+     * @param mixed $game
+     */
+    public function setGame($game)
+    {
+        $this->game = $game;
+    }
 
 }

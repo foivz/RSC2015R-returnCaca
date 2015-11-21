@@ -30,10 +30,10 @@ class Player implements \JsonSerializable
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Team", inversedBy="players")
-     * @ORM\JoinTable(name="players_teams")
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
      */
-    private $teams;
+    private $team;
 
 
     /**
@@ -66,10 +66,16 @@ class Player implements \JsonSerializable
      */
     private $steps;
 
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean")
+     */
+    private $isLive = true;
+
 
     public function __construct()
     {
-        $this->teams = new ArrayCollection();
+        $this->team = new ArrayCollection();
     }
 
     /**
@@ -171,34 +177,44 @@ class Player implements \JsonSerializable
     /**
      * @return ArrayCollection
      */
-    public function getTeams()
+    public function getTeam()
     {
-        return $this->teams;
+        return $this->team;
     }
 
     /**
      * @param Team $team
      */
-    public function addTeam(Team $team)
+    public function setTeam($team)
     {
-        $this->getTeams()->add($team);
+        $this->team = $team;
     }
 
     /**
-     * @param Team $team
+     * @return boolean
      */
-    public function removeTeam(Team $team)
+    public function isLive()
     {
-        $this->getTeams()->removeElement($team);
+        return $this->isLive;
+    }
+
+    /**
+     * @param boolean $isLive
+     */
+    public function setIsLive($isLive)
+    {
+        $this->isLive = $isLive;
     }
 
 
     function jsonSerialize()
     {
         return [
-            'id'    => $this->getId(),
-            'alias' => $this->getAlias(),
-            'level' => $this->getLevel(),
+            'id'     => $this->getId(),
+            'alias'  => $this->getAlias(),
+            'level'  => $this->getLevel(),
+            'team'   => $this->getTeam()->getId(),
+            'isLive' => $this->isLive(),
         ];
     }
 

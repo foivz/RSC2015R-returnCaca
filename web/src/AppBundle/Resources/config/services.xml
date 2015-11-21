@@ -11,10 +11,6 @@
             <argument type="service" id="service_container"/>
         </service>
 
-        <service id="game_stat" class="AppBundle\Service\GameStatService">
-            <argument type="service" id="service_container"/>
-        </service>
-
         <service id="app.rsc.menu_builder" class="AppBundle\Menu\MenuBuilder">
             <argument type="service" id="knp_menu.factory"/>
             <tag name="zantolov.app.menu"/>

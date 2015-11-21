@@ -75,7 +75,7 @@ class ApiLocationTest extends \Codeception\TestCase\Test
         $token = $this->doLogin('player1@mailinator.com', '123456');
         $this->tester->haveHttpHeader('Content-type', 'application/json');
         $this->tester->haveHttpHeader('X-Api-token', $token);
-        $filter = ['game' => rand(1, \AppBundle\DataFixtures\ORM\LoadGamesData::NUMBER - 1)];
+        $filter = ['game' => 1];
         $this->tester->sendGET('/api/locations', $filter);
         $this->checkLocationList();
 
