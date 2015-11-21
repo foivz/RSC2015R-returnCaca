@@ -148,4 +148,15 @@ class SiteController extends Controller
 
     }
 
+    /**
+     * @Route("/judge/new-game", name="judge.new.game")
+     * @Template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function judgeIndexAction(Request $request)
+    {
+        return [];
+    }
+
 }

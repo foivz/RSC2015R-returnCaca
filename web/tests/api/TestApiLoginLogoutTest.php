@@ -40,10 +40,6 @@ class TestApiLoginLogoutTest extends \Codeception\TestCase\Test
         $this->tester->seeResponseJsonMatchesJsonPath('$.data.username');
         $this->tester->seeResponseJsonMatchesJsonPath('$.data.email');
         $this->tester->seeResponseJsonMatchesJsonPath('$.data.registrationId');
-
-        $this->tester->seeResponseJsonMatchesJsonPath('$.profile_refugee');
-        $this->tester->seeResponseJsonMatchesJsonPath('$.profile_citizen');
-        $this->tester->seeResponseJsonMatchesJsonPath('$.profile_authority');
     }
 
     public function testLoginUser()
@@ -92,50 +88,4 @@ class TestApiLoginLogoutTest extends \Codeception\TestCase\Test
         $this->checkIsLogin($token, false);
     }
 
-
-    public function testLoginRefugee()
-    {
-        $this->checkIsLogin('', false);
-
-        $token = $this->doLogin('refugee1@mailinator.com', '123456');
-        $this->tester->seeResponseCodeIs(200);
-        $this->tester->seeResponseIsJson();
-
-        $this->checkGenericLoginData();
-
-        // Check login is true
-        $this->checkIsLogin($token, true);
-        $this->doCheckLogout($token);
-    }
-
-
-    public function testLoginAuthority()
-    {
-        $this->checkIsLogin('', false);
-
-        $token = $this->doLogin('authority1@mailinator.com', '123456');
-        $this->tester->seeResponseCodeIs(200);
-        $this->tester->seeResponseIsJson();
-
-        $this->checkGenericLoginData();
-
-        // Check login is true
-        $this->checkIsLogin($token, true);
-        $this->doCheckLogout($token);
-    }
-
-    public function testLoginCitizen()
-    {
-        $this->checkIsLogin('', false);
-
-        $token = $this->doLogin('citizen1@mailinator.com', '123456');
-        $this->tester->seeResponseCodeIs(200);
-        $this->tester->seeResponseIsJson();
-
-        $this->checkGenericLoginData();
-
-        // Check login is true
-        $this->checkIsLogin($token, true);
-        $this->doCheckLogout($token);
-    }
 }
