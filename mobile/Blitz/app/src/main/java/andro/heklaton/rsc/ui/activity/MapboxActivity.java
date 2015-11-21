@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.annotations.PolygonOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
 import com.mapbox.mapboxsdk.annotations.Sprite;
 import com.mapbox.mapboxsdk.annotations.SpriteFactory;
@@ -68,6 +69,8 @@ public class MapboxActivity extends DrawerActivity {
     private PendingIntent pendingIntent;
     private IntentFilter[] readTagFilters;
 
+    private List<PolygonOptions> takenZones;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +101,7 @@ public class MapboxActivity extends DrawerActivity {
         markers = new ArrayList<>();
 
         zones = MapsUtil.getZones();
+        takenZones = MapsUtil.getPolygonZones();
 
         startSendingLocation();
         startReceivingStats();
@@ -219,6 +223,7 @@ public class MapboxActivity extends DrawerActivity {
                 String[] tag = text.split("-");
                 String zone = tag[1];
                 Toast.makeText(getApplicationContext(), zone, Toast.LENGTH_LONG).show();
+                markZone(Integer.valueOf(zone));
 
                 ndef.close();
             }
@@ -235,6 +240,13 @@ public class MapboxActivity extends DrawerActivity {
 
             readFromTag(getIntent());
         }
+    }
+
+    private void markZone(int zone) {
+        PolygonOptions po = takenZones.get(zone);
+        po.fillColor(Color.parseColor("#00bb00"));
+        po.alpha(0.5f);
+        mapView.addPolygon(takenZones.get(zone));
     }
 
     @Override
