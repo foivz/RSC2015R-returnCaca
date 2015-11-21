@@ -20,22 +20,28 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
+import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.LoginRequest;
+import andro.heklaton.rsc.api.request.SocialLoginRequest;
 import andro.heklaton.rsc.gcm.RegistrationIntentService;
 import andro.heklaton.rsc.model.login.Data;
-import andro.heklaton.rsc.model.login.PostCategory;
 import andro.heklaton.rsc.model.login.User;
 import andro.heklaton.rsc.ui.activity.base.AccountActivity;
-import andro.heklaton.rsc.util.Constants;
 import andro.heklaton.rsc.util.PrefsHelper;
 import andro.heklaton.rsc.util.VoiceControlHelper;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -82,12 +88,34 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
         });
 
         fbLogin = (LoginButton) findViewById(R.id.fb_login);
+        fbLogin.setReadPermissions(Arrays.asList("email"));
         fbLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // save fb access token
                 fbAccessToken = loginResult.getAccessToken();
-                Log.d("FB token", fbAccessToken.toString());
+                Log.d("FB token", fbAccessToken.getToken());
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                // Application code
+                                Log.v("LoginActivity", response.toString());
+                                try {
+                                    String email = object.getString("email");
+                                    registerSocial(email);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "email");
+                request.setParameters(parameters);
+                request.executeAsync();
+
             }
 
             @Override
@@ -114,6 +142,25 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
         mSpeechRecognizer.setRecognitionListener(listener);
     }
 
+    private void registerSocial(String email) {
+        SocialLoginRequest socialLoginRequest = new SocialLoginRequest();
+        socialLoginRequest.setEmail(email);
+        socialLoginRequest.setUsername(fbAccessToken.getToken());
+        socialLoginRequest.setPassword(getString(R.string.fb_login_pass));
+
+        RestHelper.getRestApi().login(RestAPI.HEADER, socialLoginRequest, new Callback<User>() {
+            @Override
+            public void success(User user, Response response) {
+                saveUserData(user);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -138,37 +185,15 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
                 Toast.makeText(LoginActivity.this, R.string.no_username_or_password, Toast.LENGTH_SHORT).show();
 
             } else {
-                RestAdapter adapter = new RestAdapter.Builder()
-                        .setEndpoint(Constants.ENDPOINT)
-                        .build();
+                RestHelper.getRestApi().login(RestAPI.HEADER, new LoginRequest(
+                        etUsername.getText().toString(),
+                        etPassword.getText().toString(),
+                        PrefsHelper.getGcmToken(LoginActivity.this)),
+                        new Callback<User>() {
 
-                RestAPI api = adapter.create(RestAPI.class);
-                api.login(RestAPI.HEADER, new LoginRequest("user", "123456", PrefsHelper.getGcmToken(LoginActivity.this)), new Callback<User>() {
                     @Override
                     public void success(User user, Response response) {
-                        if (user.getStatus().equals("ok")) {
-
-                            // delete existing data
-                            new Delete().from(User.class).execute();
-                            new Delete().from(PostCategory.class).execute();
-                            new Delete().from(Data.class).execute();
-
-                            // Save user data locally
-                            user.save();
-                            user.getData().save();
-                            for (PostCategory pc : user.getConfig().getPostCategories()) {
-                                pc.save();
-                            }
-
-                            PrefsHelper.saveEmail(LoginActivity.this, user.getData().getEmail());
-                            PrefsHelper.saveUsername(LoginActivity.this, user.getData().getUsername());
-                            PrefsHelper.saveToken(LoginActivity.this, user.getData().getToken());
-
-                            hideProgress();
-
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                        }
+                        saveUserData(user);
                     }
 
                     @Override
@@ -181,6 +206,28 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
 
         }
     };
+
+    private void saveUserData(User user) {
+        if (user.getStatus().equals("ok")) {
+
+            // delete existing data
+            new Delete().from(User.class).execute();
+            new Delete().from(Data.class).execute();
+
+            // Save user data locally
+            user.save();
+            user.getData().save();
+
+            PrefsHelper.saveEmail(LoginActivity.this, user.getData().getEmail());
+            PrefsHelper.saveUsername(LoginActivity.this, user.getData().getUsername());
+            PrefsHelper.saveToken(LoginActivity.this, user.getData().getToken());
+
+            hideProgress();
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
 
     private View.OnClickListener registrationClickListener = new View.OnClickListener() {
         @Override

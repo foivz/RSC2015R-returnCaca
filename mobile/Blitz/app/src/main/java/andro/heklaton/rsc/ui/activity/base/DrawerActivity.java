@@ -21,8 +21,10 @@ import andro.heklaton.rsc.interfrace.InflateDrawerActivityLayout;
 import andro.heklaton.rsc.interfrace.NavigationItemPosition;
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.ui.activity.MainActivity;
+import andro.heklaton.rsc.ui.activity.MapboxActivity;
 import andro.heklaton.rsc.ui.activity.MapsActivity;
 import andro.heklaton.rsc.ui.activity.SettingsActivity;
+import andro.heklaton.rsc.util.PrefsHelper;
 
 /**
  * Abstract activity that contains DrawerLayout. Any activity that needs to have visible drawer needs
@@ -106,7 +108,7 @@ public abstract class DrawerActivity extends AppCompatActivity implements
                     break;
                 }
                 case R.id.nav_share: {
-                    intent.setClass(DrawerActivity.this, MapsActivity.class);
+                    intent.setClass(DrawerActivity.this, MapboxActivity.class);
                     startActivity(intent);
                     break;
                 }
@@ -159,6 +161,11 @@ public abstract class DrawerActivity extends AppCompatActivity implements
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (id == R.id.action_logout) {
+            PrefsHelper.saveUsername(this, null);
+            PrefsHelper.saveToken(this, null);
+            PrefsHelper.saveEmail(this, null);
+            PrefsHelper.saveGcmToken(this, null);
         }
 
         return super.onOptionsItemSelected(item);

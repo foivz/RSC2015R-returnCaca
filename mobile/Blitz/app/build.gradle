@@ -28,7 +28,10 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
-    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     compile 'com.facebook.android:facebook-android-sdk:4.8.1'
+    compile ('com.mapbox.mapboxsdk:mapbox-android-sdk:2.2.0@aar'){
+        transitive=true
+    }
 }

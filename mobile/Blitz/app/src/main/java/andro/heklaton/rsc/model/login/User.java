@@ -19,11 +19,6 @@ public class User extends Model {
     @Expose
     private Data data;
 
-    @Column(name = "Config", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
-    @SerializedName("config")
-    @Expose
-    private Config config;
-
     /**
      *
      * @return
@@ -58,24 +53,6 @@ public class User extends Model {
      */
     public void setData(Data data) {
         this.data = data;
-    }
-
-    /**
-     *
-     * @return
-     * The config
-     */
-    public Config getConfig() {
-        return config;
-    }
-
-    /**
-     *
-     * @param config
-     * The config
-     */
-    public void setConfig(Config config) {
-        this.config = config;
     }
 
 }
