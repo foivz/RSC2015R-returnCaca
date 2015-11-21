@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Zantolov\AppBundle\Entity\Traits\ActivableTrait;
 use Zantolov\AppBundle\Entity\Traits\BasicEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,10 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="games")
  * @ORM\HasLifecycleCallbacks
  */
-class Game
+class Game implements \JsonSerializable
 {
     use BasicEntityTrait;
     use ActivableTrait;
+    use TimestampableEntity;
 
     /**
      * @ORM\ManyToOne(targetEntity="Team")
@@ -30,17 +32,42 @@ class Game
     private $team2;
 
     /**
-     * @ORM\OneToOne(targetEntity="Team")
+     * @ORM\ManyToOne(targetEntity="Team")
      * @ORM\JoinColumn(name="winner_id", referencedColumnName="id")
      */
     private $winner;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     */
+    private $ownerRegion1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     */
+    private $ownerRegion2;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     */
+    private $ownerRegion3;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Team")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     */
+    private $ownerRegion4;
+
 
     public function __construct()
     {
     }
 
     /**
-     * @return mixed
+     * @return Team
      */
     public function getTeam1()
     {
@@ -86,4 +113,84 @@ class Game
     {
         $this->winner = $winner;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerRegion1()
+    {
+        return $this->ownerRegion1;
+    }
+
+    /**
+     * @param mixed $ownerRegion1
+     */
+    public function setOwnerRegion1($ownerRegion1)
+    {
+        $this->ownerRegion1 = $ownerRegion1;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerRegion2()
+    {
+        return $this->ownerRegion2;
+    }
+
+    /**
+     * @param mixed $ownerRegion2
+     */
+    public function setOwnerRegion2($ownerRegion2)
+    {
+        $this->ownerRegion2 = $ownerRegion2;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerRegion3()
+    {
+        return $this->ownerRegion3;
+    }
+
+    /**
+     * @param mixed $ownerRegion3
+     */
+    public function setOwnerRegion3($ownerRegion3)
+    {
+        $this->ownerRegion3 = $ownerRegion3;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwnerRegion4()
+    {
+        return $this->ownerRegion4;
+    }
+
+    /**
+     * @param mixed $ownerRegion4
+     */
+    public function setOwnerRegion4($ownerRegion4)
+    {
+        $this->ownerRegion4 = $ownerRegion4;
+    }
+
+    function jsonSerialize()
+    {
+        return [
+            'id'           => $this->getId(),
+            'team1'        => $this->getTeam1(),
+            'team2'        => $this->getTeam2(),
+            'winner'       => $this->getWinner(),
+            'ownerRegion1' => $this->getOwnerRegion1(),
+            'ownerRegion2' => $this->getOwnerRegion2(),
+            'ownerRegion3' => $this->getOwnerRegion3(),
+            'ownerRegion4' => $this->getOwnerRegion4(),
+        ];
+    }
+
+
 }

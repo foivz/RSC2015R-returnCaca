@@ -11,7 +11,7 @@ use Zantolov\AppBundle\Entity\User;
 
 class LoadGamesData extends AbstractDbFixture
 {
-    const NUMBER = 20;
+    const NUMBER = 3;
 
     public function load(\Doctrine\Common\Persistence\ObjectManager $manager)
     {
@@ -27,12 +27,12 @@ class LoadGamesData extends AbstractDbFixture
             $team2->setName($faker->word);
 
             $teamIndex = rand(1, 49);
-            $count = 0;
-            for ($i = $teamIndex; $i < LoadPlayersData::NUMBER; $i = ($i++ % 49) + 1) {
-                if ($count < 5) {
-                    $team1->addPlayer($this->getReference('player' . $i));
-                } elseif ($count < 10) {
-                    $team2->addPlayer($this->getReference('player' . $i));
+            $count = 1;
+            for ($i = $teamIndex; $i < LoadPlayersData::NUMBER;) {
+                if ($count <= 5) {
+                    $team1->addPlayer($this->getReference('player' . $count));
+                } elseif ($count <= 10) {
+                    $team2->addPlayer($this->getReference('player' . $count));
                 } else {
                     break;
                 }
