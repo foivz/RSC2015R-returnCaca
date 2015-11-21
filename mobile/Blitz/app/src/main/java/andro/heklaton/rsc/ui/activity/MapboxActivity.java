@@ -1,14 +1,18 @@
 package andro.heklaton.rsc.ui.activity;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
+import com.mapbox.mapboxsdk.annotations.Sprite;
+import com.mapbox.mapboxsdk.annotations.SpriteFactory;
 import com.mapbox.mapboxsdk.constants.MyLocationTracking;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -27,6 +31,7 @@ import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
+import andro.heklaton.rsc.ui.util.ImageUtil;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
 import retrofit.Callback;
@@ -41,6 +46,12 @@ public class MapboxActivity extends DrawerActivity {
     private MapView mapView;
     private List<MarkerOptions> markers;
     private List<PolylineOptions> zones;
+    private SpriteFactory spriteFactory;
+
+    private Drawable ally;
+    private Drawable enemy;
+    private Timer timer;
+    private Timer timer2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +62,15 @@ public class MapboxActivity extends DrawerActivity {
         mapView.setZoomLevel(16.8);
         mapView.onCreate(savedInstanceState);
         mapView.setMyLocationEnabled(true);
-        mapView.setMyLocationTrackingMode(MyLocationTracking.TRACKING_FOLLOW);
         mapView.setCompassEnabled(true);
+
+        timer = new Timer();
+        timer2 = new Timer();
+
+        ally = getResources().getDrawable(R.drawable.ally);
+        enemy = getResources().getDrawable(R.drawable.enemy);
+
+        spriteFactory = new SpriteFactory(mapView);
 
         markers = new ArrayList<>();
 
@@ -66,19 +84,18 @@ public class MapboxActivity extends DrawerActivity {
      * Send location every second
      */
     private void startSendingLocation() {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Location location = mapView.getMyLocation();
-                if (location != null) {
+        Location location = mapView.getMyLocation();
+        if (location != null) {
 
-                    // prepare request
-                    LocationSendRequest request = new LocationSendRequest();
-                    request.setGame(1);
-                    request.setLat(location.getLatitude());
-                    request.setLng(location.getLongitude());
+            // prepare request
+            final LocationSendRequest request = new LocationSendRequest();
+            request.setGame(1);
+            request.setLat(location.getLatitude());
+            request.setLng(location.getLongitude());
 
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
                     RestHelper.getRestApi().sendCurrentLocation(
                             RestAPI.HEADER,
                             PrefsHelper.getToken(MapboxActivity.this),
@@ -97,12 +114,11 @@ public class MapboxActivity extends DrawerActivity {
                             }
                     );
                 }
-            }
-        }, 1000, 1000);
+            });
+        }
     }
 
     private void startReceivingStats() {
-        Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -123,7 +139,7 @@ public class MapboxActivity extends DrawerActivity {
         }, 1000, 1000);
     }
 
-    private void updateStats(List<Stat> stats) {
+    private void updateStats(final List<Stat> stats) {
         markers.clear();
         mapView.removeAllAnnotations();
 
