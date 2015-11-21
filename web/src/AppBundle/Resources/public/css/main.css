@@ -3,6 +3,9 @@
 @import url(side-navigation.css);
 @import url(judge.css);
 @import url(homepage.css);
+body {
+  overflow: hidden; }
+
 footer {
   height: 50px;
   width: 100%;
