@@ -176,7 +176,7 @@ function refreshMap() {
     team1Markers = [];
     $.each(team1Locations, function(key, location) {
         var mark = allyMarker;
-        if(location.died == true) mark = deadAllyMarker;
+        if(location.alive == false) mark = deadAllyMarker;
         team1Markers.push(new google.maps.Marker({
             position: new google.maps.LatLng(location.lat, location.lng),
             map: map,
@@ -187,7 +187,7 @@ function refreshMap() {
     team2Markers = [];
     $.each(team2Locations, function(key, location) {
         var mark = enemyMarker;
-        if(location.died == true) mark = deadEnemyMarker;
+        if(location.alive == false) mark = deadEnemyMarker;
         team1Markers.push(new google.maps.Marker({
             position: new google.maps.LatLng(location.lat, location.lng),
             map: map,
@@ -198,16 +198,15 @@ function refreshMap() {
 }
 
 function refreshLocations() {
-    $.get( "/api/locations?game=1", function(data) {
+    $.get( "api/stats/1", function(data) {
         team1Locations = [];
         team2Locations = [];
-        $.each(data.data, function(key, loc) {
-            team1Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
+        $.each(data.data.stats, function(key, loc) {
             if(loc.team == 1) {
-                team1Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
+                team1Locations.push({lat: loc.location.lat, lng: loc.location.lng, alive: loc.isLive});
             }
-            else if(loc.team == 1) {
-                team2Locations.push({lat: loc.lat, lng: loc.lng, died: loc.dead});
+            else if(loc.team == 2) {
+                team2Locations.push({lat: loc.location.lat, lng: loc.location.lng, alive: loc.isLive});
             }
         });
     });
