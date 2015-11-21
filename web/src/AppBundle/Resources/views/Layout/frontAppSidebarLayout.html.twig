@@ -1,0 +1,82 @@
+{% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
+
+
+{% block navigation %}
+    <nav class="navbar navbar-default navbar-default-custom">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">bliTZ</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand hidden-sm hidden-xs" href="#">
+                    <img src="{{ asset('bundles/app/img/logo-2.svg') }}" height="70">
+                </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div>
+                            <br>
+                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                <a class="btn btn-default" href="{{ url('fos_user_security_logout') }}">Logout</a>
+                            {% else %}
+                                <a class="btn btn-default" href="{{ url('fos_user_security_login') }}">Login</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="col-md-2">
+            <div class="side-menu">
+                <nav class="navbar navbar-default" role="navigation">
+                    <!-- Main Menu -->
+                    <div class="side-menu-container">
+                        <ul class="nav navbar-nav">
+
+                            <li>
+                                <a href="#">
+                                    <span class="fa fa-plus fa-2x"></span>
+                                    New game
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span class="fa fa-user-secret fa-2x"></span>
+                                    Teams
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span class="fa fa-bomb fa-2x"></span>
+                                    Games
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            {% block mainColumn %}
+            {% endblock %}
+        </div>
+    </div>
+
+{% endblock %}

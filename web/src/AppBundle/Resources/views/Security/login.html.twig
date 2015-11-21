@@ -56,11 +56,13 @@
                             <br>
                         </form>
                     </div>
-                    <a href="{{ path('fos_user_resetting_request') }}">{{ 'security.login.reset'|trans({}, 'FOSUserBundle') }}
-                    </a>
-                    <a href="{{ path('fos_user_registration_register') }}">
-                        Register
-                    </a>
+                    <div class="col-md-12">
+                        <a href="{{ path('fos_user_resetting_request') }}">{{ 'security.login.reset'|trans({}, 'FOSUserBundle') }}
+                        </a>
+                        <a href="{{ path('fos_user_registration_register') }}">
+                            Register
+                        </a>
+                    </div>
 
                     <hr>
                     <h6>Login with:</h6>
