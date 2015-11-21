@@ -24,6 +24,7 @@ class LoadLocationsData extends AbstractDbFixture
 
             $location = new Location();
             $location->setPlayer($this->getReference('player' . (rand(2, LoadPlayersData::NUMBER) - 1)));
+            $location->setGame($this->getReference('game' . (rand(2, LoadGamesData::NUMBER) - 1)));
             $location->setLat($latLng['lat']);
             $location->setLng($latLng['lng']);
             $manager->persist($location);
@@ -34,7 +35,7 @@ class LoadLocationsData extends AbstractDbFixture
 
     public function getOrder()
     {
-        return 4;
+        return 5;
     }
 
 }
