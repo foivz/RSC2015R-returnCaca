@@ -28,7 +28,7 @@
  *} */
 .side-menu {
   position: fixed;
-  width: 240px !important;
+  width: 15% !important;
   height: 100%; }
   .side-menu .navbar {
     border: none; }

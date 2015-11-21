@@ -3,6 +3,8 @@
 @import 'side-navigation.css'
 @import 'judge.css'
 
+$orange: #ff9800
+
 footer
   height: 50px
   width: 100%
@@ -21,9 +23,21 @@ li
 
 .nav-tabs > li > a
   font-size: 16px
+  min-width: 220px
+  color: $orange
+
+.nav-tabs > li.active > a
+  border: none
+  -webkit-box-shadow: inset 0 -2px 0 $orange
+  box-shadow: inset 0 -2px 0 $orange
+  color: $orange
+
 
 .navbar
   -webkit-box-shadow: none
   box-shadow: none
   border: none !important
   background: transparent !important
+
+.tab-content
+  min-height: 600px

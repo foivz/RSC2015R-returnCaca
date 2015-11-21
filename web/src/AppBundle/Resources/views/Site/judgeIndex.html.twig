@@ -7,19 +7,25 @@
         {# navs tabs navigation #}
         <div class="col-md-10">
             <ul class="nav nav-tabs">
-                <li class="active">
-                    <a href="#home" data-toggle="tab">General</a>
+                <li class="active text-center">
+                    <a href="#home" data-toggle="tab">
+                        <i class="fa fa-user fa-2x"></i>
+                    </a>
                 </li>
-                <li>
-                    <a href="#location" data-toggle="tab">Location</a>
+                <li class="text-center">
+                    <a href="#location" data-toggle="tab">
+                        <i class="fa fa-map-marker fa-2x"></i>
+                    </a>
                 </li>
-                <li>
-                    <a href="#rules" data-toggle="tab">Rules</a>
+                <li class="text-center">
+                    <a href="#rules" data-toggle="tab">
+                        <i class="fa fa-flag-checkered fa-2x"></i>
+                    </a>
                 </li>
             </ul>
         </div>
         <div class="col-md-2 col-xs-12">
-            <a class="btn btn-default col-xs-12" href="#">Save game</a>
+            <a class="btn btn-warning col-xs-12" href="#">Save game</a>
         </div>
 
 
@@ -30,7 +36,7 @@
                 {# Players #}
                 <div class="col-md-6">
                     <h4 class="text-center">Players</h4>
-                    <a class="btn btn-default" id="randomize">Randomize</a>
+                    <a class="btn btn-warning" id="randomize">Randomize</a>
                     <ul class="col-md-12 player-scroll connectedSortable" id="sortable1">
 
 
@@ -128,14 +134,35 @@
             {#Location tab#}
             <div class="tab-pane fade" id="location">
                 <div class="col-md-12">
-                    <h2 class="text-center">Location</h2>
+                    <h2>Location</h2>
                 </div>
             </div>
 
             {#Rules tab#}
             <div class="tab-pane fade" id="rules">
-                <div class="col-md-12">
-                    <h2 class="text-center">Rules</h2>
+                <div class="col-md-8">
+                    <h2>Rules</h2>
+
+                    <div class="form-group">
+
+                        <label for="inputLength" class="col-lg-2 control-label">Game length</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputLength" placeholder="Game lenght">
+                        </div>
+                        <br>
+
+                        <label for="inputLength" class="col-lg-2 control-label">Kill points</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputLength" placeholder="points">
+                        </div>
+                        <br>
+
+
+                        <label for="inputLength" class="col-lg-2 control-label">Flag points</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputLength" placeholder="points">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
