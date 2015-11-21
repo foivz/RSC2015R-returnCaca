@@ -1,0 +1,174 @@
+{% extends 'AppBundle:Layout:frontAppSidebarLayout.html.twig' %}
+
+
+{% block mainColumn %}
+    <div class="col-md-12">
+
+        {# navs tabs navigation #}
+        <div class="col-md-10">
+            <ul class="nav nav-tabs">
+                <li class="active text-center">
+                    <a href="#home" data-toggle="tab">
+                        <i class="fa fa-user fa-2x"></i>
+                    </a>
+                </li>
+                <li class="text-center">
+                    <a href="#location" data-toggle="tab">
+                        <i class="fa fa-map-marker fa-2x"></i>
+                    </a>
+                </li>
+                <li class="text-center">
+                    <a href="#rules" data-toggle="tab">
+                        <i class="fa fa-flag-checkered fa-2x"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-2 col-xs-12">
+            <a class="btn btn-warning col-xs-12" href="#">Save game</a>
+        </div>
+
+
+        <div id="myTabContent" class="tab-content">
+
+            {#General game info#}
+            <div class="tab-pane fade active in" id="home">
+                {# Players #}
+                <div class="col-md-6">
+                    <h4 class="text-center">Players</h4>
+                    <a class="btn btn-warning" id="randomize">Randomize</a>
+                    <ul class="col-md-12 player-scroll connectedSortable" id="sortable1">
+
+
+                        {# kartica igraca #}
+                        <li class="col-md-12 player-card" data-id="1">
+                            <div class="col-md-2">
+                                <br>
+                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
+                            </div>
+                            <div class="col-md-10">
+                                <h5>0. Player Name</h5>
+
+                                <p>Player Nickname</p>
+
+                                <p>Level</p>
+                            </div>
+                        </li>
+
+                        {# kartica igraca #}
+                        <li class="col-md-12 player-card" data-id="2">
+                            <div class="col-md-2">
+                                <br>
+                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
+                            </div>
+                            <div class="col-md-10">
+                                <h5>1. Player Name</h5>
+
+                                <p>Player Nickname</p>
+
+                                <p>Level</p>
+                            </div>
+                        </li>
+                        {# kartica igraca #}
+                        <li class="col-md-12 player-card" data-id="3">
+                            <div class="col-md-2">
+                                <br>
+                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
+                            </div>
+                            <div class="col-md-10">
+                                <h5>2. Player Name</h5>
+
+                                <p>Player Nickname</p>
+
+                                <p>Level</p>
+                            </div>
+                        </li>
+                        {# kartica igraca #}
+                        <li class="col-md-12 player-card" data-id="4">
+                            <div class="col-md-2">
+                                <br>
+                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
+                            </div>
+                            <div class="col-md-10">
+                                <h5>3. Player Name</h5>
+
+                                <p>Player Nickname</p>
+
+                                <p>Level</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                {# Teams #}
+                <div class="col-md-6">
+                    <h4 class="text-center">Teams</h4>
+
+                    <div class="col-md-12" id="blue-team">
+                        <div>
+
+                            <div class="form-group">
+                                <input class="form-control" id="focusedInput" type="text" value="Team A" autofocus>
+                            </div>
+
+                            {# List of players #}
+                            <ul class="team-selection connectedSortable" id="sortable2">
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="red-team">
+                        <div>
+                            <div class="form-group">
+                                <input class="form-control" id="focusedInput" type="text" value="Team B">
+                            </div>
+                            {# List of players #}
+                            <ul class="team-selection connectedSortable" id="sortable3">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            {#Location tab#}
+            <div class="tab-pane fade" id="location">
+                <div class="col-md-12">
+                    <h2>Location</h2>
+                </div>
+            </div>
+
+            {#Rules tab#}
+            <div class="tab-pane fade" id="rules">
+                <div class="col-md-8">
+                    <h2>Rules</h2>
+
+                    <div class="form-group">
+
+                        <label for="inputLength" class="col-lg-2 control-label">Game length</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputLength" placeholder="Game lenght">
+                        </div>
+                        <br>
+
+                        <label for="inputLength" class="col-lg-2 control-label">Kill points</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputLength" placeholder="points">
+                        </div>
+                        <br>
+
+
+                        <label for="inputLength" class="col-lg-2 control-label">Flag points</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" id="inputLength" placeholder="points">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+{% endblock %}
