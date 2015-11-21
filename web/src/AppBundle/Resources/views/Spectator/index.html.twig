@@ -1,0 +1,31 @@
+{% extends 'ZantolovAppBundle:Layout:html5.html.twig' %}
+
+        {% block customStylesheets %}
+            <link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+            <link href='{{ asset('bundles/app/css/spectator.css') }}' rel='stylesheet' type='text/css'>
+        {% endblock %}
+
+        {#Đavaskriptovi#}
+        {% block customJsPlugins %}
+            <script src='https://maps.googleapis.com/maps/api/js?v=3.exp'></script>
+            <script src="{{ asset('bundles/app/js/spectator.js') }}"></script>
+            <script src="{{ asset('bundles/app/js/richmarker.js') }}"></script>
+        {% endblock %}
+
+        {% block headEnd %}
+            {{ parent() }}
+            <title>Spectator - Blitz</title>
+            <script src="{{ asset('bundles/app/js/wow.min.js') }}"></script>
+            <script>
+                new WOW().init();
+            </script>
+        {% endblock %}
+
+
+{% block outerBody %}
+
+    {% block body %}
+        <div id="map"></div>
+    {% endblock %}
+
+{% endblock %}
