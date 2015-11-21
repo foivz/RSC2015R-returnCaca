@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Zantolov\AppBundle\Entity\Traits\ActivableTrait;
 use Zantolov\AppBundle\Entity\Traits\BasicEntityTrait;
 use Zantolov\MediaBundle\Entity\Traits\ImageableTrait;
@@ -15,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Location implements \JsonSerializable
 {
     use BasicEntityTrait;
+    use TimestampableEntity;
 
     /**
      * @var Player
@@ -112,9 +114,9 @@ class Location implements \JsonSerializable
     {
         return [
             'player' => $this->getPlayer()->getId(),
-            'lat'  => $this->getLat(),
-            'lng'  => $this->getLng(),
-            'game' => !empty($this->getGame()) ? $this->getGame()->getId() : null,
+            'lat'    => $this->getLat(),
+            'lng'    => $this->getLng(),
+            'game'   => !empty($this->getGame()) ? $this->getGame()->getId() : null,
         ];
     }
 

@@ -13,7 +13,7 @@ use Zantolov\AppBundle\Entity\User;
 
 class LoadLocationsData extends AbstractDbFixture
 {
-    const NUMBER = 200;
+    const NUMBER = 300;
 
     public function load(\Doctrine\Common\Persistence\ObjectManager $manager)
     {
@@ -23,7 +23,8 @@ class LoadLocationsData extends AbstractDbFixture
             $latLng = LatLngHelper::getRandomLatLngNear(46.306390, 16.339145);
 
             $location = new Location();
-            $location->setPlayer($this->getReference('player' . (rand(2, LoadPlayersData::NUMBER) - 1)));
+            $playerIndex = 'player' . (($j % (LoadPlayersData::NUMBER - 1)) + 1);
+            $location->setPlayer($this->getReference($playerIndex));
             $location->setGame($this->getReference('game' . (rand(2, LoadGamesData::NUMBER) - 1)));
             $location->setLat($latLng['lat']);
             $location->setLng($latLng['lng']);

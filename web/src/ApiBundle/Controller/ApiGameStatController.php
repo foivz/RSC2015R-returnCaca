@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 use AppBundle\Entity\GameStat;
+use AppBundle\Service\GameStatService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Login Controller
  * @Route("/api")
  */
-class GameStatController extends \Zantolov\AppBundle\Controller\API\ApiLoginController
+class ApiGameStatController extends \Zantolov\AppBundle\Controller\API\ApiLoginController
 {
 
     /**
@@ -45,6 +46,26 @@ class GameStatController extends \Zantolov\AppBundle\Controller\API\ApiLoginCont
         return $this->createResponse([
             self::KEY_STATUS  => self::STATUS_OK,
             self::KEY_MESSAGE => 'Location submitted',
+        ]);
+    }
+
+
+    /**
+     *
+     * @Route("/stats/{gameId}", name="api.post.test")
+     * @Method("GET")
+     */
+    public function testAction($gameId)
+    {
+        $data = [];
+        /** @var GameStatService $service */
+        $service = $this->get('game_stat');
+
+        $stats = $service->getStatForGame($gameId);
+
+        return $this->createResponse([
+            self::KEY_STATUS => self::STATUS_OK,
+            self::KEY_DATA   => $stats,
         ]);
     }
 

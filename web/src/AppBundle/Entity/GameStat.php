@@ -9,7 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity ()
- * @ORM\Table(name="game_stats")
+ * @ORM\Table(name="game_stats", uniqueConstraints={
+ *  @ORM\UniqueConstraint(name="stat_idx", columns={"player_id", "game_id"})
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 class GameStat
