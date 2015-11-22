@@ -13,16 +13,13 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolygonOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
@@ -40,14 +37,13 @@ import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
-import andro.heklaton.rsc.api.request.LocationSendRequest;
+import andro.heklaton.rsc.api.request.MessageRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
-import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
 import andro.heklaton.rsc.util.VoiceControlActivity;
@@ -56,107 +52,93 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by Andro on 11/21/2015.
+ * Created by Andro on 11/22/2015.
  */
-public class MapboxActivity extends VoiceControlActivity {
+public class MapboxJudgeActivity extends VoiceControlActivity {
 
-        public static final String COLOR_GREEN = "#00FF00";
-        public static final String COLOR_RED = "#FF0000";
+    public static final String COLOR_GREEN = "#00FF00";
+    public static final String COLOR_RED = "#FF0000";
 
-        private List<MarkerOptions> markers;
-        private List<PolylineOptions> zones;
-        private SpriteFactory spriteFactory;
+    private List<MarkerOptions> markers;
+    private List<PolylineOptions> zones;
+    private SpriteFactory spriteFactory;
 
-        private Drawable ally;
-        private Drawable enemy;
-        private Drawable allyDead;
+    private Drawable ally;
+    private Drawable enemy;
+    private Drawable allyDead;
+    private Drawable enemyDead;
 
-        private Timer timer;
-        private Timer timer2;
+    private Timer timer;
+    private Timer timer2;
 
-        private NfcAdapter mNfcAdapter;
-        private Tag detectedTag;
-        private PendingIntent pendingIntent;
-        private IntentFilter[] readTagFilters;
+    private NfcAdapter mNfcAdapter;
+    private Tag detectedTag;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] readTagFilters;
 
-        private List<PolygonOptions> takenZones;
+    private List<PolygonOptions> takenZones;
 
-        private PlayerStatus player;
+    private PlayerStatus player;
 
-        boolean activityActive;
+    boolean activityActive;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-            getPlayerStatus();
+        getPlayerStatus();
 
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-            mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                    this.getPackageName());
+        mapView = (MapView) findViewById(R.id.mapview);
+        mapView.setStyleUrl(Style.DARK);
+        mapView.setCenterCoordinate(new LatLng(46.306390, 16.339145));
+        mapView.setZoomLevel(16.8);
+        mapView.onCreate(savedInstanceState);
+        mapView.setMyLocationEnabled(true);
+        mapView.setCompassEnabled(true);
 
-            mSpeechRecognizer.setRecognitionListener(this);
+        timer = new Timer();
+        timer2 = new Timer();
 
-            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        detectedTag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected, filter2};
 
-            mapView = (MapView) findViewById(R.id.mapview);
-            mapView.setStyleUrl(Style.DARK);
-            mapView.setCenterCoordinate(new LatLng(46.306390, 16.339145));
-            mapView.setZoomLevel(16.8);
-            mapView.onCreate(savedInstanceState);
-            mapView.setMyLocationEnabled(true);
-            mapView.setCompassEnabled(true);
+        ally = getResources().getDrawable(R.drawable.ally);
+        enemy = getResources().getDrawable(R.drawable.enemy);
+        allyDead = getResources().getDrawable(R.drawable.dead_ally);
+        enemyDead = getResources().getDrawable(R.drawable.dead_enemy);
 
-            timer = new Timer();
-            timer2 = new Timer();
+        spriteFactory = new SpriteFactory(mapView);
 
-            mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-            detectedTag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-            IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-            IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-            readTagFilters = new IntentFilter[]{tagDetected,filter2};
+        markers = new ArrayList<>();
 
-            ally = getResources().getDrawable(R.drawable.ally);
-            enemy = getResources().getDrawable(R.drawable.enemy);
-            allyDead = getResources().getDrawable(R.drawable.dead_ally);
+        zones = MapsUtil.getZones();
+        takenZones = MapsUtil.getPolygonZones();
 
-            spriteFactory = new SpriteFactory(mapView);
+        startReceivingStats();
 
-            markers = new ArrayList<>();
+        mapView.setOnMarkerClickListener(new MapView.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                markPlayerDead(Integer.valueOf(marker.getTitle()));
+                return true;
+            }
+        });
 
-            zones = MapsUtil.getZones();
-            takenZones = MapsUtil.getPolygonZones();
+        mapView.setOnMapLongClickListener(new MapView.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng point) {
+                sendAbort();
+            }
+        });
 
-            startSendingLocation();
-            startReceivingStats();
-
-            mapView.setOnMapLongClickListener(new MapView.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng point) {
-                    sendFire(point.getLatitude(), point.getLongitude());
-                }
-            });
-
-            mapView.setOnMapClickListener(new MapView.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng point) {
-                    sendWarning(point.getLatitude(), point.getLongitude());
-                }
-            });
-
-            Button btnDead = (Button) findViewById(R.id.btn_dead);
-            btnDead.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markPlayerDead();
-                }
-            });
-        }
+        Button btnDead = (Button) findViewById(R.id.btn_dead);
+        btnDead.setVisibility(View.GONE);
+    }
 
     private void getPlayerStatus() {
         RestHelper.getRestApi().getPlayerStatus(
@@ -180,39 +162,6 @@ public class MapboxActivity extends VoiceControlActivity {
         );
     }
 
-    /**
-     * Send location every second
-     */
-    private void startSendingLocation() {
-        Location location = mapView.getMyLocation();
-        if (location != null) {
-
-            // prepare request
-            final LocationSendRequest request = new LocationSendRequest();
-            request.setGame(1);
-            request.setLat(location.getLatitude());
-            request.setLng(location.getLongitude());
-
-            RestHelper.getRestApi().sendCurrentLocation(
-                    RestAPI.HEADER,
-                    PrefsHelper.getToken(MapboxActivity.this),
-                    request,
-                    new Callback<LocationSendResponse>() {
-                        @Override
-                        public void success(LocationSendResponse locationSendResponse, Response response) {
-                            //Log.d("Status", locationSendResponse.getStatus());
-                            //Log.d("Message", locationSendResponse.getMessage());
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            //Log.d("Error", error.getMessage());
-                        }
-                    }
-            );
-        }
-    }
-
     private void startReceivingStats() {
         timer.schedule(new TimerTask() {
             @Override
@@ -224,7 +173,7 @@ public class MapboxActivity extends VoiceControlActivity {
                             public void success(Stats stats, Response response) {
                                 Log.d("Success", response.getReason());
                                 if (activityActive) {
-                                    updateStats(stats.getData().getStats());
+                                    updateStats(stats.getData().getStats(), stats.getData().getGame());
                                     updateZones(stats.getData().getGame());
                                 }
                             }
@@ -240,7 +189,7 @@ public class MapboxActivity extends VoiceControlActivity {
         }, 1000, 1000);
     }
 
-    private void updateStats(final List<Stat> stats) {
+    private void updateStats(final List<Stat> stats, Game game) {
         markers.clear();
         if (mapView != null) {
             mapView.removeAllAnnotations();
@@ -248,23 +197,38 @@ public class MapboxActivity extends VoiceControlActivity {
 
         redrawPolygons();
 
-        if (player.getData() != null) {
-            for (Stat s : stats) {
-                if (s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                    marker.icon(spriteFactory.fromDrawable(ally));
-                    markers.add(marker);
-                }
-                if (!s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                    marker.icon(spriteFactory.fromDrawable(allyDead));
-                    markers.add(marker);
-                }
+        for (Stat s : stats) {
+            if (s.getIsLive() && s.getTeam().equals(game.getTeam1().getId())) {
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                marker.icon(spriteFactory.fromDrawable(ally));
+                marker.title(String.valueOf(s.getPlayer().getId()));
+                markers.add(marker);
             }
-
+            if (s.getIsLive() && s.getTeam().equals(game.getTeam2().getId())) {
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                marker.icon(spriteFactory.fromDrawable(enemy));
+                marker.title(String.valueOf(s.getPlayer().getId()));
+                markers.add(marker);
+            }
+            if (!s.getIsLive() && s.getTeam().equals(game.getTeam1().getId())) {
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                marker.icon(spriteFactory.fromDrawable(allyDead));
+                marker.title(String.valueOf(s.getPlayer().getId()));
+                markers.add(marker);
+            }
+            if (!s.getIsLive() && s.getTeam().equals(game.getTeam2().getId())) {
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                marker.icon(spriteFactory.fromDrawable(enemyDead));
+                marker.title(String.valueOf(s.getPlayer().getId()));
+                markers.add(marker);
+            }
         }
+
+
 
         mapView.addMarkers(markers);
     }
@@ -328,9 +292,9 @@ public class MapboxActivity extends VoiceControlActivity {
         }
     }
 
-    public void readFromTag(Intent intent){
+    public void readFromTag(Intent intent) {
         Ndef ndef = Ndef.get(detectedTag);
-        try{
+        try {
             ndef.connect();
 
             Parcelable[] messages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
@@ -352,15 +316,14 @@ public class MapboxActivity extends VoiceControlActivity {
 
                 ndef.close();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Cannot Read From Tag.", Toast.LENGTH_LONG).show();
         }
     }
 
     protected void onNewIntent(Intent intent) {
         setIntent(intent);
-        if(getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)){
+        if (getIntent().getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
             readFromTag(getIntent());
@@ -398,11 +361,10 @@ public class MapboxActivity extends VoiceControlActivity {
         );
     }
 
-    private void markPlayerDead() {
+    private void markPlayerDead(int id) {
         PlayerDeadRequest request = new PlayerDeadRequest();
         request.setIsLive(0);
-        if (player.getData() != null) {
-            request.setPlayerId(player.getData().getId());
+            request.setPlayerId(id);
 
             RestHelper.getRestApi().markPlayerDead(
                     RestAPI.HEADER,
@@ -420,7 +382,39 @@ public class MapboxActivity extends VoiceControlActivity {
                         }
                     }
             );
+    }
+
+    private void sendAbort() {
+        Log.d("Voice command", "Fire");
+        final Location location = mapView.getMyLocation();
+
+        MessageRequest request = new MessageRequest();
+        request.setMessage(COMMAND_ABORT);
+
+        if (location != null) {
+            request.setLat(location.getLatitude());
+            request.setLng(location.getLongitude());
         }
+
+        RestHelper.getRestApi().sendMessage(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                request,
+                new Callback<LocationSendResponse>() {
+                    @Override
+                    public void success(LocationSendResponse locationSendResponse, Response response) {
+                        Log.d("Voice command", locationSendResponse.getStatus());
+                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (error.getMessage() != null) {
+                            Log.d("Voice command", error.getMessage());
+                        }
+                    }
+                }
+        );
     }
 
     @Override
@@ -459,7 +453,7 @@ public class MapboxActivity extends VoiceControlActivity {
     }
 
     @Override
-    public void onPause()  {
+    public void onPause() {
         super.onPause();
         mapView.onPause();
     }

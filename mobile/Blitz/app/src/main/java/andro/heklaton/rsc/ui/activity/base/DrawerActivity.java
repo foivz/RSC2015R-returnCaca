@@ -23,6 +23,7 @@ import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.ui.activity.LoginActivity;
 import andro.heklaton.rsc.ui.activity.MainActivity;
 import andro.heklaton.rsc.ui.activity.MapboxActivity;
+import andro.heklaton.rsc.ui.activity.MapboxJudgeActivity;
 import andro.heklaton.rsc.ui.activity.SettingsActivity;
 import andro.heklaton.rsc.ui.activity.StepCounterActivity;
 import andro.heklaton.rsc.util.PrefsHelper;
@@ -109,7 +110,12 @@ public abstract class DrawerActivity extends AppCompatActivity implements
                     break;
                 }
                 case R.id.nav_share: {
-                    intent.setClass(DrawerActivity.this, MapboxActivity.class);
+                    if (PrefsHelper.getUsername(this).equals("admin")) {
+                        intent.setClass(DrawerActivity.this, MapboxJudgeActivity.class);
+                    } else {
+                        intent.setClass(DrawerActivity.this, MapboxActivity.class);
+                    }
+
                     startActivity(intent);
                     break;
                 }
