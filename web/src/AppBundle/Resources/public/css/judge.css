@@ -1,5 +1,6 @@
 #myTabContent {
-  z-index: 10; }
+  z-index: 10;
+  padding: 20px; }
 
 .player-scroll {
   min-height: 20px;
