@@ -59,6 +59,9 @@ class LoadGamesData extends AbstractDbFixture
         $game->setTeam1($team1);
         $game->setTeam2($team2);
         $game->setActive(true);
+        $endTime = new DateTime();
+        $endTime->add(new DateInterval('PT15M'));
+        $game->setEndTimeStamp($endTime);
         $this->addReference('game', $game);
 
         $manager->persist($team1);
