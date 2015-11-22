@@ -150,3 +150,13 @@ table.stats {
 	left: 50px;
 	z-index: 1000;
 }
+
+#placeBet {
+	background-color: #eb7f00;
+	padding: 10px 10px;
+	font-size: 30px;
+}
+
+.bold {
+	font-weight: 600;
+}
