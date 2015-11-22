@@ -14,7 +14,7 @@ public class Stat {
     private Player player;
     @SerializedName("isLive")
     @Expose
-    private Integer isLive;
+    private Boolean isLive;
     @SerializedName("location")
     @Expose
     private Location location;
@@ -60,7 +60,7 @@ public class Stat {
      * @return
      *     The isLive
      */
-    public Integer getIsLive() {
+    public Boolean getIsLive() {
         return isLive;
     }
 
@@ -69,7 +69,7 @@ public class Stat {
      * @param isLive
      *     The isLive
      */
-    public void setIsLive(Integer isLive) {
+    public void setIsLive(Boolean isLive) {
         this.isLive = isLive;
     }
 

@@ -15,6 +15,12 @@ public class Player {
     @SerializedName("level")
     @Expose
     private Object level;
+    @SerializedName("team")
+    @Expose
+    private Integer team;
+    @SerializedName("isLive")
+    @Expose
+    private Boolean isLive;
 
     /**
      * 
@@ -68,6 +74,42 @@ public class Player {
      */
     public void setLevel(Object level) {
         this.level = level;
+    }
+
+    /**
+     * 
+     * @return
+     *     The team
+     */
+    public Integer getTeam() {
+        return team;
+    }
+
+    /**
+     * 
+     * @param team
+     *     The team
+     */
+    public void setTeam(Integer team) {
+        this.team = team;
+    }
+
+    /**
+     * 
+     * @return
+     *     The isLive
+     */
+    public Boolean getIsLive() {
+        return isLive;
+    }
+
+    /**
+     * 
+     * @param isLive
+     *     The isLive
+     */
+    public void setIsLive(Boolean isLive) {
+        this.isLive = isLive;
     }
 
 }

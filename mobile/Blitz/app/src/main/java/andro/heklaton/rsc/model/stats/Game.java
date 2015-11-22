@@ -1,3 +1,4 @@
+
 package andro.heklaton.rsc.model.stats;
 
 import com.google.gson.annotations.Expose;

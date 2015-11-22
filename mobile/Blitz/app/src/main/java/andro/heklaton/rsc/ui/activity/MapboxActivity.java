@@ -120,28 +120,23 @@ public class MapboxActivity extends DrawerActivity {
             request.setLat(location.getLatitude());
             request.setLng(location.getLongitude());
 
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    RestHelper.getRestApi().sendCurrentLocation(
-                            RestAPI.HEADER,
-                            PrefsHelper.getToken(MapboxActivity.this),
-                            request,
-                            new Callback<LocationSendResponse>() {
-                                @Override
-                                public void success(LocationSendResponse locationSendResponse, Response response) {
-                                    Log.d("Status", locationSendResponse.getStatus());
-                                    Log.d("Message", locationSendResponse.getMessage());
-                                }
+            RestHelper.getRestApi().sendCurrentLocation(
+                    RestAPI.HEADER,
+                    PrefsHelper.getToken(MapboxActivity.this),
+                    request,
+                    new Callback<LocationSendResponse>() {
+                        @Override
+                        public void success(LocationSendResponse locationSendResponse, Response response) {
+                            Log.d("Status", locationSendResponse.getStatus());
+                            Log.d("Message", locationSendResponse.getMessage());
+                        }
 
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    //Log.d("Error", error.getMessage());
-                                }
-                            }
-                    );
-                }
-            });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            //Log.d("Error", error.getMessage());
+                        }
+                    }
+            );
         }
     }
 
@@ -160,6 +155,9 @@ public class MapboxActivity extends DrawerActivity {
 
                             @Override
                             public void failure(RetrofitError error) {
+                                if (error.getMessage() != null) {
+                                    Log.d("Stats fail", error.getMessage());
+                                }
                             }
                         });
             }
@@ -173,9 +171,12 @@ public class MapboxActivity extends DrawerActivity {
         redrawPolygons();
 
         for (Stat s : stats) {
-            MarkerOptions marker = new MarkerOptions();
-            marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-            markers.add(marker);
+            if (s.getIsLive() && s.getTeam() == 1) {
+                MarkerOptions marker = new MarkerOptions();
+                marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                marker.icon(spriteFactory.fromDrawable(ally));
+                markers.add(marker);
+            }
         }
 
         mapView.addMarkers(markers);
@@ -286,6 +287,8 @@ public class MapboxActivity extends DrawerActivity {
     public void onPause()  {
         super.onPause();
         mapView.onPause();
+        timer.cancel();
+        timer2.cancel();
     }
 
     @Override

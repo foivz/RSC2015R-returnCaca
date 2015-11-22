@@ -17,7 +17,7 @@ public class Team2 {
     private String name;
     @SerializedName("players")
     @Expose
-    private List<Player> players = new ArrayList<Player>();
+    private List<Player> players = new ArrayList<>();
 
     /**
      * 
