@@ -140,7 +140,7 @@ class ApiGameStatController extends \Zantolov\AppBundle\Controller\API\ApiLoginC
 
         /** @var Team $team */
         $team = $player->getTeam();
-        $game = $team->getGame();
+        $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Game')->find(1);
 
         $regionId = $data['regionId'];
         switch ($regionId) {

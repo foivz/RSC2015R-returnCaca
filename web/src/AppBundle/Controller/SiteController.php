@@ -230,7 +230,15 @@ class SiteController extends Controller
      */
     public function userProfileAction(Request $request)
     {
-        $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
+
+        $playerId = $request->get('id');
+
+        if (!empty($playerId)) {
+            $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->find($playerId);
+        } else {
+            $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
+        }
+
         return compact('player');
     }
 
@@ -291,10 +299,16 @@ class SiteController extends Controller
      */
     public function userMobileProfileAction(Request $request)
     {
-        $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
+        $playerId = $request->get('id');
+
+        if (!empty($playerId)) {
+            $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->find($playerId);
+        } else {
+            $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
+        }
+
         return compact('player');
     }
-
 
 
 }

@@ -67,11 +67,9 @@ class UserProviderService implements OAuthAwareUserProviderInterface, ContainerA
         return $user;
     }
 
-    public function createNewUser($token, $email, UserResponseInterface $response)
+    public function createNewUser($token, $email, UserResponseInterface $response = null)
     {
         $userManager = $this->container->get('fos_user.user_manager');
-
-        $image = $response->getProfilePicture();
 
         /** @var User $user */
         $user = $userManager->createUser();
@@ -82,18 +80,28 @@ class UserProviderService implements OAuthAwareUserProviderInterface, ContainerA
         $user->setRoles(array('ROLE_USER'));
         $userManager->updateUser($user, true);
 
-        $img = new Image();
-        $img->setActive(true);
-        $name = time() . '.jpg';
-        $img->setImageName($name);
-
-        $imgFile = realpath(__DIR__ . '/../../../web/uploads/images/default/') . '/' . $name;
-        file_put_contents($imgFile, file_get_contents($image));
-
         $player = new Player();
-        $player->setImage($img);
+
+
+        if (!is_null($response)) {
+            $image = $response->getProfilePicture();
+
+            $img = new Image();
+            $img->setActive(true);
+            $name = time() . '.jpg';
+            $img->setImageName($name);
+
+            $imgFile = realpath(__DIR__ . '/../../../web/uploads/images/default/') . '/' . $name;
+            file_put_contents($imgFile, file_get_contents($image));
+            $player->setImage($img);
+
+            $player->setAlias($response->getRealName());
+        } else {
+            $player->setAlias($email);
+
+        }
+
         $player->setActive(true);
-        $player->setAlias($response->getRealName());
         $player->setUser($user);
 
         $this->container->get('doctrine')->getManager()->persist($img);

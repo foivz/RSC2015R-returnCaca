@@ -10,11 +10,11 @@ facebook_login:
     path: /social-login/check-facebook
 
 
-
 Imported_ZantolovAppBundle_routes:
     resource: .
     type: routes
     prefix:   /
+
 
 zantolov_app:
     resource: "../../vendor/zantolov/appbundle/src/Controller/"
@@ -37,6 +37,7 @@ _liip_imagine:
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
 
 api:
     resource: "@ApiBundle/Controller/"
