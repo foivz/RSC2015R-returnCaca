@@ -25,6 +25,14 @@
                     <li>
                         <a href="{{ url('leaderboard') }}">Rankings</a>
                     </li>
+                    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+                        <li>
+                            <a href="{{ url('judge.new.game') }}">
+                                <i class="fa fa-plus"></i>
+                                New Game
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">

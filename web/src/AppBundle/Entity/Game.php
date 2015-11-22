@@ -401,7 +401,21 @@ class Game implements \JsonSerializable
             'duration'     => $this->getDuration(),
             'killPoints'   => $this->getKillPoints(),
             'flagPoints'   => $this->getFlagPoints(),
+            'isGameActive' => $this->isGameActive(),
         ];
+    }
+
+    public function isGameActive()
+    {
+        if ($this->getActive() == false) {
+            return false;
+        }
+
+        if ($this->endTimestamp < new \DateTime()){
+            return false;
+        }
+
+        return true;
     }
 
 

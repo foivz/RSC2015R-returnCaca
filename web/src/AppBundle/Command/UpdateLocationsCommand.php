@@ -37,6 +37,11 @@ class UpdateLocationsCommand extends ContainerAwareCommand
 
         $getData = function ($player) use ($manager, $game) {
 
+            /** @var Player $player */
+            if (!$player->isLive()) {
+                return;
+            }
+
             /** @var Location $oldLocation */
             $oldLocation = $manager->getRepository('AppBundle:Location')->findOneBy(
                 ['player' => $player], ['createdAt' => 'DESC']
@@ -72,7 +77,7 @@ class UpdateLocationsCommand extends ContainerAwareCommand
 
             $manager->flush();
             $output->writeln('Updated');
-            sleep(1);
+            //sleep(1);
         }
 
     }
