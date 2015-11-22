@@ -26,8 +26,10 @@ li {
 .login-body {
   margin-bottom: 15px; }
 
-.user-page i {
-  color: #ff9800; }
+.user-page {
+  margin: 85px 0; }
+  .user-page i {
+    color: #ff9800; }
 
 .navbar-default .navbar-nav > li > a {
   color: #666666;
