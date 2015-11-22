@@ -43,6 +43,15 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
             ]);
         }
 
+        $lat = $data['lat'];
+        $lng = $data['lng'];
+        if (empty($lat) || empty($lng)) {
+            return $this->createResponse([
+                self::KEY_STATUS  => self::STATUS_ERROR,
+                self::KEY_MESSAGE => 'Incorrect geolocation info.',
+            ]);
+        }
+
         /** @var Game $game */
         $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->find(1);
 
@@ -67,6 +76,8 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
         $message = new Message();
         $message->setMessage($msg);
         $message->setPlayer($player);
+        $message->setLat($lat);
+        $message->setLng($lng);
         $this->getDoctrine()->getManager()->persist($message);
         $this->getDoctrine()->getManager()->flush();
 
@@ -76,6 +87,8 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
             'message' => $msg,
             'from'    => $player,
             'team'    => $teamMember,
+            'lat'     => $lat,
+            'lng'     => $lng,
         ]);
 
         return $this->createResponse([
