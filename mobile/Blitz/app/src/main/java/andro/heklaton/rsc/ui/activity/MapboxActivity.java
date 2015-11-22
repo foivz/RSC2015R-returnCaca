@@ -1,6 +1,7 @@
 package andro.heklaton.rsc.ui.activity;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,6 +12,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -18,6 +22,7 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AlertDialog;
@@ -75,6 +80,8 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     private Drawable ally;
     private Drawable enemy;
     private Drawable allyDead;
+    private Drawable attention;
+    private Drawable help;
 
     private Timer timer;
     private Timer timer2;
@@ -131,6 +138,8 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         ally = getResources().getDrawable(R.drawable.ally);
         enemy = getResources().getDrawable(R.drawable.enemy);
         allyDead = getResources().getDrawable(R.drawable.dead_ally);
+        attention = getResources().getDrawable(R.drawable.attention_ally);
+        help = getResources().getDrawable(R.drawable.help_ally);
 
         spriteFactory = new SpriteFactory(mapView);
 
@@ -496,6 +505,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         if (mNfcAdapter != null) {
             mNfcAdapter.disableForegroundDispatch(this);
         }
+        unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -505,6 +515,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         if (mNfcAdapter != null) {
             mNfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
         }
+        registerReceiver(mMessageReceiver, new IntentFilter("GCM"));
     }
 
     @Override
@@ -528,7 +539,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     @Override
     public void onSensorChanged(SensorEvent event) {
         Log.d("Accelerometer", String.valueOf(event.values[2]));
-        if (event.values[2] > 0 || event.values[2] < -7) {
+        if (event.values[2] < 0 && event.values[2] > -7) {
 
             Intent intent = new Intent(this, JoinGameActivity.class);
             startActivity(intent);
@@ -539,4 +550,39 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            // Extract data included in the Intent
+            String message = intent.getStringExtra("message");
+            Log.d("GCM MESSAGE", message);
+
+            if (message.equals(COMMAND_ATTENTION)) {
+                mapView.addMarker(new MarkerOptions().position(
+                        new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lng", 0))
+                ).icon(spriteFactory.fromDrawable(attention)));
+                playNotificationSound();
+            } else if (message.equals(COMMAND_HELP)) {
+                mapView.addMarker(new MarkerOptions().position(
+                        new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lng", 0))
+                ).icon(spriteFactory.fromDrawable(help)));
+                playNotificationSound();
+            }
+        }
+    };
+
+    private void playNotificationSound() {
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

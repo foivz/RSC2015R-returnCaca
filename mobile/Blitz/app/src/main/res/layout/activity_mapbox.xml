@@ -23,7 +23,7 @@
             android:id="@+id/voice"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
             android:src="@drawable/ic_mic_none_24dp"/>
 
