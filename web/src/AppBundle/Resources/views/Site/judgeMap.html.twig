@@ -12,6 +12,11 @@
               <i class="fa fa-map-marker fa-2x"></i>
             </a>
           </li>
+          <li class="text-center">
+            <a href="#obsticle" data-toggle="tab" id="obsticle-tab">
+              <i class="fa fa-info fa-2x"></i>
+            </a>
+          </li>
         </ul>
       </div>
       <div class="col-md-2 col-xs-12">
@@ -24,13 +29,21 @@
         <div class="tab-pane active" id="location">
           <div class="col-md-12">
             <input type="text" class="form-control" id="inputMap" name="name" placeholder="Map name">
-
-
             <div id="map-canvas-show"></div>
 
             <input name="map" type="hidden" id="map-values-flags">
           </div>
         </div>
+
+        {#Obsticle tab#}
+        <div class="tab-pane" id="obsticle">
+          <div class="col-md-12">
+            <div id="map-canvas-show-obsticle"></div>
+            <input name="map" type="hidden" id="map-obsticle">
+          </div>
+        </div>
+
+
       </div>
     </div>
   </form>

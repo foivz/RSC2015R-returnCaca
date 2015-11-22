@@ -189,6 +189,17 @@ $(document).ready(function () {
 
         if ($('#map-canvas-show').length > 0) {
 
+            //obsticles
+            $('#obsticle-tab').on('click', function () {
+                initMapObsticles();
+            });
+
+            function initMapObsticles() {
+                console.log('adding obsticle');
+                var markers = [];
+                var markerId = 0;
+            }
+
             function initMap() {
                 var markers = [];
                 var markerId = 0;
@@ -235,8 +246,6 @@ $(document).ready(function () {
                         }
                     );
                 }
-
-
                 // Construct the polygon.
                 var triangle = new google.maps.Polygon({
                     paths: triangleCoords,
@@ -277,6 +286,7 @@ $(document).ready(function () {
                 $('#mapSave').on('click', function () {
                     var values = [];
 
+                    //saving flags
                     if (typeof(Storage) !== "undefined") {
                         for (var b = 0; b < markerId; b++) {
                             name = "marker-" + b;
