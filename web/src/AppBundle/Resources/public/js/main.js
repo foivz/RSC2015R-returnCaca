@@ -140,6 +140,7 @@ $(document).ready(function () {
                 zoom: 11
             };
             var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
             drawingManager = new google.maps.drawing.DrawingManager({
                 drawingMode: google.maps.drawing.OverlayType.POLYGON,
                 drawingControl: true,
@@ -184,4 +185,42 @@ $(document).ready(function () {
 
         google.maps.event.addDomListener(window, 'load', initialize);
     }
+
+
+    if ($('#map-canvas-show').length > 0) {
+
+        function initMap() {
+
+            console.log('mapa')
+            var map = new google.maps.Map(document.getElementById('map-canvas-show'), {
+                zoom: 14,
+                center: new google.maps.LatLng(46.301406, 16.341476)
+            });
+
+            var triangleCoords =
+                    [
+                        {lat: 46.31468715855948, lng: 16.252330541610718},
+                        {lat: 46.30757273562989, lng: 16.281169652938843},
+                        {lat: 46.29808539982842, lng: 16.252330541610718}
+                    ];
+
+
+            // Construct the polygon.
+            var triangle = new google.maps.Polygon({
+                paths: triangleCoords,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35
+            });
+
+            triangle.setMap(map);
+        }
+
+
+        google.maps.event.addDomListener(window, "load", initMap);
+    }
+
+
 });

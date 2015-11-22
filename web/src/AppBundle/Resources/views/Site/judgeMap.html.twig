@@ -1,0 +1,42 @@
+{% extends 'AppBundle:Layout:frontAppSidebarLayout.html.twig' %}
+
+{% block mainColumn %}
+  <form>
+    <div class="col-md-12">
+
+      {# navs tabs navigation #}
+      <div class="col-md-10">
+        <ul class="nav nav-tabs">
+          <li class="text-center active">
+            <a href="#location" data-toggle="tab">
+              <i class="fa fa-map-marker fa-2x"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-2 col-xs-12">
+        <a class="btn btn-warning col-xs-12 saveButton" href="#">Save Map</a>
+      </div>
+
+      <div id="myTabContent" class="tab-content">
+
+        {#Location tab#}
+        <div class="tab-pane active" id="location">
+          <div class="col-md-12">
+            <input type="text" class="form-control" id="inputMap" name="name" placeholder="Map name">
+
+
+            <div id="map-canvas-show"></div>
+
+            <input name="map" type="hidden" id="map-values">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+{% endblock %}
+
+{% block customJsPlugins %}
+  {{ parent() }}
+{% endblock %}

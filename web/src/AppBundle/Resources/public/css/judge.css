@@ -51,4 +51,7 @@
 .saveButton {
   margin: 5px 0; }
 
+#map-canvas-show {
+  height: 450px; }
+
 /*# sourceMappingURL=judge.css.map */
