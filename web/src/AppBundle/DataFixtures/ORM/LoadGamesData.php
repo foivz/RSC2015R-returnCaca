@@ -87,6 +87,27 @@ class LoadGamesData extends AbstractDbFixture
             $manager->persist($team);
         }
 
+        for ($i = 11; $i < 20; $i++) {
+            /** @var User $user */
+            $user = $userManager->createUser();
+            $user->setUsername('player' . $i);
+            $user->setEmail('player' . $i . '@mailinator.com');
+            $user->setPlainPassword('123456');
+            $user->setEnabled(true);
+            $user->setRoles(array('ROLE_USER', 'ROLE_PLAYER'));
+            $userManager->updateUser($user, true);
+
+            $player = new Player();
+            $player->setActive(true);
+            $player->setAlias($faker->name);
+            $player->setUser($user);
+            $this->addReference('player' . $i, $player);
+            $player->setImage($this->getReference('image' . rand(1, 19)));
+
+            $manager->persist($player);
+        }
+
+
         $manager->flush();
 
     }

@@ -35,6 +35,7 @@ class LoadFixturesCommand extends ContainerAwareCommand
             $fullPath = $rootPath . $folderName;
             if (!is_dir($fullPath)) {
                 mkdir($fullPath);
+                chmod($fullPath, 777);
                 $output->writeln(sprintf('Created dir: %s', $fullPath));
             }
         }
