@@ -26,4 +26,7 @@
 
     <string name="player_dead">I\'m dead!</string>
 
+    <string name="join_game">Join game</string>
+    <string name="joined">Joined</string>
+
 </resources>

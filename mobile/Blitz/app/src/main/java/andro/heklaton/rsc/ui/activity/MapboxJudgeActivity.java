@@ -39,7 +39,7 @@ import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.MessageRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
-import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
@@ -345,10 +345,10 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Capture", locationSendResponse.getMessage());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Capture", baseResponse.getMessage());
                     }
 
                     @Override
@@ -370,9 +370,9 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                     RestAPI.HEADER,
                     PrefsHelper.getToken(this),
                     request,
-                    new Callback<LocationSendResponse>() {
+                    new Callback<BaseResponse>() {
                         @Override
-                        public void success(LocationSendResponse locationSendResponse, Response response) {
+                        public void success(BaseResponse baseResponse, Response response) {
 
                         }
 
@@ -400,10 +400,10 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Voice command", locationSendResponse.getStatus());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Voice command", baseResponse.getStatus());
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
 

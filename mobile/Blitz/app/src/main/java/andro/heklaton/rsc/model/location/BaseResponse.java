@@ -3,7 +3,7 @@ package andro.heklaton.rsc.model.location;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class LocationSendResponse {
+public class BaseResponse {
 
     @SerializedName("status")
     @Expose

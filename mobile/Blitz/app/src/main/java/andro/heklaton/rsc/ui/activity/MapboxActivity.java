@@ -17,10 +17,8 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -42,12 +40,11 @@ import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
-import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
-import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
 import andro.heklaton.rsc.util.VoiceControlActivity;
@@ -197,11 +194,11 @@ public class MapboxActivity extends VoiceControlActivity {
                     RestAPI.HEADER,
                     PrefsHelper.getToken(MapboxActivity.this),
                     request,
-                    new Callback<LocationSendResponse>() {
+                    new Callback<BaseResponse>() {
                         @Override
-                        public void success(LocationSendResponse locationSendResponse, Response response) {
-                            //Log.d("Status", locationSendResponse.getStatus());
-                            //Log.d("Message", locationSendResponse.getMessage());
+                        public void success(BaseResponse baseResponse, Response response) {
+                            //Log.d("Status", baseResponse.getStatus());
+                            //Log.d("Message", baseResponse.getMessage());
                         }
 
                         @Override
@@ -382,10 +379,10 @@ public class MapboxActivity extends VoiceControlActivity {
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Capture", locationSendResponse.getMessage());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Capture", baseResponse.getMessage());
                     }
 
                     @Override
@@ -408,9 +405,9 @@ public class MapboxActivity extends VoiceControlActivity {
                     RestAPI.HEADER,
                     PrefsHelper.getToken(this),
                     request,
-                    new Callback<LocationSendResponse>() {
+                    new Callback<BaseResponse>() {
                         @Override
-                        public void success(LocationSendResponse locationSendResponse, Response response) {
+                        public void success(BaseResponse baseResponse, Response response) {
 
                         }
 

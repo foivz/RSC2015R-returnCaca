@@ -155,21 +155,21 @@ public class LoginActivity extends AccountActivity {
 
             } else {
                 RestHelper.getRestApi().login(RestAPI.HEADER, new LoginRequest(
-                        etUsername.getText().toString(),
-                        etPassword.getText().toString(),
-                        PrefsHelper.getGcmToken(LoginActivity.this)),
+                                etUsername.getText().toString(),
+                                etPassword.getText().toString(),
+                                PrefsHelper.getGcmToken(LoginActivity.this)),
                         new Callback<User>() {
 
-                    @Override
-                    public void success(User user, Response response) {
-                        saveUserData(user);
-                    }
+                            @Override
+                            public void success(User user, Response response) {
+                                saveUserData(user);
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        hideProgress();
-                    }
-                });
+                            @Override
+                            public void failure(RetrofitError error) {
+                                hideProgress();
+                            }
+                        });
             }
 
 
@@ -193,7 +193,7 @@ public class LoginActivity extends AccountActivity {
 
             hideProgress();
 
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
             startActivity(intent);
         }
     }

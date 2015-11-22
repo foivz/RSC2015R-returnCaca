@@ -6,7 +6,7 @@ import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.api.request.MessageRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
 import andro.heklaton.rsc.api.request.SocialLoginRequest;
-import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.login.User;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Stats;
@@ -37,17 +37,12 @@ public interface RestAPI {
             Callback<User> response
     );
 
-    @GET("/positions")
-    void getPositions(
-            @Header("Content-Type") String contentType
-            );
-
     @POST("/locations")
     void sendCurrentLocation(
             @Header("Content-Type") String contentType,
             @Header("X-Api-Token") String token,
             @Body LocationSendRequest request,
-            Callback<LocationSendResponse> response
+            Callback<BaseResponse> response
     );
 
     @GET("/stats/1")
@@ -61,7 +56,7 @@ public interface RestAPI {
             @Header("Content-Type") String contentType,
             @Header("X-Api-Token") String token,
             @Body CaptureRequest request,
-            Callback<LocationSendResponse> response
+            Callback<BaseResponse> response
     );
 
     @GET("/player-status")
@@ -76,7 +71,7 @@ public interface RestAPI {
             @Header("Content-Type") String contentType,
             @Header("X-Api-Token") String token,
             @Body MessageRequest request,
-            Callback<LocationSendResponse> response
+            Callback<BaseResponse> response
     );
 
     @POST("/stats")
@@ -84,7 +79,15 @@ public interface RestAPI {
             @Header("Content-Type") String contentType,
             @Header("X-Api-Token") String token,
             @Body PlayerDeadRequest request,
-            Callback<LocationSendResponse> response
+            Callback<BaseResponse> response
+    );
+
+    @POST("/queue/join")
+    void joinQueue(
+            @Header("Content-Type") String contentType,
+            @Header("X-Api-Token") String token,
+            @Body String body,
+            Callback<BaseResponse> request
     );
 
 }

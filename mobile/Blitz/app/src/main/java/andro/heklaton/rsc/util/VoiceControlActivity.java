@@ -3,25 +3,21 @@ package andro.heklaton.rsc.util;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import com.mapbox.mapboxsdk.views.MapView;
 
 import java.util.ArrayList;
 
-import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.MessageRequest;
-import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -143,10 +139,10 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Voice command", locationSendResponse.getStatus());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Voice command", baseResponse.getStatus());
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
 
@@ -176,10 +172,10 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Voice command", locationSendResponse.getStatus());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Voice command", baseResponse.getStatus());
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
 
@@ -206,10 +202,10 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Voice command", locationSendResponse.getStatus());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Voice command", baseResponse.getStatus());
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
 
@@ -236,10 +232,10 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Voice command", locationSendResponse.getStatus());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Voice command", baseResponse.getStatus());
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
 
