@@ -64,7 +64,7 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void saveToken(String token) {
-        PrefsHelper.saveToken(this, token);
+        PrefsHelper.saveGcmToken(this, token);
     }
 
 }

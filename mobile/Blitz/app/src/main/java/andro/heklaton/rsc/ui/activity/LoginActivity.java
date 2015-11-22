@@ -154,12 +154,12 @@ public class LoginActivity extends AccountActivity {
                 Toast.makeText(LoginActivity.this, R.string.no_username_or_password, Toast.LENGTH_SHORT).show();
 
             } else {
+                Log.d("GCM", PrefsHelper.getGcmToken(LoginActivity.this));
                 RestHelper.getRestApi().login(RestAPI.HEADER, new LoginRequest(
                                 etUsername.getText().toString(),
                                 etPassword.getText().toString(),
                                 PrefsHelper.getGcmToken(LoginActivity.this)),
                         new Callback<User>() {
-
                             @Override
                             public void success(User user, Response response) {
                                 saveUserData(user);
