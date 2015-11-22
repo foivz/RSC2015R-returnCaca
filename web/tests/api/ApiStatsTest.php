@@ -29,7 +29,7 @@ class ApiStatsTest extends \Codeception\TestCase\Test
         $this->tester->seeResponseJsonMatchesJsonPath('$.status');
         $this->tester->seeResponseJsonMatchesJsonPath('$.data');
 
-        foreach ($data['data'] as $item) {
+        foreach ($data['data']['stats'] as $item) {
             $this->assertArrayHasKey('team', $item);
             $this->assertArrayHasKey('player', $item);
             $this->assertArrayHasKey('id', $item['player']);
