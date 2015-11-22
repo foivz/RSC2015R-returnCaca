@@ -32,8 +32,8 @@ import retrofit.client.Response;
  */
 public abstract class VoiceControlActivity extends DrawerActivity implements RecognitionListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
-    public static final String COMMAND_FIRE = "fire";
-    public static final String COMMAND_HELP = "help";
+    public static final String COMMAND_FIRE = "ATTENTION";
+    public static final String COMMAND_HELP = "HELP";
     public static final String TAG = "Voice";
 
     protected SpeechRecognizer mSpeechRecognizer;

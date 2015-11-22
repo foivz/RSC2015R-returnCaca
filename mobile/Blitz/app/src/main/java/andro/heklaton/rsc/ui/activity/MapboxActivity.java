@@ -47,6 +47,7 @@ import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
+import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
 import andro.heklaton.rsc.util.VoiceControlActivity;
@@ -68,7 +69,7 @@ public class MapboxActivity extends VoiceControlActivity {
 
     private Drawable ally;
     private Drawable enemy;
-    
+    private Drawable allyDead;
 
     private Timer timer;
     private Timer timer2;
@@ -122,6 +123,7 @@ public class MapboxActivity extends VoiceControlActivity {
 
         ally = getResources().getDrawable(R.drawable.ally);
         enemy = getResources().getDrawable(R.drawable.enemy);
+        allyDead = getResources().getDrawable(R.drawable.dead_ally);
 
         spriteFactory = new SpriteFactory(mapView);
 
@@ -246,13 +248,22 @@ public class MapboxActivity extends VoiceControlActivity {
 
         redrawPolygons();
 
-        for (Stat s : stats) {
-            if (s.getIsLive() && s.getTeam() == 1) {
-                MarkerOptions marker = new MarkerOptions();
-                marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                marker.icon(spriteFactory.fromDrawable(ally));
-                markers.add(marker);
+        if (player.getData() != null) {
+            for (Stat s : stats) {
+                if (s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                    marker.icon(spriteFactory.fromDrawable(ally));
+                    markers.add(marker);
+                }
+                if (!s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
+                    MarkerOptions marker = new MarkerOptions();
+                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                    marker.icon(spriteFactory.fromDrawable(allyDead));
+                    markers.add(marker);
+                }
             }
+
         }
 
         mapView.addMarkers(markers);
@@ -390,24 +401,26 @@ public class MapboxActivity extends VoiceControlActivity {
     private void markPlayerDead() {
         PlayerDeadRequest request = new PlayerDeadRequest();
         request.setIsLive(0);
-        request.setPlayerId(player.getData().getId());
+        if (player.getData() != null) {
+            request.setPlayerId(player.getData().getId());
 
-        RestHelper.getRestApi().markPlayerDead(
-                RestAPI.HEADER,
-                PrefsHelper.getToken(this),
-                request,
-                new Callback<LocationSendResponse>() {
-                    @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
+            RestHelper.getRestApi().markPlayerDead(
+                    RestAPI.HEADER,
+                    PrefsHelper.getToken(this),
+                    request,
+                    new Callback<LocationSendResponse>() {
+                        @Override
+                        public void success(LocationSendResponse locationSendResponse, Response response) {
 
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
                     }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                }
-        );
+            );
+        }
     }
 
     @Override
