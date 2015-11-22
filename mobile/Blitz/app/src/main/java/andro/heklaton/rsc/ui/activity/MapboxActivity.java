@@ -21,6 +21,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.speech.RecognizerIntent;
@@ -32,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -53,6 +55,7 @@ import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
+import andro.heklaton.rsc.model.gamestatus.GameStatus;
 import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
@@ -76,6 +79,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     private List<MarkerOptions> markers;
     private List<PolylineOptions> zones;
     private SpriteFactory spriteFactory;
+    private TextView tvTimer;
 
     private Drawable ally;
     private Drawable enemy;
@@ -98,6 +102,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     boolean activityActive;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private int endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +111,8 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         getPlayerStatus();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        tvTimer = (TextView) findViewById(R.id.timer);
 
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -196,6 +203,40 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
                 }
             }
         });
+
+        RestHelper.getRestApi().getStatus(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                new Callback<GameStatus>() {
+                    @Override
+                    public void success(GameStatus gameStatus, Response response) {
+                        endTime = gameStatus.getData().getEndTimeStamp();
+                        setTime();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                }
+        );
+
+    }
+
+    void setTime() {
+        new CountDownTimer(endTime - (System.currentTimeMillis()), 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.d("TIME", "end: " + endTime + " - " + "current: " + System.currentTimeMillis());
+                int seconds = (int) (millisUntilFinished / 1000) % 60 ;
+                int minutes = (int) ((millisUntilFinished / (1000*60)) % 60);
+                tvTimer.setText(minutes + ":" + seconds);
+            }
+
+            public void onFinish() {
+                tvTimer.setText("done!");
+            }
+        }.start();
     }
 
     private void getPlayerStatus() {
@@ -288,25 +329,27 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
 
         redrawPolygons();
 
-        if (player.getData() != null) {
-            for (Stat s : stats) {
-                if (s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                    marker.icon(spriteFactory.fromDrawable(ally));
-                    markers.add(marker);
+        if (player != null) {
+            if (player.getData() != null) {
+                for (Stat s : stats) {
+                    if (s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                        marker.icon(spriteFactory.fromDrawable(ally));
+                        markers.add(marker);
+                    }
+                    if (!s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                        marker.icon(spriteFactory.fromDrawable(allyDead));
+                        markers.add(marker);
+                    }
                 }
-                if (!s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                    marker.icon(spriteFactory.fromDrawable(allyDead));
-                    markers.add(marker);
-                }
+
             }
 
+            mapView.addMarkers(markers);
         }
-
-        mapView.addMarkers(markers);
     }
 
     private void updateZones(Game game) {
