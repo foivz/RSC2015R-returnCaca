@@ -71,20 +71,20 @@ class Game implements \JsonSerializable
      * @var integer
      * @ORM\Column(type="integer")
      */
-    private $duration;
+    private $duration = 15;
 
 
     /**
      * @var integer
      * @ORM\Column(type="integer")
      */
-    private $killPoints;
+    private $killPoints = 1;
 
     /**
      * @var integer
      * @ORM\Column(type="integer")
      */
-    private $flagPoints;
+    private $flagPoints = 5;
 
     public function __construct()
     {
