@@ -4,6 +4,23 @@ body {
 	font-family: 'Lato', sans-serif;
 }
 
+a {
+	color: #FFF;
+}
+a:hover {
+	color: #FFF;
+	text-decoration: none;
+}
+
+.inputbox {
+	width: 35%
+}
+.inputbox > input {
+	color: #000;
+	font-size: 30px;
+	width: 60%;
+}
+
 #map {
 	width: 70%;
 	height: 100%;
@@ -122,6 +139,9 @@ table.stats {
 .orange {
 	color: #eb7f00;
 	fill: #eb7f00;
+}
+.black-bg {
+	background-color: #000000;
 }
 
 .logo {

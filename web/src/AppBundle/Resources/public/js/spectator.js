@@ -146,6 +146,12 @@ var attentionAllyMarker = new google.maps.MarkerImage(
 // Function
 $(document).ready(function() {
     init();
+    $('.button').click(function() {
+        $(this).addClass('black-bg');
+    });
+    $('#placeBet').click(function() {
+        placeBet();
+    });
     updateTimer = window.setInterval(refreshLocations, 1000);
 });
 
@@ -269,7 +275,6 @@ function refreshLocations() {
         refreshMap();
     });
     $.get("api/msg", function (data) {
-        console.log(data);
         $.each(data.data, function(key, val) {
             var marker = null;
             if(val.player.team == 1 && val.message == "ATTENTION")
@@ -317,4 +322,9 @@ function fillZone(id, team) {
 
 function showSummary() {
     window.clearInterval(updateTimer);
+}
+
+function placeBet() {
+    $(".button").removeClass("black-bg");
+    $("input").val('');
 }
