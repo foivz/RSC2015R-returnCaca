@@ -1,0 +1,4 @@
+.idea/*
+web/vagrant
+web/vagrant/*
+web/web/app_dev.php

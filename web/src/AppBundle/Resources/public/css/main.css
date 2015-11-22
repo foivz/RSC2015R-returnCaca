@@ -1,0 +1,61 @@
+@import url(animate.css);
+@import url(bootstrap.min.css);
+@import url(side-navigation.css);
+@import url(judge.css);
+@import url(homepage.css);
+@import url(login.css);
+body {
+  min-height: 100%; }
+
+footer {
+  height: 50px;
+  width: 100%;
+  vertical-align: middle;
+  opacity: 0;
+  z-index: 10000; }
+
+li {
+  list-style: none; }
+
+.orange {
+  color: #ff9800; }
+
+.blue {
+  color: #2196f3; }
+
+.login-body {
+  margin-bottom: 15px; }
+
+.user-page i {
+  color: #ff9800; }
+
+.navbar-default .navbar-nav > li > a {
+  color: #666666;
+  padding: 35px 0 0 40px;
+  font-size: 15px; }
+
+.modal-content {
+  padding: 10px;
+  margin: 2px; }
+
+.nav-tabs > li > a {
+  font-size: 16px;
+  min-width: 220px;
+  color: #ff9800; }
+
+.nav-tabs > li.active > a {
+  border: none;
+  -webkit-box-shadow: inset 0 -2px 0 #ff9800;
+  box-shadow: inset 0 -2px 0 #ff9800;
+  color: #ff9800; }
+
+.navbar {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: none !important;
+  background: transparent !important; }
+
+.tab-content {
+  min-height: 600px; }
+
+/*# sourceMappingURL=main.css.map */

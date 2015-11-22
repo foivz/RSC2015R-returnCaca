@@ -1,0 +1,52 @@
+{% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
+
+
+{% block body %}
+    {% if post.image is defined and post.image is not null %}
+        <div class="">
+            <div style="background-size: cover;background: url({{ zantolov_uploader_asset(post.image, 'imageFile', null, false) | imagine_filter('postLeadingImageBig') }}) no-repeat scroll center center / cover;min-height: 320px"></div>
+        </div>
+    {% endif %}
+
+    <div class="container-fluid blogPost">
+
+        <div class="container">
+            <h1>{{ post.title }}</h1>
+
+
+            <div class="postMeta">
+                <br>
+                {{ post.publishedAt|date(defaultDateTimeFormat) }}
+                <hr>
+                {% if post.categories is defined and post.categories is not null %}
+                    {% for cat in post.categories %}
+                        <a href="{{ url('site.category', {slug: cat.slug}) }}" class="badge">
+                            {{ cat.name }}
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="content">
+                <p>{{ post.body|raw }}</p>
+                <hr>
+                <div class="text-center">
+                    <ul class="list-unstyled list-inline text-center">
+                        <li>
+                            <a href="http://www.facebook.com/share.php?u={{ url('site.post', {slug: post.slug}) }}"
+                               target="_blank">
+                                <i class="fa fa-2x fa-facebook"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="http://twitter.com/share?text={{ post.title }}&url={{ url('site.post', {slug: post.slug}) }}"
+                               target="_blank">
+                                <i class="fa fa-2x fa-twitter"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

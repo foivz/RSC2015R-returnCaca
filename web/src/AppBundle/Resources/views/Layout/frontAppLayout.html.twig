@@ -1,0 +1,44 @@
+{% extends 'ZantolovAppBundle:Layout:html5.html.twig' %}
+
+        {% block customStylesheets %}
+            <link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+            <link href="{{ asset('bundles/app/css/main.css') }}" rel="stylesheet">
+            <link href="{{ asset('bundles/zantolovapp/css/centered-columns.css') }}" rel="stylesheet">
+        {% endblock %}
+
+        {#Đavaskriptovi#}
+        {% block customJsPlugins %}
+            <!--<script src="https://maps.google.com/maps/api/js?sensor=false&language=en"></script>-->
+
+          <script type="text/javascript"
+                  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCv-5XXOAI1kdllaD73qEc1yS-9zxcI1s&sensor=false&libraries=drawing&dummy=.js">
+          </script>
+
+            <script src="{{ asset('bundles/app/js/components/gmaps.js') }}"></script>
+            <script src="{{ asset('bundles/app/js/components/jquery.matchHeight.js') }}"></script>
+            <script src="{{ asset('bundles/app/js/components/jquery-ui.js') }}"></script>
+            <script src="{{ asset('bundles/app/js/main.js') }}"></script>
+        {% endblock %}
+
+        {% block headEnd %}
+            {{ parent() }}
+            <script src="{{ asset('bundles/app/js/wow.min.js') }}"></script>
+            <script>
+                new WOW().init();
+            </script>
+        {% endblock %}
+
+
+{% block outerBody %}
+    {% block navigation %}
+        {% include 'AppBundle:Layout/partials:navigation.html.twig' %}
+    {% endblock %}
+    {% include "ZantolovAppBundle::Layout/partials/flashNotifications.html.twig" with {} %}
+
+    {% block body %}
+    {% endblock %}
+
+    {% block footer %}
+        {% include 'AppBundle:Layout/partials:footer.html.twig' %}
+    {% endblock %}
+{% endblock %}
