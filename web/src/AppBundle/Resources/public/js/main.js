@@ -51,6 +51,18 @@ $(document).ready(function () {
 
         var initialPlayers = [];
         var playerIds = [];
+
+        function getPlayerId() {
+            var listItems = $('#sortable1').find('li');
+            listItems.each(function (idx, li) {
+                var attribute = $(li);
+                var id = attribute.attr('data-id');
+                playerIds.push(id);
+                initialPlayers.push(id);
+            });
+            return true;
+        }
+
         getPlayerId();
 
         //sortable lists on judge
@@ -64,18 +76,6 @@ $(document).ready(function () {
             $('#randomize').addClass('disabled');
             shuffle(initialPlayers)
         });
-
-        function getPlayerId() {
-            var listItems = $('#sortable1').find('li');
-            listItems.each(function (idx, li) {
-                var attribute = $(li);
-                var id = attribute.attr('data-id');
-                playerIds.push(id);
-                initialPlayers.push(id);
-            });
-            return true;
-        }
-
 
         function shuffle(array) {
             $('#sortable1').empty();
