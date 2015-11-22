@@ -81,6 +81,7 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
     private PlayerStatus player;
 
     boolean activityActive;
+    private List<Stat> statses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +108,8 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
         IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         readTagFilters = new IntentFilter[]{tagDetected, filter2};
 
-        ally = getResources().getDrawable(R.drawable.ally);
-        enemy = getResources().getDrawable(R.drawable.enemy);
+        ally = getResources().getDrawable(R.drawable.ally_large);
+        enemy = getResources().getDrawable(R.drawable.enemy_large);
         allyDead = getResources().getDrawable(R.drawable.dead_ally);
         enemyDead = getResources().getDrawable(R.drawable.dead_enemy);
 
@@ -173,6 +174,7 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                             public void success(Stats stats, Response response) {
                                 Log.d("Success", response.getReason());
                                 if (activityActive) {
+                                    statses = stats.getData().getStats();
                                     updateStats(stats.getData().getStats(), stats.getData().getGame());
                                     updateZones(stats.getData().getGame());
                                 }
@@ -371,25 +373,38 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
 
     private void markPlayerDead(int id) {
         PlayerDeadRequest request = new PlayerDeadRequest();
-        request.setIsLive(0);
-            request.setPlayerId(id);
 
-            RestHelper.getRestApi().markPlayerDead(
-                    RestAPI.HEADER,
-                    PrefsHelper.getToken(this),
-                    request,
-                    new Callback<BaseResponse>() {
-                        @Override
-                        public void success(BaseResponse baseResponse, Response response) {
+        boolean alive = false;
+        for (Stat s : statses) {
+            if (s.getPlayer().getId().equals(id)) {
+                alive = s.getPlayer().getIsLive();
+            }
+        }
 
-                        }
+        if (alive) {
+            request.setIsLive(0);
+        } else {
+            request.setIsLive(1);
+        }
 
-                        @Override
-                        public void failure(RetrofitError error) {
+        request.setPlayerId(id);
 
-                        }
+        RestHelper.getRestApi().markPlayerDead(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                request,
+                new Callback<BaseResponse>() {
+                    @Override
+                    public void success(BaseResponse baseResponse, Response response) {
+
                     }
-            );
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                }
+        );
     }
 
     private void sendAbort() {

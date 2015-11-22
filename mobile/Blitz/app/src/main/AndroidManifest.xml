@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <permission android:name="com.example.gcm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.example.gcm.permission.C2D_MESSAGE" />
@@ -20,7 +21,7 @@
     <application
         android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
@@ -41,6 +42,10 @@
             android:theme="@style/AppTheme.AppBarOverlay" >
         </activity>
         <activity android:name=".ui.activity.SettingsActivity" />
+
+        <activity android:name=".ui.activity.ProfileActivity"
+            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".ui.activity.DetailsActivity"
             android:theme="@style/AppTheme.AppBarOverlay" />

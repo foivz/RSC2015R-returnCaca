@@ -1,6 +1,7 @@
 package andro.heklaton.rsc.ui.activity;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,13 +12,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Parcelable;
+import android.os.Vibrator;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -48,6 +55,7 @@ import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
+import andro.heklaton.rsc.model.gamestatus.GameStatus;
 import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
@@ -71,10 +79,13 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     private List<MarkerOptions> markers;
     private List<PolylineOptions> zones;
     private SpriteFactory spriteFactory;
+    private TextView tvTimer;
 
     private Drawable ally;
     private Drawable enemy;
     private Drawable allyDead;
+    private Drawable attention;
+    private Drawable help;
 
     private Timer timer;
     private Timer timer2;
@@ -91,6 +102,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     boolean activityActive;
     private SensorManager mSensorManager;
     private Sensor mSensor;
+    private int endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +111,8 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         getPlayerStatus();
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        tvTimer = (TextView) findViewById(R.id.timer);
 
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -131,6 +145,8 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         ally = getResources().getDrawable(R.drawable.ally);
         enemy = getResources().getDrawable(R.drawable.enemy);
         allyDead = getResources().getDrawable(R.drawable.dead_ally);
+        attention = getResources().getDrawable(R.drawable.attention_ally);
+        help = getResources().getDrawable(R.drawable.help_ally);
 
         spriteFactory = new SpriteFactory(mapView);
 
@@ -187,6 +203,40 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
                 }
             }
         });
+
+        RestHelper.getRestApi().getStatus(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                new Callback<GameStatus>() {
+                    @Override
+                    public void success(GameStatus gameStatus, Response response) {
+                        endTime = gameStatus.getData().getEndTimeStamp();
+                        setTime();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                }
+        );
+
+    }
+
+    void setTime() {
+        new CountDownTimer(endTime - (System.currentTimeMillis()), 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.d("TIME", "end: " + endTime + " - " + "current: " + System.currentTimeMillis());
+                int seconds = (int) (millisUntilFinished / 1000) % 60 ;
+                int minutes = (int) ((millisUntilFinished / (1000*60)) % 60);
+                tvTimer.setText(minutes + ":" + seconds);
+            }
+
+            public void onFinish() {
+                tvTimer.setText("done!");
+            }
+        }.start();
     }
 
     private void getPlayerStatus() {
@@ -279,25 +329,27 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
 
         redrawPolygons();
 
-        if (player.getData() != null) {
-            for (Stat s : stats) {
-                if (s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                    marker.icon(spriteFactory.fromDrawable(ally));
-                    markers.add(marker);
+        if (player != null) {
+            if (player.getData() != null) {
+                for (Stat s : stats) {
+                    if (s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                        marker.icon(spriteFactory.fromDrawable(ally));
+                        markers.add(marker);
+                    }
+                    if (!s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
+                        MarkerOptions marker = new MarkerOptions();
+                        marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
+                        marker.icon(spriteFactory.fromDrawable(allyDead));
+                        markers.add(marker);
+                    }
                 }
-                if (!s.getIsLive() && s.getTeam().equals(player.getData().getTeam())) {
-                    MarkerOptions marker = new MarkerOptions();
-                    marker.position(new LatLng(Double.valueOf(s.getLocation().getLat()), Double.valueOf(s.getLocation().getLng())));
-                    marker.icon(spriteFactory.fromDrawable(allyDead));
-                    markers.add(marker);
-                }
+
             }
 
+            mapView.addMarkers(markers);
         }
-
-        mapView.addMarkers(markers);
     }
 
     private void updateZones(Game game) {
@@ -496,6 +548,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         if (mNfcAdapter != null) {
             mNfcAdapter.disableForegroundDispatch(this);
         }
+        unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -505,6 +558,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         if (mNfcAdapter != null) {
             mNfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
         }
+        registerReceiver(mMessageReceiver, new IntentFilter("GCM"));
     }
 
     @Override
@@ -528,7 +582,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     @Override
     public void onSensorChanged(SensorEvent event) {
         Log.d("Accelerometer", String.valueOf(event.values[2]));
-        if (event.values[2] > 0 || event.values[2] < -7) {
+        if (event.values[2] < 0 && event.values[2] > -7) {
 
             Intent intent = new Intent(this, JoinGameActivity.class);
             startActivity(intent);
@@ -539,4 +593,39 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            // Extract data included in the Intent
+            String message = intent.getStringExtra("message");
+            Log.d("GCM MESSAGE", message);
+
+            if (message.equals(COMMAND_ATTENTION)) {
+                mapView.addMarker(new MarkerOptions().position(
+                        new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lng", 0))
+                ).icon(spriteFactory.fromDrawable(attention)));
+                playNotificationSound();
+            } else if (message.equals(COMMAND_HELP)) {
+                mapView.addMarker(new MarkerOptions().position(
+                        new LatLng(intent.getDoubleExtra("lat", 0), intent.getDoubleExtra("lng", 0))
+                ).icon(spriteFactory.fromDrawable(help)));
+                playNotificationSound();
+            }
+        }
+    };
+
+    private void playNotificationSound() {
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

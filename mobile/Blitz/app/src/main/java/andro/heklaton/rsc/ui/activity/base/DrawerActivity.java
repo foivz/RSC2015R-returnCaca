@@ -22,9 +22,9 @@ import andro.heklaton.rsc.interfrace.NavigationItemPosition;
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.ui.activity.JoinGameActivity;
 import andro.heklaton.rsc.ui.activity.LoginActivity;
-import andro.heklaton.rsc.ui.activity.MainActivity;
 import andro.heklaton.rsc.ui.activity.MapboxActivity;
 import andro.heklaton.rsc.ui.activity.MapboxJudgeActivity;
+import andro.heklaton.rsc.ui.activity.ProfileActivity;
 import andro.heklaton.rsc.ui.activity.SettingsActivity;
 import andro.heklaton.rsc.ui.activity.StepCounterActivity;
 import andro.heklaton.rsc.util.PrefsHelper;
@@ -55,7 +55,10 @@ public abstract class DrawerActivity extends AppCompatActivity implements
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header);
 
         TextView tvUsername = (TextView) headerView.findViewById(R.id.username);
-        TextView tvEmail = (TextView) headerView.findViewById(R.id.username);
+        TextView tvEmail = (TextView) headerView.findViewById(R.id.email);
+
+        tvUsername.setText(PrefsHelper.getUsername(this));
+        tvEmail.setText(PrefsHelper.getEmail(this));
 
         inflateActivityLayout(getLayoutId());
 
@@ -105,12 +108,12 @@ public abstract class DrawerActivity extends AppCompatActivity implements
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
             switch (id) {
-                case R.id.nav_map: {
+                case R.id.join_game: {
                     intent.setClass(DrawerActivity.this, JoinGameActivity.class);
                     startActivity(intent);
                     break;
                 }
-                case R.id.nav_share: {
+                case R.id.play_game: {
                     if (PrefsHelper.getUsername(this).equals("admin")) {
                         intent.setClass(DrawerActivity.this, MapboxJudgeActivity.class);
                     } else {
@@ -120,8 +123,8 @@ public abstract class DrawerActivity extends AppCompatActivity implements
                     startActivity(intent);
                     break;
                 }
-                case R.id.nav_info:
-                    intent.setClass(DrawerActivity.this, StepCounterActivity.class);
+                case R.id.profile:
+                    intent.setClass(DrawerActivity.this, ProfileActivity.class);
                     startActivity(intent);
                     break;
             }

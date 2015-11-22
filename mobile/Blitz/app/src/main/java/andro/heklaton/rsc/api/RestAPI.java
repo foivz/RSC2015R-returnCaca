@@ -6,6 +6,7 @@ import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.api.request.MessageRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
 import andro.heklaton.rsc.api.request.SocialLoginRequest;
+import andro.heklaton.rsc.model.gamestatus.GameStatus;
 import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.login.User;
 import andro.heklaton.rsc.model.player.PlayerStatus;
@@ -88,6 +89,13 @@ public interface RestAPI {
             @Header("X-Api-Token") String token,
             @Body String body,
             Callback<BaseResponse> request
+    );
+
+    @GET("/game-status/1")
+    void getStatus(
+            @Header("Content-Type") String contentType,
+            @Header("X-Api-Token") String token,
+            Callback<GameStatus> response
     );
 
 }
