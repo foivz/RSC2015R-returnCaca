@@ -33,6 +33,47 @@ class Message implements \JsonSerializable
     private $message;
 
     /**
+     * @var float
+     * @ORM\Column(type="decimal", precision=18, scale=14, nullable=true)
+     */
+    private $lat;
+
+
+    /**
+     * @var float
+     * @ORM\Column(type="decimal", precision=18, scale=14, nullable=true)
+     */
+    private $lng;
+
+    /**
+     * @return float
+     */
+    public function getLat() {
+        return $this->lat;
+    }
+
+    /**
+     * @param float $lat
+     */
+    public function setLat($lat) {
+        $this->lat = $lat;
+    }
+
+    /**
+     * @return float
+     */
+    public function getLng() {
+        return $this->lng;
+    }
+
+    /**
+     * @param float $lng
+     */
+    public function setLng($lng) {
+        $this->lng = $lng;
+    }
+
+    /**
      * @return Player
      */
     public function getPlayer()
@@ -67,8 +108,11 @@ class Message implements \JsonSerializable
     function jsonSerialize()
     {
         return [
+            'id'      => $this->getId(),
             'player'  => $this->getPlayer(),
             'message' => $this->getMessage(),
+            'lat'     => $this->getLat(),
+            'lng'     => $this->getLng(),
         ];
     }
 
