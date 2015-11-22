@@ -34,6 +34,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
 
     public static final String COMMAND_FIRE = "ATTENTION";
     public static final String COMMAND_HELP = "HELP";
+    public static final String COMMAND_ABORT = "ABORT";
     public static final String TAG = "Voice";
 
     protected SpeechRecognizer mSpeechRecognizer;

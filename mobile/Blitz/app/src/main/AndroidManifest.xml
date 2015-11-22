@@ -31,7 +31,6 @@
             android:name="AA_DB_VERSION"
             android:value="6" />
 
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -66,6 +65,9 @@
 
         <activity android:name=".ui.activity.StepCounterActivity"
             android:theme="@style/AppTheme"/>
+
+        <activity android:name=".ui.activity.MapboxJudgeActivity"
+            android:screenOrientation="landscape"/>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
