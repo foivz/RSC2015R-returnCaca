@@ -167,23 +167,27 @@
             });
         }
 
+        function updateLists(elem, teamId) {
+            var players = [];
+            elem.children("li.player-card").each(function () {
+                players.push($(this).attr('data-id'));
+            });
+
+            $.ajax({
+                url: "{{ url('api.team.join') }}",
+                type: 'POST',
+                dataType: 'JSON',
+                data: {players: players, team: teamId}
+            }).done(function (data) {
+
+            });
+        }
+
         function joinTeam(elem) {
             var teamId = elem.attr("data-team");
             elem.sortable({
                 deactivate: function (event, ui) {
-                    var players = [];
-                    elem.children("li.player-card").each(function () {
-                        players.push($(this).attr('data-id'));
-                    });
-
-                    $.ajax({
-                        url: "{{ url('api.team.join') }}",
-                        type: 'POST',
-                        dataType: 'JSON',
-                        data: {players: players, team: teamId}
-                    }).done(function (data) {
-
-                    });
+                    updateLists(elem, teamId);
                 }
             });
         }
@@ -216,6 +220,34 @@
 
             })
 
+            $('#randomize').on('click', function () {
+                //$('#randomize').addClass('disabled');
+                shuffleQueuePlayers()
+            });
+
+            function shuffle(o) {
+                for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+                return o;
+            }
+
+
+            function shuffleQueuePlayers() {
+                var players = $('#sortable1 > li');
+                shuffle(players);
+                console.log(players);
+
+                var i = 0;
+                for (i = 0; i < players.length / 2; i++) {
+                    $(players[i]).appendTo("#sortable2");
+                }
+
+                for (i; i < players.length; i++) {
+                    $(players[i]).appendTo("#sortable3");
+                }
+
+                updateLists($("#sortable2"), $("#sortable2").attr("data-team"));
+                updateLists($("#sortable3"), $("#sortable3").attr("data-team"));
+            }
 
         });
 
