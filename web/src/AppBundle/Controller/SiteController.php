@@ -211,7 +211,8 @@ class SiteController extends Controller
      */
     public function userProfileAction(Request $request)
     {
-        return [];
+        $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
+        return compact('player');
     }
 
 }

@@ -75,7 +75,6 @@ class Player implements \JsonSerializable
 
     public function __construct()
     {
-        $this->team = new ArrayCollection();
     }
 
     /**
@@ -215,6 +214,7 @@ class Player implements \JsonSerializable
             'level'  => $this->getLevel(),
             'team'   => $this->getTeam()->getId(),
             'isLive' => $this->isLive(),
+            'image' => $this->getImage()->getImageName(),
         ];
     }
 

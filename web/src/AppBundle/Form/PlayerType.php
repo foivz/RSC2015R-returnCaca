@@ -5,6 +5,7 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Zantolov\MediaBundle\Form\EventSubscriber\ImagesChooserFieldAdderSubscriber;
 
 class PlayerType extends AbstractType
 {
@@ -14,6 +15,9 @@ class PlayerType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $imagesSubscriber = new ImagesChooserFieldAdderSubscriber('image', array('label' => 'Image', 'multiple' => false));
+        $builder->addEventSubscriber($imagesSubscriber);
+
         $builder
             ->add('score')
             ->add('alias')
@@ -22,26 +26,24 @@ class PlayerType extends AbstractType
             ->add('steps')
             ->add('active')
             ->add('user')
-            ->add('teams')
-            ->add('image')
-;
-}
+            ->add('team');
+    }
 
-/**
-* @param OptionsResolverInterface $resolver
-*/
-public function setDefaultOptions(OptionsResolverInterface $resolver)
-{
-$resolver->setDefaults(array(
-'data_class' => 'AppBundle\Entity\Player'
-));
-}
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'AppBundle\Entity\Player'
+        ));
+    }
 
-/**
-* @return string
-*/
-public function getName()
-{
-return 'appbundle_player';
-}
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'appbundle_player';
+    }
 }

@@ -152,7 +152,7 @@
                         continue;
                     }
 
-                    $('.connectedSortable[data-team="' + id + '"]').append(buildCard(elem.id, elem.alias, '{{ asset('bundles/app/img/dan.jpeg') }}'));
+                    $('.connectedSortable[data-team="' + id + '"]').append(buildCard(elem.id, elem.alias, 'media/cache/postLeadingImageBig/uploads/images/default/' + elem.image));
                 }
             });
         }
@@ -196,8 +196,8 @@
                 $.ajax({
                     url: "{{ url('api.game.setup') }}",
                     type: 'POST',
-                    data: data,
-                    dataType: 'JSON'
+                    dataType: 'JSON',
+                    data: data
                 }).done(function (data) {
                     if (data.status == 'ok') {
                         $("#rulesForm").children('.alert').text(data.message).fadeIn();

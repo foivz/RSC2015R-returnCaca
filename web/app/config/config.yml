@@ -190,7 +190,7 @@ hwi_oauth:
             client_id:           "%fb_client_id%"
             client_secret:       "%fb_client_secret%"
             scope:               "email"
-            infos_url:           https://graph.facebook.com/me?fields=email,id,link,name,verified,picture.type(square)
+            infos_url:           https://graph.facebook.com/me?fields=email,id,link,name,verified,picture.type(square).width(800).height(800)
             scope:               "email"
             paths:
                 email:           email
