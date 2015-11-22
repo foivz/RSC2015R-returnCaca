@@ -84,14 +84,14 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
         /** @var GcmService $gcmService */
         $gcmService = $this->get('gcm_service');
         $result = $gcmService->sendNotification($ids, [
-            'message' => $msg,
-            'from'    => $player,
-            'team'    => $teamMember,
-            'lat'     => $lat,
-            'lng'     => $lng,
+            'message'    => $msg,
+            'fromPlayer' => $player,
+            'team'       => $teamMember,
+            'lat'        => $lat,
+            'lng'        => $lng,
         ]);
 
-        file_put_contents(__DIR__ . '/../../app/logs/gcm.log', json_encode($result));
+        file_put_contents(__DIR__ . '/../../app/logs/gcm.log', is_array($result) ? json_encode($result) : $result);
 
 
         return $this->createResponse([
