@@ -5,7 +5,7 @@
     <div class="col-md-12">
 
         {# navs tabs navigation #}
-        <div class="col-md-10">
+        <div class="col-md-12">
             <ul class="nav nav-tabs">
                 <li class="active text-center">
                     <a href="#home" data-toggle="tab">
@@ -24,109 +24,42 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-2 col-xs-12">
-            <a class="btn btn-warning col-xs-12 saveButton" href="#">Save game</a>
-        </div>
-
 
         <div id="myTabContent" class="tab-content">
 
             {#General game info#}
             <div class="tab-pane fade active in" id="home">
-                {# Players #}
-                <div class="col-md-6">
-                    <h4 class="text-center">Players</h4>
-                    <a class="btn btn-warning" id="randomize">Randomize</a>
-                    <ul class="col-md-12 player-scroll connectedSortable" id="sortable1">
-
-
-                        {# kartica igraca #}
-                        <li class="col-md-12 player-card" data-id="1">
-                            <div class="col-md-2">
-                                <br>
-                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
-                            </div>
-                            <div class="col-md-10">
-                                <h5>0. Player Name</h5>
-
-                                <p>Player Nickname</p>
-
-                                <p>Level</p>
-                            </div>
-                        </li>
-
-                        {# kartica igraca #}
-                        <li class="col-md-12 player-card" data-id="2">
-                            <div class="col-md-2">
-                                <br>
-                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
-                            </div>
-                            <div class="col-md-10">
-                                <h5>1. Player Name</h5>
-
-                                <p>Player Nickname</p>
-
-                                <p>Level</p>
-                            </div>
-                        </li>
-                        {# kartica igraca #}
-                        <li class="col-md-12 player-card" data-id="3">
-                            <div class="col-md-2">
-                                <br>
-                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
-                            </div>
-                            <div class="col-md-10">
-                                <h5>2. Player Name</h5>
-
-                                <p>Player Nickname</p>
-
-                                <p>Level</p>
-                            </div>
-                        </li>
-                        {# kartica igraca #}
-                        <li class="col-md-12 player-card" data-id="4">
-                            <div class="col-md-2">
-                                <br>
-                                <img class="img-responsive img-circle" src="{{ asset('bundles/app/img/dan.jpeg') }}">
-                            </div>
-                            <div class="col-md-10">
-                                <h5>3. Player Name</h5>
-
-                                <p>Player Nickname</p>
-
-                                <p>Level</p>
-                            </div>
+                <div class="col-md-12" id="selectionNav">
+                    <ul class="list-inline">
+                        <li>
+                            <a class="btn btn-warning" id="randomize">Randomize</a>
+                            <a class="btn btn-success" id="randomize">Start <i class="fa fa-arrow-right"></i></a>
                         </li>
                     </ul>
                 </div>
 
+                {# Players #}
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <input class="form-control" id="focusedInput" type="text" value="Queue" disabled>
+                    </div>
+                    <ul class="player-scroll connectedSortable queueList" id="sortable1" data-team="0"></ul>
+                </div>
+
                 {# Teams #}
-                <div class="col-md-6">
-                    <h4 class="text-center">Teams</h4>
-
-                    <div class="col-md-12" id="blue-team">
-                        <div>
-
-                            <div class="form-group">
-                                <input class="form-control" id="focusedInput" type="text" value="Team A" autofocus>
-                            </div>
-
-                            {# List of players #}
-                            <ul class="team-selection connectedSortable" id="sortable2">
-                            </ul>
-
-                        </div>
+                <div class="col-md-4" id="blue-team">
+                    <div class="form-group">
+                        <input class="form-control" id="focusedInput" type="text" placeholder="Team A"
+                               autofocus>
                     </div>
-                    <div class="col-md-12" id="red-team">
-                        <div>
-                            <div class="form-group">
-                                <input class="form-control" id="focusedInput" type="text" value="Team B">
-                            </div>
-                            {# List of players #}
-                            <ul class="team-selection connectedSortable" id="sortable3">
-                            </ul>
-                        </div>
+
+                    <ul class="team-selection connectedSortable" id="sortable2" data-team="1"></ul>
+                </div>
+                <div class="col-md-4" id="red-team">
+                    <div class="form-group">
+                        <input class="form-control" id="focusedInput" type="text" placeholder="Team B">
                     </div>
+                    <ul class="team-selection connectedSortable" id="sortable3" data-team="2"></ul>
                 </div>
 
 
@@ -140,29 +73,25 @@
 
             {#Rules tab#}
             <div class="tab-pane fade" id="rules">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <h2>Rules</h2>
 
                     <div class="form-group">
-
-                        <label for="inputLength" class="col-lg-2 control-label">Game length</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" id="inputLength" placeholder="Game lenght">
-                        </div>
-                        <br>
-
-                        <label for="inputLength" class="col-lg-2 control-label">Kill points</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" id="inputLength" placeholder="points">
-                        </div>
-                        <br>
-
-
-                        <label for="inputLength" class="col-lg-2 control-label">Flag points</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" id="inputLength" placeholder="points">
-                        </div>
+                        <label for="inputLength">Game length</label>
+                        <input type="number" class="form-control" id="inputLength" placeholder="Game lenght">
                     </div>
+
+                    <div class="form-group">
+                        <label for="inputLength">Kill points</label>
+                        <input type="number" class="form-control" id="inputLength" placeholder="points">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputLength">Flag points</label>
+
+                        <input type="number" class="form-control" id="inputLength" placeholder="points">
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -170,5 +99,94 @@
 
     </div>
 
+
+{% endblock %}
+
+{% block customJsPlugins %}
+
+    {{ parent() }}
+
+    <script>
+
+        function buildCard(id, title, img) {
+            var li = $('<li/>').addClass('col-md-12 player-card')
+                    .attr('data-id', id)
+                    .append($('<div/>').addClass('col-md-4').append($('<img/>').addClass('img-responsive img-circle').attr('src', img)))
+                    .append($('<div/>').addClass('col-md-8').append($('<h5/>').text(title)));
+
+            return li;
+        }
+
+        function refreshQueue() {
+            $.ajax({
+                url: "{{ url('api.get.queue') }}",
+                type: 'GET',
+                dataType: 'JSON'
+            }).done(function (data) {
+                for (var i = 0; i < data.data.players.length; i++) {
+                    var elem = data.data.players[i];
+                    if ($('.player-card[data-id="' + elem.id + '"]').length != 0) {
+                        continue;
+                    }
+                    $('.queueList').append(buildCard(elem.id, elem.alias, '{{ asset('bundles/app/img/dan.jpeg') }}'));
+                }
+            });
+        }
+
+        function refreshTeam(id) {
+            $.ajax({
+                url: "{{ url('api.team.get') }}",
+                data: {teamId: id},
+                type: 'GET',
+                dataType: 'JSON'
+            }).done(function (data) {
+                for (var i = 0; i < data.data.players.length; i++) {
+                    var elem = data.data.players[i];
+                    if ($('.player-card[data-id="' + elem.id + '"]').length != 0) {
+                        continue;
+                    }
+
+                    $('.connectedSortable[data-team="' + id + '"]').append(buildCard(elem.id, elem.alias, '{{ asset('bundles/app/img/dan.jpeg') }}'));
+                }
+            });
+        }
+
+        function joinTeam(elem) {
+            var teamId = elem.attr("data-team");
+            elem.sortable({
+                deactivate: function (event, ui) {
+                    var players = [];
+                    elem.children("li.player-card").each(function () {
+                        players.push($(this).attr('data-id'));
+                    });
+
+                    $.ajax({
+                        url: "{{ url('api.team.join') }}",
+                        type: 'POST',
+                        dataType: 'JSON',
+                        data: {players: players, team: teamId}
+                    }).done(function (data) {
+
+                    });
+                }
+            });
+        }
+        ;
+
+        $(function () {
+
+            refreshQueue();
+            window.setInterval(refreshQueue, 1000);
+            refreshTeam(1);
+            refreshTeam(2);
+            joinTeam($("#sortable2"));
+            joinTeam($("#sortable3"));
+            joinTeam($("#sortable1"));
+
+
+        });
+
+
+    </script>
 
 {% endblock %}
