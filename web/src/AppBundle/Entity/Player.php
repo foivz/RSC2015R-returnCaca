@@ -175,7 +175,7 @@ class Player implements \JsonSerializable
     }
 
     /**
-     * @return ArrayCollection
+     * @return Team
      */
     public function getTeam()
     {
