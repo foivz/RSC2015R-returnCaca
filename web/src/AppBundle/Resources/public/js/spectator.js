@@ -1,5 +1,6 @@
 var map;
 var timestamp;
+var updateTimer;
 
 function component(x, v) {
     return Math.floor(x / v);
@@ -144,7 +145,7 @@ var attentionAllyMarker = new google.maps.MarkerImage(
 // Function
 $(document).ready(function() {
     init();
-    window.setInterval(refreshLocations, 1000);
+    updateTimer = window.setInterval(refreshLocations, 1000);
     showPing("attentionEnemy", 46.306390,16.339145);
 });
 
@@ -189,10 +190,17 @@ function init() {
         var $div = $('.time');
         setInterval(function() {
             timestamp--;
+            console.log(timestamp);
             var minutes = component(timestamp, 60) % 60,
                 seconds = component(timestamp,  1) % 60;
 
-            $div.html(pad(minutes, 2) + ":" + pad(seconds, 2));
+            if(timestamp <= 0) {
+                $div.html("FINISHED");
+                showSummary();
+            }
+            else {
+                $div.html(pad(minutes, 2) + ":" + pad(seconds, 2));
+            }
         }, 1000);
     });
 
@@ -230,14 +238,31 @@ function refreshMap() {
 }
 
 function refreshLocations() {
-    $.get( "api/stats/1", function(data) {
+    $.get("api/stats/1", function (data) {
+        // PLayer count
+        $('#team1PlayerCount').text(data.data.game.playerCount.team1.alive + "/" + data.data.game.playerCount.team1.total);
+        $('#team2PlayerCount').text(data.data.game.playerCount.team2.alive + "/" + data.data.game.playerCount.team2.total);
+        // Score
+        $('#team1Score').text(data.data.game.score.team1);
+        $('#team2Score').text(data.data.game.score.team2);
+        // Flags
+        $('#team1Flag').text(data.data.game.regionCount.team1);
+        $('#team2Flag').text(data.data.game.regionCount.team2);
+        // Odds
+        $('#team1Odd').text(data.data.game.odds.team1);
+        $('#team2Odd').text(data.data.game.odds.team2);
+        // Regions
+        $.each(data.data.game.regions, function (id, owner) {
+            fillZone(id, owner);
+        });
+        // Locations
         team1Locations = [];
         team2Locations = [];
-        $.each(data.data.stats, function(key, loc) {
-            if(loc.team == 1) {
+        $.each(data.data.stats, function (key, loc) {
+            if (loc.team == 1) {
                 team1Locations.push({lat: loc.location.lat, lng: loc.location.lng, alive: loc.isLive});
             }
-            else if(loc.team == 2) {
+            else if (loc.team == 2) {
                 team2Locations.push({lat: loc.location.lat, lng: loc.location.lng, alive: loc.isLive});
             }
         });
@@ -268,6 +293,11 @@ function showPing(marker, lat, lng) {
 function fillZone(id, team) {
     var color;
     if(team == 1) color = '#bceb00';
-    else color = '#eb7f00';
+    else if(team == 2) color = '#eb7f00';
+    else color = '#000000';
     zoneFill[id].setOptions({fillColor: color});
+}
+
+function showSummary() {
+    window.clearInterval(updateTimer);
 }
