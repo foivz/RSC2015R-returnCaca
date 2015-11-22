@@ -96,6 +96,7 @@ var team1Markers = [];
 var team2Markers = [];
 
 var notifications = [];
+var notificationIdHistory = [];
 
 // Settings
 var allyMarker = new google.maps.MarkerImage(
@@ -146,7 +147,6 @@ var attentionAllyMarker = new google.maps.MarkerImage(
 $(document).ready(function() {
     init();
     updateTimer = window.setInterval(refreshLocations, 1000);
-    showPing("attentionEnemy", 46.306390,16.339145);
 });
 
 function init() {
@@ -268,26 +268,39 @@ function refreshLocations() {
         });
         refreshMap();
     });
+    $.get("api/msg", function (data) {
+        console.log(data);
+        $.each(data.data, function(key, val) {
+            var marker;
+            if(val.player.team == 1 && val.message == "ATTENTION")
+                marker = "attentionAlly";
+            if(val.player.team == 2 && val.message == "ATTENTION")
+                marker = "attentionEnemy";
+            showPing(marker, val.id, val.lat, val.lng);
+        });
+    });
 }
 
-function showPing(marker, lat, lng) {
-    var audio = new Audio('/bundles/app/sounds/ping.mp3');
-    audio.play();
-    notifications[Math.floor(Date.now()/1000)] = new RichMarker({
-        position: new google.maps.LatLng(lat, lng),
-        map: map,
-        shadow: 'none',
-        content: '<div class="ring ping"></div><div class="marker"><img src="/bundles/app/images/markers/' + marker + '.png"></img></a>'
-    });
-    setTimeout(function() {
-        for(var key in notifications) {
-            console.log(Math.floor(Date.now()/1000) - key);
-            if(Math.floor(Date.now()/1000) - key > 10) {
-                notifications[key].setMap(null);
-                delete notifications[key];
+function showPing(marker, id, lat, lng) {
+    if((notificationIdHistory.indexOf(id) > -1) == false) {
+        notificationIdHistory.push(id);
+        var audio = new Audio('/bundles/app/sounds/ping.mp3');
+        audio.play();
+        notifications[Math.floor(Date.now()/1000)] = new RichMarker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            shadow: 'none',
+            content: '<div class="ring ping"></div><div class="marker"><img src="/bundles/app/images/markers/' + marker + '.png"></img></a>'
+        });
+        setTimeout(function() {
+            for(var key in notifications) {
+                if(Math.floor(Date.now()/1000) - key > 10) {
+                    notifications[key].setMap(null);
+                    delete notifications[key];
+                }
             }
-        }
-    }, 11000);
+        }, 11000);
+    }
 }
 
 function fillZone(id, team) {
