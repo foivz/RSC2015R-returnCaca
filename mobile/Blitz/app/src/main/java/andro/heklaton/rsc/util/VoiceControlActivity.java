@@ -1,7 +1,6 @@
 package andro.heklaton.rsc.util;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
@@ -30,7 +29,7 @@ import retrofit.client.Response;
  */
 public abstract class VoiceControlActivity extends DrawerActivity implements RecognitionListener, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
-    public static final String COMMAND_FIRE = "ATTENTION";
+    public static final String COMMAND_ATTENTION = "ATTENTION";
     public static final String COMMAND_HELP = "HELP";
     public static final String COMMAND_ABORT = "ABORT";
     public static final String TAG = "Voice";
@@ -91,7 +90,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
         if (matches != null) {
             for (String s : matches) {
                 Log.d("Voice", s);
-                if (s.equalsIgnoreCase(COMMAND_FIRE)) {
+                if (s.equalsIgnoreCase(COMMAND_ATTENTION)) {
                     matchesFire = true;
                 }
                 if (s.equalsIgnoreCase(COMMAND_HELP)) {
@@ -115,7 +114,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
         Log.d("Voice command", "Help");
 
         MessageRequest request = new MessageRequest();
-        request.setMessage(COMMAND_FIRE);
+        request.setMessage(COMMAND_ATTENTION);
 
         request.setLat(lat);
         request.setLng(lng);

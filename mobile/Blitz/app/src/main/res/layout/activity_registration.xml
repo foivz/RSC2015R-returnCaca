@@ -143,7 +143,7 @@
             card:layout_anchor="@id/card"
             card:layout_anchorGravity="bottom|end"
             card:backgroundTint="@color/gray_fab"
-            android:src="@android:drawable/ic_menu_share"
+            android:src="@drawable/ic_done_24dp"
             android:transitionName="fab"
             android:layout_marginEnd="@dimen/login_fab_margin"
             android:layout_marginRight="@dimen/login_fab_margin"/>

@@ -122,7 +122,7 @@ public class LoginActivity extends AccountActivity {
     private void registerSocial(String email) {
         SocialLoginRequest socialLoginRequest = new SocialLoginRequest();
         socialLoginRequest.setEmail(email);
-        socialLoginRequest.setUsername(fbAccessToken.getToken());
+        socialLoginRequest.setUsername(fbAccessToken.getUserId());
         socialLoginRequest.setPassword(getString(R.string.fb_login_pass));
 
         RestHelper.getRestApi().login(RestAPI.HEADER, socialLoginRequest, new Callback<User>() {
@@ -133,7 +133,9 @@ public class LoginActivity extends AccountActivity {
 
             @Override
             public void failure(RetrofitError error) {
-
+                if(error.getMessage() != null) {
+                    Log.d("FB", error.getMessage());
+                }
             }
         });
     }
