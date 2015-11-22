@@ -1,10 +1,12 @@
 package andro.heklaton.rsc.api;
 
+import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.api.request.LoginRequest;
 import andro.heklaton.rsc.api.request.SocialLoginRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.login.User;
+import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Stats;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -50,6 +52,21 @@ public interface RestAPI {
     void getCurrentStats(
             @Header("Content-Type") String contentType,
             Callback<Stats> response
+    );
+
+    @POST("/capture-flag")
+    void captureFlag(
+            @Header("Content-Type") String contentType,
+            @Header("X-Api-Token") String token,
+            @Body CaptureRequest request,
+            Callback<LocationSendResponse> response
+    );
+
+    @GET("/player-status")
+    void getPlayerStatus(
+            @Header("Content-Type") String contentType,
+            @Header("X-Api-Token") String token,
+            Callback<PlayerStatus> response
     );
 
 }

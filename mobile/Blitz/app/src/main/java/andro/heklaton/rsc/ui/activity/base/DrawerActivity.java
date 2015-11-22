@@ -20,6 +20,7 @@ import android.widget.TextView;
 import andro.heklaton.rsc.interfrace.InflateDrawerActivityLayout;
 import andro.heklaton.rsc.interfrace.NavigationItemPosition;
 import andro.heklaton.rsc.R;
+import andro.heklaton.rsc.ui.activity.LoginActivity;
 import andro.heklaton.rsc.ui.activity.MainActivity;
 import andro.heklaton.rsc.ui.activity.MapboxActivity;
 import andro.heklaton.rsc.ui.activity.SettingsActivity;
@@ -166,6 +167,9 @@ public abstract class DrawerActivity extends AppCompatActivity implements
             PrefsHelper.saveToken(this, null);
             PrefsHelper.saveEmail(this, null);
             PrefsHelper.saveGcmToken(this, null);
+            Intent intent = new Intent(DrawerActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

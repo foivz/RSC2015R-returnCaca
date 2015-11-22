@@ -37,8 +37,11 @@ import java.util.TimerTask;
 import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
+import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.player.PlayerStatus;
+import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
@@ -53,6 +56,9 @@ import retrofit.client.Response;
  * Created by Andro on 11/21/2015.
  */
 public class MapboxActivity extends DrawerActivity {
+
+    public static final String COLOR_GREEN = "#00FF00";
+    public static final String COLOR_RED = "#FF0000";
 
     private MapView mapView;
     private List<MarkerOptions> markers;
@@ -71,9 +77,14 @@ public class MapboxActivity extends DrawerActivity {
 
     private List<PolygonOptions> takenZones;
 
+    private PlayerStatus player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getPlayerStatus();
+
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setStyleUrl(Style.DARK);
         mapView.setCenterCoordinate(new LatLng(46.306390, 16.339145));
@@ -105,6 +116,26 @@ public class MapboxActivity extends DrawerActivity {
 
         startSendingLocation();
         startReceivingStats();
+    }
+
+    private void getPlayerStatus() {
+        RestHelper.getRestApi().getPlayerStatus(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                new Callback<PlayerStatus>() {
+                    @Override
+                    public void success(PlayerStatus playerStatus, Response response) {
+                        player = playerStatus;
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (error.getMessage() != null) {
+                            Log.d("Error player", error.getMessage());
+                        }
+                    }
+                }
+        );
     }
 
     /**
@@ -151,6 +182,7 @@ public class MapboxActivity extends DrawerActivity {
                             public void success(Stats stats, Response response) {
                                 Log.d("Success", response.getReason());
                                 updateStats(stats.getData().getStats());
+                                updateZones(stats.getData().getGame());
                             }
 
                             @Override
@@ -180,6 +212,42 @@ public class MapboxActivity extends DrawerActivity {
         }
 
         mapView.addMarkers(markers);
+    }
+
+    private void updateZones(Game game) {
+        if (player != null) {
+            if (game.getOwnerRegion1() != null) {
+                if (game.getOwnerRegion1().getId().equals(player.getData().getTeam())) {
+                    markZone(1, COLOR_GREEN);
+                } else {
+                    markZone(1, COLOR_RED);
+                }
+            }
+
+            if (game.getOwnerRegion2() != null) {
+                if (game.getOwnerRegion2().getId().equals(player.getData().getTeam())) {
+                    markZone(2, COLOR_GREEN);
+                } else {
+                    markZone(2, COLOR_RED);
+                }
+            }
+
+            if (game.getOwnerRegion3() != null) {
+                if (game.getOwnerRegion3().getId().equals(player.getData().getTeam())) {
+                    markZone(3, COLOR_GREEN);
+                } else {
+                    markZone(3, COLOR_RED);
+                }
+            }
+
+            if (game.getOwnerRegion4() != null) {
+                if (game.getOwnerRegion4().getId().equals(player.getData().getTeam())) {
+                    markZone(4, COLOR_GREEN);
+                } else {
+                    markZone(4, COLOR_RED);
+                }
+            }
+        }
     }
 
     private void redrawPolygons() {
@@ -224,7 +292,8 @@ public class MapboxActivity extends DrawerActivity {
                 String[] tag = text.split("-");
                 String zone = tag[1];
                 Toast.makeText(getApplicationContext(), zone, Toast.LENGTH_LONG).show();
-                markZone(Integer.valueOf(zone));
+                markZone(Integer.valueOf(zone), "#00FF00");
+                markZoneOnline(Integer.valueOf(zone));
 
                 ndef.close();
             }
@@ -243,11 +312,35 @@ public class MapboxActivity extends DrawerActivity {
         }
     }
 
-    private void markZone(int zone) {
-        PolygonOptions po = takenZones.get(zone);
-        po.fillColor(Color.parseColor("#00bb00"));
+    private void markZone(int zone, String color) {
+        PolygonOptions po = takenZones.get(zone - 1);
+        po.fillColor(Color.parseColor(color));
         po.alpha(0.5f);
-        mapView.addPolygon(takenZones.get(zone));
+        mapView.addPolygon(takenZones.get(zone - 1));
+    }
+
+    private void markZoneOnline(int zone) {
+        CaptureRequest request = new CaptureRequest();
+        request.setRegionId(zone);
+
+        RestHelper.getRestApi().captureFlag(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                request,
+                new Callback<LocationSendResponse>() {
+                    @Override
+                    public void success(LocationSendResponse locationSendResponse, Response response) {
+                        Log.d("Capture", locationSendResponse.getMessage());
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (error.getMessage() != null) {
+                            Log.d("Capture", error.getMessage());
+                        }
+                    }
+                }
+        );
     }
 
     @Override
@@ -287,8 +380,6 @@ public class MapboxActivity extends DrawerActivity {
     public void onPause()  {
         super.onPause();
         mapView.onPause();
-        timer.cancel();
-        timer2.cancel();
     }
 
     @Override
@@ -302,6 +393,8 @@ public class MapboxActivity extends DrawerActivity {
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        timer.cancel();
+        timer2.cancel();
     }
 
     @Override

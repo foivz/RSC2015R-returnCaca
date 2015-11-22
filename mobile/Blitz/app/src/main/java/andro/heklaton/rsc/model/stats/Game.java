@@ -20,16 +20,16 @@ public class Game {
     private Object winner;
     @SerializedName("ownerRegion1")
     @Expose
-    private Object ownerRegion1;
+    private Team ownerRegion1;
     @SerializedName("ownerRegion2")
     @Expose
-    private Object ownerRegion2;
+    private Team ownerRegion2;
     @SerializedName("ownerRegion3")
     @Expose
-    private Object ownerRegion3;
+    private Team ownerRegion3;
     @SerializedName("ownerRegion4")
     @Expose
-    private Object ownerRegion4;
+    private Team ownerRegion4;
 
     /**
      * 
@@ -108,7 +108,7 @@ public class Game {
      * @return
      *     The ownerRegion1
      */
-    public Object getOwnerRegion1() {
+    public Team getOwnerRegion1() {
         return ownerRegion1;
     }
 
@@ -117,7 +117,7 @@ public class Game {
      * @param ownerRegion1
      *     The ownerRegion1
      */
-    public void setOwnerRegion1(Object ownerRegion1) {
+    public void setOwnerRegion1(Team ownerRegion1) {
         this.ownerRegion1 = ownerRegion1;
     }
 
@@ -126,7 +126,7 @@ public class Game {
      * @return
      *     The ownerRegion2
      */
-    public Object getOwnerRegion2() {
+    public Team getOwnerRegion2() {
         return ownerRegion2;
     }
 
@@ -135,7 +135,7 @@ public class Game {
      * @param ownerRegion2
      *     The ownerRegion2
      */
-    public void setOwnerRegion2(Object ownerRegion2) {
+    public void setOwnerRegion2(Team ownerRegion2) {
         this.ownerRegion2 = ownerRegion2;
     }
 
@@ -144,7 +144,7 @@ public class Game {
      * @return
      *     The ownerRegion3
      */
-    public Object getOwnerRegion3() {
+    public Team getOwnerRegion3() {
         return ownerRegion3;
     }
 
@@ -153,7 +153,7 @@ public class Game {
      * @param ownerRegion3
      *     The ownerRegion3
      */
-    public void setOwnerRegion3(Object ownerRegion3) {
+    public void setOwnerRegion3(Team ownerRegion3) {
         this.ownerRegion3 = ownerRegion3;
     }
 
@@ -162,7 +162,7 @@ public class Game {
      * @return
      *     The ownerRegion4
      */
-    public Object getOwnerRegion4() {
+    public Team getOwnerRegion4() {
         return ownerRegion4;
     }
 
@@ -171,7 +171,7 @@ public class Game {
      * @param ownerRegion4
      *     The ownerRegion4
      */
-    public void setOwnerRegion4(Object ownerRegion4) {
+    public void setOwnerRegion4(Team ownerRegion4) {
         this.ownerRegion4 = ownerRegion4;
     }
 
