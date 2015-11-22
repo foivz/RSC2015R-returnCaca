@@ -271,12 +271,16 @@ function refreshLocations() {
     $.get("api/msg", function (data) {
         console.log(data);
         $.each(data.data, function(key, val) {
-            var marker;
+            var marker = null;
             if(val.player.team == 1 && val.message == "ATTENTION")
                 marker = "attentionAlly";
             if(val.player.team == 2 && val.message == "ATTENTION")
                 marker = "attentionEnemy";
-            showPing(marker, val.id, val.lat, val.lng);
+            if(val.player.team == 1 && val.message == "HELP")
+                marker = "helpAlly";
+            if(val.player.team == 2 && val.message == "HELP")
+                marker = "helpEnemy";
+            if(marker != null) showPing(marker, val.id, val.lat, val.lng);
         });
     });
 }
