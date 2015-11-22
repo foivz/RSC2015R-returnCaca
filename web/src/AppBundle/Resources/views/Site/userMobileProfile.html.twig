@@ -1,10 +1,10 @@
 {% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
 
-
+{% block navigation %}{% endblock %}
 {% block body %}
   <div class="container">
     <div class="row-centered user-page">
-      <div class="col-md-10">
+      <div class="col-md-12">
         <div class="col-md-2">
           {% if player.image is defined and player.image is not null %}
 
@@ -38,7 +38,7 @@
             6700 cal
           </p>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-12">
           <div class="bs-component">
             <blockquote>
               <p>I hate campers.</p>
@@ -54,3 +54,4 @@
     </div>
   </div>
 {% endblock %}
+{% block footer %}{% endblock %}

@@ -215,4 +215,18 @@ class SiteController extends Controller
         return compact('player');
     }
 
+    /**
+     * @Route("/mobile/user", name="user.profile.mobile")
+     * @Template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userMobileProfileAction(Request $request)
+    {
+        $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
+        return compact('player');
+    }
+
+
+
 }
