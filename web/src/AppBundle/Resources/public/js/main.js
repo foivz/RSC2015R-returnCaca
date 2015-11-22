@@ -51,7 +51,6 @@ $(document).ready(function () {
 
             var initialPlayers = [];
             var playerIds = [];
-            getPlayerId();
 
             //sortable lists on judge
             $("#sortable1, #sortable2, #sortable3").sortable({
@@ -75,6 +74,8 @@ $(document).ready(function () {
                 });
                 return true;
             }
+
+            getPlayerId();
 
 
             function shuffle(array) {
