@@ -36,7 +36,8 @@ class UpdateLocationsCommand extends ContainerAwareCommand
         $manager = $this->getContainer()->get('doctrine')->getManager();
 
         $getData = function ($player) use ($manager, $game) {
-
+            $manager->refresh($player);
+            
             /** @var Player $player */
             if (!$player->isLive()) {
                 return;
