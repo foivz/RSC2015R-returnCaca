@@ -77,7 +77,7 @@ class UpdateLocationsCommand extends ContainerAwareCommand
 
             $manager->flush();
             $output->writeln('Updated');
-            sleep(1);
+            //sleep(1);
         }
 
     }
