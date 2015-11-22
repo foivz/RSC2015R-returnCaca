@@ -1,0 +1,12 @@
+{% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
+
+{% block body %}
+  <div id="loginPage">
+    <div class="row-centered">
+      <div class="col-md-5 col-centered text-center modal-content loginCard wow fadeInUp">
+        <h1>{{ 'resetting.title'|trans({}, 'FOSUserBundle') }}</h1>
+        {% include "FOSUserBundle:Resetting:request_content.html.twig" %}
+      </div>
+    </div>
+  </div>
+{% endblock body %}

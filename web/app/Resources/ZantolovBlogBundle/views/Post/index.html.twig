@@ -1,0 +1,152 @@
+{% extends 'ZantolovBlogBundle::baseAdmin.html.twig' %}
+
+    {% block body -%}
+
+
+        {% embed 'ZantolovAppBundle:Admin/partials:crudHeader.html.twig'  with { ignoreTabs: [""]} %}
+            {% block entityTitle %}
+                Posts
+            {% endblock %}
+            {% block actionPanel %}
+                <ul class="list-inline list-unstyled">
+                    {% include 'ZantolovAppBundle:SensioGeneratorBundle:partials/CRUD/indexLinks.html.twig' with {
+                    noUlElement: true,
+                    entityPrefix: "blog.admin.post."} %}
+                    <li>
+                        <a href="javascript:void(0);" class="selectVisible btn btn-default btn-sm">
+                            <i class="fa fa-check-square-o"></i>
+                            {% trans %}Select{% endtrans %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="deselectSelection btn btn-default btn-sm">
+                            <i class="fa fa-square-o"></i>
+                            {% trans %}Deselect{% endtrans %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="activateSelectedBtn btn btn-default btn-sm">
+                            <i class="fa fa-plus"></i>
+                            {% trans %}Activate{% endtrans %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="deactivateSelectedBtn btn btn-default btn-sm">
+                            <i class="fa fa-times"></i>
+                            {% trans %}Deactivate{% endtrans %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" data-confirm="Are you sure?"
+                           class="deleteSelectedBtn btn btn-default btn-sm">
+                            <i class="fa fa-trash"></i>
+                            {% trans %}Delete{% endtrans %}
+                        </a>
+                    </li>
+                </ul>
+            {% endblock %}
+            {% block filterPanel %}
+                <form>
+                    <ul class="list-inline list-unstyled">
+                        <li>
+                            <label for="filters[category]">Category</label>
+                            <select class="form-control onChangeSubmit" name="filters[category]">
+                                {% for category in categories %}
+                                    <option {{ (filters.category is defined ? (filters.category == category.id ? 'selected="selected': '') : '') }}value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </li>
+                        <li>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-filter"></i> {% trans %}Filter{% endtrans %}
+                            </button>
+                            <a href="{{ path('blog.admin.post') }}" class="btn btn-default">
+                                {% trans %}Reset filters{% endtrans %}</a>
+                        </li>
+                    </ul>
+                </form>
+
+            {% endblock %}
+        {% endembed %}
+
+
+        <table class="table dataTable table-hover">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Title</th>
+                <th class="col-sm-2">Published at</th>
+                <th>Active</th>
+                <th>Slug</th>
+                <th>Categories</th>
+                <th class="col-sm-1">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for entity in entities %}
+                <tr>
+                    <td>
+                        <input autocomplete="off"
+                               class="selectCheckbox"
+                               type="checkbox"
+                               value="{{ entity.id }}">
+                    </td>
+                    <td>
+                        <a href="{{ path('blog.admin.post.show', { 'id': entity.id }) }}">{{ entity.id }}</a>
+                    </td>
+                    <td>{{ entity.title }}</td>
+                    <td>{% if entity.publishedAt %}{{ entity.publishedAt|date(defaultDateTimeFormat) }}{% endif %}</td>
+                    <td>{{ entity.active|fontAwesome() }}</td>
+                    <td>{{ entity.slug }}</td>
+                    <td>
+                        {% if entity.categories is defined and entity.categories|length > 0 %}
+                            {% for category in entity.categories %}
+                                <span class="badge">{{ category.name }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-primary btn-sm"
+                           title="Show"
+                           href="{{ path('blog.admin.post.show', { 'id': entity.id }) }}">
+                            <i class="fa fa-search"></i>
+                        </a>
+                        <a class="btn btn-primary btn-sm"
+                           title="Edit"
+                           href="{{ path('blog.admin.post.edit', { 'id': entity.id }) }}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        {% if entity.active == true %}
+                            <a class="btn btn-primary btn-sm"
+                               title="Send push notification for this post"
+                               href="{{ path('admin_push_notification.send.post', { 'id': entity.id }) }}">
+                                <i class="fa fa-exclamation-triangle"></i> Notify
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <script>
+            function doMass(action) {
+                var selected = $(".selectCheckbox").map(function () {
+                    if ($(this).is(":checked")) {
+                        return $(this).val()
+                    }
+                }).get();
+
+                $.ajax({
+                    method: "POST",
+                    url: "{{ path("blog.admin.post.massAction") }}",
+                    dataType: "JSON",
+                    data: {ids: selected, action: action}
+                }).done(function (msg) {
+                    if (msg.status > 0) {
+                        window.location.reload();
+                    }
+                });
+            }
+        </script>
+    {% endblock %}

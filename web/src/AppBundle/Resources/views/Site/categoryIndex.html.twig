@@ -1,0 +1,80 @@
+{% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
+
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center">News</h1>
+        <br>
+        <br>
+        {% for post in posts %}
+            <div class="col-md-4">
+                <div class="postItem well">
+                    <h1 class="postTitle">
+                        <a href="{{ url('site.post', {slug: post.slug}) }}">
+                            {{ post.title }}
+                        </a>
+                    </h1>
+
+                    {% if post.image is defined and post.image is not null %}
+                        <div class="postLeadingImage">
+                            <a href="{{ url('site.post', {slug: post.slug}) }}">
+                            <img class="img-responsive"
+                                 src="{{ zantolov_uploader_asset(post.image, 'imageFile', null, false) | imagine_filter('postLeadingImage') }}"/>
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div class="postMeta">
+                        {{ post.publishedAt|date(defaultDateTimeFormat) }}
+                        <hr>
+                        <div class="col-md-12">
+                            {% if post.categories is defined and post.categories is not null %}
+                                {% for cat in post.categories %}
+                                    <a href="{{ url('site.category', {slug: cat.slug}) }}" class="badge">
+                                        {{ cat.name }}
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <br>
+                        <br>
+
+                        <p>{{ post.intro|raw }}</p>
+                        <hr>
+                        <div class="text-center">
+                            <ul class="list-unstyled list-inline text-center">
+                                <li>
+                                    <a href="http://www.facebook.com/share.php?u={{ url('site.post', {slug: post.slug}) }}"
+                                       target="_blank">
+                                        <i class="fa fa-2x fa-facebook"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="http://twitter.com/share?text={{ post.title }}&url={{ url('site.post', {slug: post.slug}) }}"
+                                       target="_blank">
+                                        <i class="fa fa-2x fa-twitter"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('site.post', {slug: post.slug}) }}">
+                                        <i class="fa fa-arrow-right fa-2x"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="row-centered">
+            <div id="postsPagination" class="col-centered col-md-12">
+                {{ knp_pagination_render(posts) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

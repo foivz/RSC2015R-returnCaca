@@ -1,0 +1,50 @@
+    {% extends 'AppBundle::baseAdmin.html.twig' %}
+
+    {% block body -%}
+    <h1>Player list</h1>
+
+            {% include 'ZantolovAppBundle:SensioGeneratorBundle:partials/CRUD/indexLinks.html.twig' with {entityPrefix: "admin_players."} %}
+    
+    <table class="table dataTable">
+        <thead>
+        <tr>
+                <th>Score</th>
+                <th>Alias</th>
+                <th>Level</th>
+                <th>Calories</th>
+                <th>Steps</th>
+                <th>Id</th>
+                <th>Active</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+        <tr>
+                    <td>
+                        <a href="{{ path('admin_players.show', { 'id': entity.id }) }}">{{ entity.score }}</a>
+                    </td>
+                    <td>{{ entity.alias }}</td>
+                    <td>{{ entity.level }}</td>
+                    <td>{{ entity.calories }}</td>
+                    <td>{{ entity.steps }}</td>
+                    <td>{{ entity.id }}</td>
+                    <td>{{ entity.active|fontAwesome() }}</td>
+                    <td><ul class="list-inline">        <li>
+            <a class="btn btn-primary"
+               href="{{ path('admin_players.show', { 'id': entity.id }) }}">
+                show
+            </a>
+        </li>        <li>
+            <a class="btn btn-primary"
+               href="{{ path('admin_players.edit', { 'id': entity.id }) }}">
+                edit
+            </a>
+        </li></ul>
+                    </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+            {% include 'ZantolovAppBundle:SensioGeneratorBundle:partials/CRUD/indexLinks.html.twig' with {entityPrefix: "admin_players."} %}        {% endblock %}

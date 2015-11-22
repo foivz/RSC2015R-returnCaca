@@ -1,0 +1,42 @@
+    {% extends 'AppBundle::baseAdmin.html.twig' %}
+
+    {% block body -%}
+    <h1>Team list</h1>
+
+            {% include 'ZantolovAppBundle:SensioGeneratorBundle:partials/CRUD/indexLinks.html.twig' with {entityPrefix: "admin_teams."} %}
+    
+    <table class="table dataTable">
+        <thead>
+        <tr>
+                <th>Name</th>
+                <th>Id</th>
+                <th>Active</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+        <tr>
+                    <td>
+                        <a href="{{ path('admin_teams.show', { 'id': entity.id }) }}">{{ entity.name }}</a>
+                    </td>
+                    <td>{{ entity.id }}</td>
+                    <td>{{ entity.active|fontAwesome() }}</td>
+                    <td><ul class="list-inline">        <li>
+            <a class="btn btn-primary"
+               href="{{ path('admin_teams.show', { 'id': entity.id }) }}">
+                show
+            </a>
+        </li>        <li>
+            <a class="btn btn-primary"
+               href="{{ path('admin_teams.edit', { 'id': entity.id }) }}">
+                edit
+            </a>
+        </li></ul>
+                    </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+            {% include 'ZantolovAppBundle:SensioGeneratorBundle:partials/CRUD/indexLinks.html.twig' with {entityPrefix: "admin_teams."} %}        {% endblock %}
