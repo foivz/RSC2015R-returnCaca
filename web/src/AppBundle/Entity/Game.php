@@ -209,8 +209,82 @@ class Game implements \JsonSerializable
         $this->endTimestamp = $endTimestamp;
     }
 
+    /*
+     * Returns array with alive/dead/total team member info
+     */
+    function getKillCount()
+    {
+        $result = [
+            'team1' => [
+                'total' => 0,
+                'dead' => 0,
+                'alive' => 0,
+            ],
+            'team2' => [
+                'total' => 0,
+                'dead' => 0,
+                'alive' => 0,
+            ],
+        ];
+        foreach($this->getTeam1()->getPlayers() as $player) {
+            $result['team1']['total']++;
+            if($player->isLive() == true)
+                $result['team1']['alive']++;
+            else
+                $result['team1']['dead']++;
+        }
+        foreach($this->getTeam2()->getPlayers() as $player) {
+            $result['team2']['total']++;
+            if($player->isLive() == true)
+                $result['team2']['alive']++;
+            else
+                $result['team2']['dead']++;
+        }
+        return $result;
+    }
+
+    function getRegionOwners()
+    {
+        return [
+            1 => $this->getOwnerRegion1() != null ? $this->getOwnerRegion1()->getId() : null,
+            2 => $this->getOwnerRegion2() != null ? $this->getOwnerRegion2()->getId() : null,
+            3 => $this->getOwnerRegion3() != null ? $this->getOwnerRegion3()->getId() : null,
+            4 => $this->getOwnerRegion4() != null ? $this->getOwnerRegion4()->getId() : null,
+        ];
+    }
+
+    function getScore()
+    {
+        $result = [
+            'team1' => 0,
+            'team2' => 0,
+        ];
+
+        // Kill score
+        $killCount = $this->getKillCount();
+        $result['team1'] = $killCount['team2']['dead'] * 2;
+        $result['team2'] = $killCount['team1']['dead'] * 2;
+
+        // Zone score
+        $owners = $this->getRegionOwners();
+        foreach($owners as $zone => $owner) {
+            switch($owner) {
+                case 1:
+                    $result['team1'] += 5;
+                    break;
+                case 2:
+                    $result['team2'] += 5;
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
     function jsonSerialize()
     {
+
+
         return [
             'id'           => $this->getId(),
             'team1'        => $this->getTeam1(),
@@ -220,6 +294,9 @@ class Game implements \JsonSerializable
             'ownerRegion2' => $this->getOwnerRegion2(),
             'ownerRegion3' => $this->getOwnerRegion3(),
             'ownerRegion4' => $this->getOwnerRegion4(),
+            'regions'      => $this->getRegionOwners(),
+            'playerCount'  => $this->getKillCount(),
+            'score'        => $this->getScore(),
             'endTimeStamp' => $this->getEndTimestamp()->getTimestamp(),
         ];
     }

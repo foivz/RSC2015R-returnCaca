@@ -36,6 +36,26 @@ class Team implements \JsonSerializable
      */
     private $game;
 
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     */
+    private $points = 0;
+
+    /**
+     * @return int
+     */
+    public function getPoints() {
+        return $this->points;
+    }
+
+    /**
+     * @param int $points
+     */
+    public function setPoints($points) {
+        $this->points = $points;
+    }
+
 
     public function __construct()
     {

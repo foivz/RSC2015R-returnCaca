@@ -231,6 +231,17 @@ function refreshMap() {
 
 function refreshLocations() {
     $.get( "api/stats/1", function(data) {
+        // PLayer count
+        $('#team1PlayerCount').text(data.data.game.playerCount.team1.alive + "/" + data.data.game.playerCount.team1.total);
+        $('#team2PlayerCount').text(data.data.game.playerCount.team2.alive + "/" + data.data.game.playerCount.team2.total);
+        // Score
+        $('#team1Score').text(data.data.game.score.team1);
+        $('#team2Score').text(data.data.game.score.team2);
+        // Regions
+        $.each(data.data.game.regions, function(id, owner) {
+            fillZone(id, owner);
+        });
+        // Locations
         team1Locations = [];
         team2Locations = [];
         $.each(data.data.stats, function(key, loc) {
@@ -268,6 +279,7 @@ function showPing(marker, lat, lng) {
 function fillZone(id, team) {
     var color;
     if(team == 1) color = '#bceb00';
-    else color = '#eb7f00';
+    else if(team == 2) color = '#eb7f00';
+    else color = '#000000';
     zoneFill[id].setOptions({fillColor: color});
 }
