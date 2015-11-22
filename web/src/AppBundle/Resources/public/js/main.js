@@ -1,226 +1,298 @@
 $(document).ready(function () {
 
-    //sticky footer
-    $(window).bind("load", function () {
+        //sticky footer
+        $(window).bind("load", function () {
 
-        var footerHeight = 0,
-            footerTop = 0,
-            $footer = $("#footer");
+            var footerHeight = 0,
+                footerTop = 0,
+                $footer = $("#footer");
 
-        positionFooter();
+            positionFooter();
 
-        function positionFooter() {
+            function positionFooter() {
 
-            footerHeight = $footer.height();
-            footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
+                footerHeight = $footer.height();
+                footerTop = ($(window).scrollTop() + $(window).height() - footerHeight) + "px";
 
-            if (($(document.body).height() + footerHeight) < $(window).height()) {
-                $footer.css({position: "absolute"}).animate({top: footerTop}, 1, 'linear').css({opacity: 1})
-            } else {
-                $footer.css({position: "static", opacity: 1})
+                if (($(document.body).height() + footerHeight) < $(window).height()) {
+                    $footer.css({position: "absolute"}).animate({top: footerTop}, 1, 'linear').css({opacity: 1})
+                } else {
+                    $footer.css({position: "static", opacity: 1})
+                }
             }
-        }
 
-        $(window)
-            .scroll(positionFooter)
-            .resize(positionFooter)
-    });
-
-    //side navigation
-    $('.navbar-toggle').click(function () {
-        $('.navbar-nav').toggleClass('slide-in');
-        $('.side-body').toggleClass('body-slide-in');
-        $('#search').removeClass('in').addClass('collapse').slideUp(200);
-
-        /// uncomment code for absolute positioning tweek see top comment in css
-        //$('.absolute-wrapper').toggleClass('slide-in');
-
-    });
-
-    // Remove menu for searching
-    $('#search-trigger').click(function () {
-        $('.navbar-nav').removeClass('slide-in');
-        $('.side-body').removeClass('body-slide-in');
-
-        /// uncomment code for absolute positioning tweek see top comment in css
-        //$('.absolute-wrapper').removeClass('slide-in');
-    });
-
-
-    if ($('#home').length > 0) {
-
-        var initialPlayers = [];
-        var playerIds = [];
-        getPlayerId();
-
-        //sortable lists on judge
-        $("#sortable1, #sortable2, #sortable3").sortable({
-            connectWith: ".connectedSortable",
-            revert: true
-        }).disableSelection();
-
-
-        $('#randomize').on('click', function () {
-            $('#randomize').addClass('disabled');
-            shuffle(initialPlayers)
+            $(window)
+                .scroll(positionFooter)
+                .resize(positionFooter)
         });
 
-        function getPlayerId() {
-            var listItems = $('#sortable1').find('li');
-            listItems.each(function (idx, li) {
-                var attribute = $(li);
-                var id = attribute.attr('data-id');
-                playerIds.push(id);
-                initialPlayers.push(id);
+        //side navigation
+        $('.navbar-toggle').click(function () {
+            $('.navbar-nav').toggleClass('slide-in');
+            $('.side-body').toggleClass('body-slide-in');
+            $('#search').removeClass('in').addClass('collapse').slideUp(200);
+
+            /// uncomment code for absolute positioning tweek see top comment in css
+            //$('.absolute-wrapper').toggleClass('slide-in');
+
+        });
+
+        // Remove menu for searching
+        $('#search-trigger').click(function () {
+            $('.navbar-nav').removeClass('slide-in');
+            $('.side-body').removeClass('body-slide-in');
+
+            /// uncomment code for absolute positioning tweek see top comment in css
+            //$('.absolute-wrapper').removeClass('slide-in');
+        });
+
+
+        if ($('#home').length > 0) {
+
+            var initialPlayers = [];
+            var playerIds = [];
+            getPlayerId();
+
+            //sortable lists on judge
+            $("#sortable1, #sortable2, #sortable3").sortable({
+                connectWith: ".connectedSortable",
+                revert: true
+            }).disableSelection();
+
+
+            $('#randomize').on('click', function () {
+                $('#randomize').addClass('disabled');
+                shuffle(initialPlayers)
             });
-            return true;
-        }
 
-
-        function shuffle(array) {
-            $('#sortable1').empty();
-            var currentIndex = array.length, temporaryValue, randomIndex;
-            while (0 !== currentIndex) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex -= 1;
-                temporaryValue = array[currentIndex];
-                array[currentIndex] = array[randomIndex];
-                array[randomIndex] = temporaryValue;
+            function getPlayerId() {
+                var listItems = $('#sortable1').find('li');
+                listItems.each(function (idx, li) {
+                    var attribute = $(li);
+                    var id = attribute.attr('data-id');
+                    playerIds.push(id);
+                    initialPlayers.push(id);
+                });
+                return true;
             }
-            splitArray(array)
-        }
 
-        function splitArray(array) {
-            var teamA = array;
-            var teamB = teamA.splice(0, Math.floor(initialPlayers.length / 2));
-            createTeamA(teamA);
-            createTeamB(teamB);
 
-        }
-
-        function createTeamA(teamA) {
-            $('#sortable2').empty();
-            createTeam(teamA, '#sortable2');
-        }
-
-        function createTeamB(teamB) {
-            $('#sortable3').empty()
-            createTeam(teamB, '#sortable3');
-        }
-
-        function createTeam(array, id) {
-            $.each(array, function (index, value) {
-                $(id).append(
-                    "<li class='col-md-12 player-card' data-id='" + value + "'>" +
-                    "<div class='col-md-2'>" +
-                    "<br>" +
-                    "<img class='img-responsive img-circle' src='/bundles/app/img/dan.jpeg'>" +
-                    "</div>" +
-                    "<div class='col-md-10'>" +
-                    "<h5>" + value + ". Player Name</h5>" +
-                    "<p>Player Nickname</p>" +
-                    "<p>Level</p>" +
-                    "</div>" +
-                    "</li>"
-                );
-            });
-        }
-    }
-
-    //map builder
-    if ($('#map-canvas').length > 0) {
-        var iw = new google.maps.InfoWindow(); // Global declaration of the infowindow
-        var lat_longs = [];
-        var markers = [];
-        var drawingManager;
-
-        function initialize() {
-            var mapOptions = {
-                center: new google.maps.LatLng(46.301406, 16.341476),
-                zoom: 11
-            };
-            var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
-            drawingManager = new google.maps.drawing.DrawingManager({
-                drawingMode: google.maps.drawing.OverlayType.POLYGON,
-                drawingControl: true,
-                drawingControlOptions: {
-                    position: google.maps.ControlPosition.TOP_CENTER,
-                    drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-                },
-                polygonOptions: {
-                    editable: true
+            function shuffle(array) {
+                $('#sortable1').empty();
+                var currentIndex = array.length, temporaryValue, randomIndex;
+                while (0 !== currentIndex) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex -= 1;
+                    temporaryValue = array[currentIndex];
+                    array[currentIndex] = array[randomIndex];
+                    array[randomIndex] = temporaryValue;
                 }
-            });
-            drawingManager.setMap(map);
+                splitArray(array)
+            }
 
-            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
-                var newShape = event.overlay;
-                newShape.type = event.type;
-            });
+            function splitArray(array) {
+                var teamA = array;
+                var teamB = teamA.splice(0, Math.floor(initialPlayers.length / 2));
+                createTeamA(teamA);
+                createTeamB(teamB);
 
-            google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+            }
 
-                var path = event.overlay.getPath().getArray();
-                var vertices = event.overlay.getPath();
-                var value = [];
-                var points = [];
-                var contentString = [];
+            function createTeamA(teamA) {
+                $('#sortable2').empty();
+                createTeam(teamA, '#sortable2');
+            }
 
-                // Iterate over the vertices.
-                for (var i = 0; i < vertices.getLength(); i++) {
-                    var xy = vertices.getAt(i);
-                    value.push({lat: xy.lat()});
-                    value.push({lng: xy.lng()});
+            function createTeamB(teamB) {
+                $('#sortable3').empty()
+                createTeam(teamB, '#sortable3');
+            }
 
-                    points.push(value);
-                    value = [];
-
-                }
-                contentString.push(points);
-                var json = JSON.stringify(contentString);
-                $('#map-values').val(json);
-            });
+            function createTeam(array, id) {
+                $.each(array, function (index, value) {
+                    $(id).append(
+                        "<li class='col-md-12 player-card' data-id='" + value + "'>" +
+                        "<div class='col-md-2'>" +
+                        "<br>" +
+                        "<img class='img-responsive img-circle' src='/bundles/app/img/dan.jpeg'>" +
+                        "</div>" +
+                        "<div class='col-md-10'>" +
+                        "<h5>" + value + ". Player Name</h5>" +
+                        "<p>Player Nickname</p>" +
+                        "<p>Level</p>" +
+                        "</div>" +
+                        "</li>"
+                    );
+                });
+            }
         }
 
-        google.maps.event.addDomListener(window, 'load', initialize);
-    }
+        //map builder
+        if ($('#map-canvas').length > 0) {
+            var iw = new google.maps.InfoWindow(); // Global declaration of the infowindow
+            var lat_longs = [];
+            var markers = [];
+            var drawingManager;
+
+            function initialize() {
+                var mapOptions = {
+                    center: new google.maps.LatLng(46.301406, 16.341476),
+                    zoom: 11
+                };
+                var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+                drawingManager = new google.maps.drawing.DrawingManager({
+                    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                    drawingControl: true,
+                    drawingControlOptions: {
+                        position: google.maps.ControlPosition.TOP_CENTER,
+                        drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+                    },
+                    polygonOptions: {
+                        editable: true
+                    }
+                });
+                drawingManager.setMap(map);
+
+                google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+                    var newShape = event.overlay;
+                    newShape.type = event.type;
+                });
+
+                google.maps.event.addListener(drawingManager, "overlaycomplete", function (event) {
+
+                    var path = event.overlay.getPath().getArray();
+                    var vertices = event.overlay.getPath();
+                    var value = [];
+                    var points = [];
+                    var contentString = [];
+
+                    // Iterate over the vertices.
+                    for (var i = 0; i < vertices.getLength(); i++) {
+                        var xy = vertices.getAt(i);
+                        value.push({lat: xy.lat()});
+                        value.push({lng: xy.lng()});
+
+                        points.push(value);
+                        value = [];
+
+                    }
+                    contentString.push(points);
+                    var json = JSON.stringify(contentString);
+                    $('#map-values').val(json);
+                });
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+        }
 
 
-    if ($('#map-canvas-show').length > 0) {
+        if ($('#map-canvas-show').length > 0) {
 
-        function initMap() {
+            function initMap() {
+                var markers = [];
+                var markerId = 0;
 
-            console.log('mapa')
-            var map = new google.maps.Map(document.getElementById('map-canvas-show'), {
-                zoom: 14,
-                center: new google.maps.LatLng(46.301406, 16.341476)
-            });
+                var map = new google.maps.Map(document.getElementById('map-canvas-show'), {
+                    zoom: 12,
+                    center: new google.maps.LatLng(46.301406, 16.341476)
+                });
 
-            var triangleCoords =
+                var triangleCoords =
                     [
                         {lat: 46.31468715855948, lng: 16.252330541610718},
                         {lat: 46.30757273562989, lng: 16.281169652938843},
                         {lat: 46.29808539982842, lng: 16.252330541610718}
                     ];
 
+                var mapPins =
+                    [
+                        {lat: 46.29808539982842, lng: 16.252330541610718}
+                    ];
 
-            // Construct the polygon.
-            var triangle = new google.maps.Polygon({
-                paths: triangleCoords,
-                strokeColor: '#FF0000',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#FF0000',
-                fillOpacity: 0.35
-            });
 
-            triangle.setMap(map);
+                for (i = 0; i < mapPins.length; i++) {
+                    start = new google.maps.Marker({
+                        position: new google.maps.LatLng(mapPins[i]['lat'], mapPins[i]['lng']),
+                        map: map,
+                        draggable: true,
+                        id: markerId++,
+                        icon: '/bundles/app/img/flag-icon.png'
+                    });
+
+                    var locations = [];
+                    locations.push({lat: start.getPosition().lat(), lng: start.getPosition().lng()});
+                    localStorage.setItem("marker-" + start.id, JSON.stringify(locations));
+                    locations = [];
+
+                    start.addListener('dragend', function (e) {
+
+                            var locations = [];
+                            locations.push({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                            localStorage.setItem("marker-" + start.id, JSON.stringify(locations));
+                            locations = [];
+
+                        }
+                    );
+                }
+
+
+                // Construct the polygon.
+                var triangle = new google.maps.Polygon({
+                    paths: triangleCoords,
+                    strokeColor: '#ff9800',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#ff9800',
+                    fillOpacity: 0.35,
+                    zIndex: -100
+                });
+
+                google.maps.event.addListener(map, 'click', function (event) {
+                    placeMarker(event.latLng);
+                });
+
+
+                function placeMarker(location) {
+                    var marker = new google.maps.Marker({
+                        id: markerId++,
+                        position: location,
+                        map: map,
+                        draggable: true,
+                        icon: '/bundles/app/img/flag-icon.png'
+                    });
+
+                    var markers = [];
+                    marker.addListener('dragend', function (e) {
+                            console.log(marker.id)
+                            var locations = [];
+                            locations.push({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                            localStorage.setItem("marker-" + marker.id, JSON.stringify(locations));
+                            locations = [];
+
+                        }
+                    );
+                }
+
+                $('#mapSave').on('click', function () {
+                    var values = [];
+
+                    if (typeof(Storage) !== "undefined") {
+                        for (var b = 0; b < markerId; b++) {
+                            name = "marker-" + b;
+                            values.push(localStorage.getItem(name));
+                            localStorage.removeItem(name);
+                        }
+                    }
+                    $('#map-values-flags').val(values);
+                });
+                triangle.setMap(map);
+            }
+
+            google.maps.event.addDomListener(window, "load", initMap);
         }
 
 
-        google.maps.event.addDomListener(window, "load", initMap);
     }
-
-
-});
+)
+;
