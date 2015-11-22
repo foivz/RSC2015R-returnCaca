@@ -160,6 +160,17 @@ class SiteController extends Controller
     }
 
     /**
+     * @Route("/judge/map-drawer", name="judge.map.drawer")
+     * @Template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function judgeDrawerAction(Request $request)
+    {
+        return [];
+    }
+
+    /**
      * @Route("/leaderboard", name="leaderboard")
      * @Template
      * @param Request $request
@@ -171,12 +182,23 @@ class SiteController extends Controller
     }
 
     /**
-     * @Route("/mobile/leaderboard", name="leaderboard-mobile")
+     * @Route("/mobile/leaderboard", name="leaderboard.mobile")
      * @Template
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function leaderboardMobileAction(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * @Route("/user", name="user.profile")
+     * @Template
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userProfileAction(Request $request)
     {
         return [];
     }

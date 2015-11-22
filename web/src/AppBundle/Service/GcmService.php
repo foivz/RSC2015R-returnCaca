@@ -8,7 +8,7 @@ class GcmService
     public function sendNotification($regIds, $msg)
     {
         // API access key from Google API's Console
-        $key = 'AIzaSyACo1LB8nOCpNJFj26v8MnpaE5xR1jCGBw';
+        $key = 'AIzaSyAofIVUPCytKOOZSIKWErstOIcIdJAapjk';
         $registrationIds = $regIds;
 
         $fields = array

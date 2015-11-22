@@ -36,7 +36,20 @@ class UpdateLocationsCommand extends ContainerAwareCommand
         $manager = $this->getContainer()->get('doctrine')->getManager();
 
         $getData = function ($player) use ($manager, $game) {
-            $latLng = LatLngHelper::getRandomLatLngNear(46.306390, 16.339145);
+
+            /** @var Location $oldLocation */
+            $oldLocation = $manager->getRepository('AppBundle:Location')->findOneBy(
+                ['player' => $player], ['createdAt' => 'DESC']
+            );
+
+            if (!empty($oldLocation)) {
+                $latLng = [
+                    'lat' => $oldLocation->getLat() + rand(1, 9) / 1000000 * (((rand() % 2 == 0) ? 1 : -1)),
+                    'lng' => $oldLocation->getLng() + rand(1, 9) / 1000000 * (((rand() % 2 == 0) ? 1 : -1)),
+                ];
+            } else {
+                $latLng = LatLngHelper::getRandomLatLngNear(46.306390, 16.339145);
+            }
 
             $location = new Location();
             $location->setPlayer($player);

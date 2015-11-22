@@ -68,6 +68,8 @@ class Game implements \JsonSerializable
     protected $endTimestamp;
 
 
+    private $gameDuration;
+
     public function __construct()
     {
     }
@@ -86,6 +88,9 @@ class Game implements \JsonSerializable
     public function setTeam1($team1)
     {
         $this->team1 = $team1;
+        if ($team1 instanceof Team) {
+            $team1->setGame($this);
+        }
     }
 
     /**
@@ -101,6 +106,10 @@ class Game implements \JsonSerializable
      */
     public function setTeam2($team2)
     {
+        if ($team2 instanceof Team) {
+            $team2->setGame($this);
+        }
+        
         $this->team2 = $team2;
     }
 
