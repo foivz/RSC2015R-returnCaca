@@ -22,12 +22,6 @@ class ApiNewGameController extends \Zantolov\AppBundle\Controller\API\ApiLoginCo
     private function getQueue()
     {
         $q = $this->getDoctrine()->getManager()->getRepository('AppBundle:Team')->findOneBy(['name' => 'queue']);
-        if (empty($q)) {
-            $q = new Team();
-            $q->setName('queue');
-            $this->getDoctrine()->getManager()->persist($q);
-            $this->getDoctrine()->getManager()->flush();
-        }
 
         return $q;
     }
@@ -105,9 +99,14 @@ class ApiNewGameController extends \Zantolov\AppBundle\Controller\API\ApiLoginCo
      */
     public function getTeamMembersAction(Request $request)
     {
+        $team = $this->getDoctrine()->getManager()->getRepository('AppBundle:Team')->find($request->get('teamId'));
+        if(empty($team)){
+            $team = new Team();
+        }
+
         return $this->createResponse([
             self::KEY_STATUS => self::STATUS_OK,
-            self::KEY_DATA   => $this->getDoctrine()->getManager()->getRepository('AppBundle:Team')->find($request->get('teamId')),
+            self::KEY_DATA   => $team,
         ]);
     }
 

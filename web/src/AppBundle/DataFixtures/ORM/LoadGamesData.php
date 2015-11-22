@@ -70,6 +70,12 @@ class LoadGamesData extends AbstractDbFixture
 
         $manager->persist($team1);
         $manager->persist($team2);
+
+        $queue = new Team();
+        $queue->setActive(true);
+        $queue->setName('queue');
+        $manager->persist($queue);
+
         $manager->persist($game);
         $manager->flush();
     }

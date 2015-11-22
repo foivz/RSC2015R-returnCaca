@@ -2,77 +2,80 @@
 
 
 {% block body %}
-  <div class="container">
-    <div class="row-centered user-page">
-      <div class="col-md-10">
-        <div class="col-md-2">
-          <img class="img-responsive img-circle" src="{{ zantolov_uploader_asset(player.image, 'imageFile', null, false) | imagine_filter('postLeadingImageBig') }}">
+    <div class="container">
+        <div class="row-centered user-page">
+            <div class="col-md-10">
+                <div class="col-md-2">
+                    {% if player.image is defined and player.image is not null %}
+
+                        <img class="img-responsive img-circle"
+                             src="{{ zantolov_uploader_asset(player.image, 'imageFile', null, false) | imagine_filter('postLeadingImageBig') }}">
+                    {% endif %}
+
+                </div>
+                <div class="col-md-4 text-left">
+                    <h5>User name</h5>
+
+                    <cite>Terminator</cite>
+
+                    <p>
+                        <i class="fa fa-envelope"></i>
+                        user@mail.com
+                    </p>
+
+                    <p>
+                        <i class="fa fa-trophy"></i>
+                        950 pts
+                    </p>
+
+                    <p>
+                        <i class="fa fa-heart"></i>
+                        18 km
+                    </p>
+
+                    <p>
+                        <i class="fa fa-bar-chart"></i>
+                        6700 cal
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="bs-component">
+                        <blockquote>
+                            <p>I hate campers.</p>
+                            <small>By:
+                                <cite title="Source Title">
+                                    Dan Biltzerian</cite>
+                            </small>
+                        </blockquote>
+                    </div>
+                </div>
 
 
-        </div>
-        <div class="col-md-4 text-left">
-          <h5>User name</h5>
+                <div class="col-md-12">
+                    <div class="col-md-6  col-sm-12 col-centered">
+                        <h2 class="blue">Recent games</h2>
+                        <hr>
+                        {# Game #}
+                        <div class="col-md-12">
+                            <div class="modal-content">
+                                <p>Game date: 21.12.2015</p>
 
-          <cite>Terminator</cite>
+                                <p>Point: 200</p>
+                            </div>
+                        </div>
 
-          <p>
-            <i class="fa fa-envelope"></i>
-            user@mail.com
-          </p>
+                        {# Game #}
+                        <div class="col-md-12">
+                            <div class="modal-content">
+                                <p>Game date: 21.12.2015</p>
 
-          <p>
-            <i class="fa fa-trophy"></i>
-            950 pts
-          </p>
+                                <p>Point: 200</p>
+                            </div>
+                        </div>
+                    </div>
 
-          <p>
-            <i class="fa fa-heart"></i>
-            18 km
-          </p>
-
-          <p>
-            <i class="fa fa-bar-chart"></i>
-            6700 cal
-          </p>
-        </div>
-        <div class="col-md-6">
-          <div class="bs-component">
-            <blockquote>
-              <p>I hate campers.</p>
-              <small>By:
-                <cite title="Source Title">
-                  Dan Biltzerian</cite>
-              </small>
-            </blockquote>
-          </div>
-        </div>
-
-
-        <div class="col-md-12">
-          <div class="col-md-6  col-sm-12 col-centered">
-            <h2 class="blue">Recent games</h2>
-            <hr>
-            {# Game #}
-            <div class="col-md-12">
-              <div class="modal-content">
-                <p>Game date: 21.12.2015</p>
-
-                <p>Point: 200</p>
-              </div>
+                </div>
             </div>
-
-            {# Game #}
-            <div class="col-md-12">
-              <div class="modal-content">
-                <p>Game date: 21.12.2015</p>
-
-                <p>Point: 200</p>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div>
     </div>
-  </div>
 {% endblock %}
