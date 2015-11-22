@@ -264,6 +264,11 @@ function refreshMap() {
 
 function refreshLocations() {
     $.get("api/stats/1", function (data) {
+        // Game stop
+        if(data.data.game.isGameActive == false) {
+            showSummary();
+            timestamp = 0;
+        }
         // PLayer count
         $('#team1PlayerCount').text(data.data.game.playerCount.team1.alive + "/" + data.data.game.playerCount.team1.total);
         $('#team2PlayerCount').text(data.data.game.playerCount.team2.alive + "/" + data.data.game.playerCount.team2.total);
