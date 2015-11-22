@@ -56,12 +56,12 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
         $ids = [];
         /** @var Player $teamMember */
         foreach ($teamMembers as $teamMember) {
-            if ($teamMember->getUser() != $this->getUser()) {
+//            if ($teamMember->getUser() != $this->getUser()) {
                 $id = $teamMember->getUser()->getGcmRegistrationId();
                 if (!empty($id)) {
                     $ids[] = $id;
                 }
-            }
+//            }
         }
 
         $message = new Message();
