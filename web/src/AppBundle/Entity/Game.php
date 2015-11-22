@@ -401,6 +401,7 @@ class Game implements \JsonSerializable
             'duration'     => $this->getDuration(),
             'killPoints'   => $this->getKillPoints(),
             'flagPoints'   => $this->getFlagPoints(),
+            'isGameActive' => $this->isGameActive(),
         ];
     }
 
