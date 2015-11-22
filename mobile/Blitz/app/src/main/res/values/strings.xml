@@ -24,4 +24,6 @@
     <string name="fb_login_pass">fejsbukLogin</string>
     <string name="logout">Logout</string>
 
+    <string name="player_dead">I\'m dead!</string>
+
 </resources>

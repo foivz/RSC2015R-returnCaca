@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
+import andro.heklaton.rsc.api.request.PlayerDeadRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
@@ -66,6 +68,8 @@ public class MapboxActivity extends VoiceControlActivity {
 
     private Drawable ally;
     private Drawable enemy;
+    
+
     private Timer timer;
     private Timer timer2;
 
@@ -140,6 +144,14 @@ public class MapboxActivity extends VoiceControlActivity {
             @Override
             public void onMapClick(LatLng point) {
                 sendWarning(point.getLatitude(), point.getLongitude());
+            }
+        });
+
+        Button btnDead = (Button) findViewById(R.id.btn_dead);
+        btnDead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markPlayerDead();
             }
         });
     }
@@ -370,6 +382,29 @@ public class MapboxActivity extends VoiceControlActivity {
                         if (error.getMessage() != null) {
                             Log.d("Capture", error.getMessage());
                         }
+                    }
+                }
+        );
+    }
+
+    private void markPlayerDead() {
+        PlayerDeadRequest request = new PlayerDeadRequest();
+        request.setIsLive(0);
+        request.setPlayerId(player.getData().getId());
+
+        RestHelper.getRestApi().markPlayerDead(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                request,
+                new Callback<LocationSendResponse>() {
+                    @Override
+                    public void success(LocationSendResponse locationSendResponse, Response response) {
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
                     }
                 }
         );

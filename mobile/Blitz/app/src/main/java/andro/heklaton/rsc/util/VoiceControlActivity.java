@@ -34,7 +34,6 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
 
     public static final String COMMAND_FIRE = "fire";
     public static final String COMMAND_HELP = "help";
-    public static final String COMMAND_WARNING = "warning";
     public static final String TAG = "Voice";
 
     protected SpeechRecognizer mSpeechRecognizer;
@@ -227,7 +226,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
         Log.d("Voice command", "Warning");
 
         MessageRequest request = new MessageRequest();
-        request.setMessage(COMMAND_WARNING);
+        request.setMessage(COMMAND_FIRE);
 
         request.setLat(lat);
         request.setLng(lng);
