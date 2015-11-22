@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -26,34 +27,42 @@ public class JoinGameActivity extends DrawerActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        Button btnJoinGame = (Button) findViewById(R.id.join_game);
-        btnJoinGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RestHelper.getRestApi().joinQueue(
-                        RestAPI.HEADER,
-                        PrefsHelper.getToken(JoinGameActivity.this),
-                        "",
-                        new Callback<BaseResponse>() {
-                            @Override
-                            public void success(BaseResponse baseResponse, Response response) {
-                                if (baseResponse.getStatus().equals("ok")) {
-                                    Toast.makeText(JoinGameActivity.this, R.string.joined, Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.d("Queue", baseResponse.getMessage());
-                                }
-                            }
+        WebView webView = (WebView) findViewById(R.id.webView);
+        webView.loadUrl("http://www.heklaton.xyz/mobile/leaderboard");
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                if (error.getMessage() != null) {
-                                    Log.d("Queue", error.getMessage());
+        Button btnJoinGame = (Button) findViewById(R.id.join_game);
+
+        if (PrefsHelper.getUsername(this).equals("admin")) {
+            btnJoinGame.setVisibility(View.GONE);
+        } else {
+            btnJoinGame.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RestHelper.getRestApi().joinQueue(
+                            RestAPI.HEADER,
+                            PrefsHelper.getToken(JoinGameActivity.this),
+                            "",
+                            new Callback<BaseResponse>() {
+                                @Override
+                                public void success(BaseResponse baseResponse, Response response) {
+                                    if (baseResponse.getStatus().equals("ok")) {
+                                        Toast.makeText(JoinGameActivity.this, R.string.joined, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d("Queue", baseResponse.getMessage());
+                                    }
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    if (error.getMessage() != null) {
+                                        Log.d("Queue", error.getMessage());
+                                    }
                                 }
                             }
-                        }
-                );
-            }
-        });
+                    );
+                }
+            });
+        }
     }
 
     @Override

@@ -3,7 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_below="@+id/include"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <Button
         android:id="@+id/join_game"
@@ -12,7 +20,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="32dp"
         android:text="@string/join_game"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         />

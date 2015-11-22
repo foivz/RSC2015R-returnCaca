@@ -1,10 +1,15 @@
 package andro.heklaton.rsc.ui.activity;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -15,10 +20,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -28,6 +36,7 @@ import com.mapbox.mapboxsdk.annotations.SpriteFactory;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.views.MapView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,105 +64,122 @@ import retrofit.client.Response;
 /**
  * Created by Andro on 11/21/2015.
  */
-public class MapboxActivity extends VoiceControlActivity {
+public class MapboxActivity extends VoiceControlActivity implements SensorEventListener {
 
-        public static final String COLOR_GREEN = "#00FF00";
-        public static final String COLOR_RED = "#FF0000";
+    public static final String COLOR_GREEN = "#00FF00";
+    public static final String COLOR_RED = "#FF0000";
 
-        private List<MarkerOptions> markers;
-        private List<PolylineOptions> zones;
-        private SpriteFactory spriteFactory;
+    private List<MarkerOptions> markers;
+    private List<PolylineOptions> zones;
+    private SpriteFactory spriteFactory;
 
-        private Drawable ally;
-        private Drawable enemy;
-        private Drawable allyDead;
+    private Drawable ally;
+    private Drawable enemy;
+    private Drawable allyDead;
 
-        private Timer timer;
-        private Timer timer2;
+    private Timer timer;
+    private Timer timer2;
 
-        private NfcAdapter mNfcAdapter;
-        private Tag detectedTag;
-        private PendingIntent pendingIntent;
-        private IntentFilter[] readTagFilters;
+    private NfcAdapter mNfcAdapter;
+    private Tag detectedTag;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] readTagFilters;
 
-        private List<PolygonOptions> takenZones;
+    private List<PolygonOptions> takenZones;
 
-        private PlayerStatus player;
+    private PlayerStatus player;
 
-        boolean activityActive;
+    boolean activityActive;
+    private SensorManager mSensorManager;
+    private Sensor mSensor;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-            getPlayerStatus();
+        getPlayerStatus();
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-            mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                    this.getPackageName());
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
 
-            mSpeechRecognizer.setRecognitionListener(this);
+        mSpeechRecognizer.setRecognitionListener(this);
 
-            mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
 
-            mapView = (MapView) findViewById(R.id.mapview);
-            mapView.setStyleUrl(Style.DARK);
-            mapView.setCenterCoordinate(new LatLng(46.306390, 16.339145));
-            mapView.setZoomLevel(16.8);
-            mapView.onCreate(savedInstanceState);
-            mapView.setMyLocationEnabled(true);
-            mapView.setCompassEnabled(true);
+        mapView = (MapView) findViewById(R.id.mapview);
+        mapView.setStyleUrl(Style.DARK);
+        mapView.setCenterCoordinate(new LatLng(46.306390, 16.339145));
+        mapView.setZoomLevel(16.8);
+        mapView.onCreate(savedInstanceState);
+        mapView.setMyLocationEnabled(true);
+        mapView.setCompassEnabled(true);
 
-            timer = new Timer();
-            timer2 = new Timer();
+        timer = new Timer();
+        timer2 = new Timer();
 
-            mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-            detectedTag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
-                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-            IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-            IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-            readTagFilters = new IntentFilter[]{tagDetected,filter2};
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        detectedTag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        IntentFilter filter2 = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        readTagFilters = new IntentFilter[]{tagDetected,filter2};
 
-            ally = getResources().getDrawable(R.drawable.ally);
-            enemy = getResources().getDrawable(R.drawable.enemy);
-            allyDead = getResources().getDrawable(R.drawable.dead_ally);
+        ally = getResources().getDrawable(R.drawable.ally);
+        enemy = getResources().getDrawable(R.drawable.enemy);
+        allyDead = getResources().getDrawable(R.drawable.dead_ally);
 
-            spriteFactory = new SpriteFactory(mapView);
+        spriteFactory = new SpriteFactory(mapView);
 
-            markers = new ArrayList<>();
+        markers = new ArrayList<>();
 
-            zones = MapsUtil.getZones();
-            takenZones = MapsUtil.getPolygonZones();
+        zones = MapsUtil.getZones();
+        takenZones = MapsUtil.getPolygonZones();
 
-            startSendingLocation();
-            startReceivingStats();
+        startSendingLocation();
+        startReceivingStats();
 
-            mapView.setOnMapLongClickListener(new MapView.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng point) {
-                    sendFire(point.getLatitude(), point.getLongitude());
+        mapView.setOnMapLongClickListener(new MapView.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng point) {
+                sendFire(point.getLatitude(), point.getLongitude());
+            }
+        });
+
+        mapView.setOnMapClickListener(new MapView.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng point) {
+                sendWarning(point.getLatitude(), point.getLongitude());
+            }
+        });
+
+        Button btnDead = (Button) findViewById(R.id.btn_dead);
+        btnDead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markPlayerDead();
+
+                if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
+                    mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                    mSensorManager.registerListener(MapboxActivity.this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                } else {
+                    Toast.makeText(MapboxActivity.this, "No accelerometer", Toast.LENGTH_SHORT).show();
                 }
-            });
 
-            mapView.setOnMapClickListener(new MapView.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng point) {
-                    sendWarning(point.getLatitude(), point.getLongitude());
-                }
-            });
-
-            Button btnDead = (Button) findViewById(R.id.btn_dead);
-            btnDead.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    markPlayerDead();
-                }
-            });
-        }
+                AlertDialog.Builder builder = new AlertDialog.Builder(MapboxActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_image, null);
+                builder.setView(view);
+                builder.show();
+            }
+        });
+    }
 
     private void getPlayerStatus() {
         RestHelper.getRestApi().getPlayerStatus(
@@ -465,7 +491,9 @@ public class MapboxActivity extends VoiceControlActivity {
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        mNfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
+        if (mNfcAdapter != null) {
+            mNfcAdapter.enableForegroundDispatch(this, pendingIntent, readTagFilters, null);
+        }
     }
 
     @Override
@@ -477,7 +505,10 @@ public class MapboxActivity extends VoiceControlActivity {
         if (mSpeechRecognizer != null) {
             mSpeechRecognizer.destroy();
         }
-
+        if (mNfcAdapter != null) {
+            mNfcAdapter.disableForegroundDispatch(this);
+        }
+        mSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -486,4 +517,18 @@ public class MapboxActivity extends VoiceControlActivity {
         mapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Log.d("Accelerometer", String.valueOf(event.values[2]));
+        if (event.values[2] > 0 || event.values[2] < -7) {
+
+            Intent intent = new Intent(this, JoinGameActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 }
