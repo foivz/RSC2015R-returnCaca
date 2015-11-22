@@ -127,21 +127,13 @@ var deadEnemyMarker = new google.maps.MarkerImage(
     null,
     new google.maps.Size(32, 32)
 );
-var attentionEnemyMarker = new google.maps.MarkerImage(
-    "bundles/app/images/markers/attentionEnemy.png",
+var flagMarker = new google.maps.MarkerImage(
+    "bundles/app/images/markers/flag.png",
     null,
     null,
     null,
     new google.maps.Size(32, 32)
 );
-var attentionAllyMarker = new google.maps.MarkerImage(
-    "bundles/app/images/markers/attentionAlly.png",
-    null,
-    null,
-    null,
-    new google.maps.Size(32, 32)
-);
-
 
 // Function
 $(document).ready(function() {
@@ -188,6 +180,33 @@ function init() {
     zoneFill[3].setMap(map);
     zoneFill[4] = new google.maps.Polygon({path:zone4, strokeColor: "#9900FF", strokeOpacity: 1.0, strokeWeight: 2});
     zoneFill[4].setMap(map);
+
+    // Flags
+    var flag;
+    flag = new google.maps.Marker({
+        position: new google.maps.LatLng(46.306169, 16.338458),
+        map: map,
+        icon: flagMarker
+    });
+    flag.setMap(map);
+    flag = new google.maps.Marker({
+        position: new google.maps.LatLng(46.306187, 16.339024),
+        map: map,
+        icon: flagMarker
+    });
+    flag.setMap(map);
+    flag = new google.maps.Marker({
+        position: new google.maps.LatLng(46.306278, 16.339742),
+        map: map,
+        icon: flagMarker
+    });
+    flag.setMap(map);
+    flag = new google.maps.Marker({
+        position: new google.maps.LatLng(46.306704, 16.339514),
+        map: map,
+        icon: flagMarker
+    });
+    flag.setMap(map);
 
     // Countdown
     $.get( "api/stats/1", function(data) {
