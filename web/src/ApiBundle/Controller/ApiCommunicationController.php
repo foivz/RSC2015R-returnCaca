@@ -66,10 +66,10 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
         /** @var Player $teamMember */
         foreach ($teamMembers as $teamMember) {
 //            if ($teamMember->getUser() != $this->getUser()) {
-                $id = $teamMember->getUser()->getGcmRegistrationId();
-                if (!empty($id)) {
-                    $ids[] = $id;
-                }
+            $id = $teamMember->getUser()->getGcmRegistrationId();
+            if (!empty($id)) {
+                $ids[] = $id;
+            }
 //            }
         }
 
@@ -83,13 +83,16 @@ class ApiCommunicationController extends \Zantolov\AppBundle\Controller\API\ApiL
 
         /** @var GcmService $gcmService */
         $gcmService = $this->get('gcm_service');
-        $gcmService->sendNotification($ids, [
+        $result = $gcmService->sendNotification($ids, [
             'message' => $msg,
             'from'    => $player,
             'team'    => $teamMember,
             'lat'     => $lat,
             'lng'     => $lng,
         ]);
+
+        file_put_contents(__DIR__ . '/../../app/logs/gcm.log', json_encode($result));
+
 
         return $this->createResponse([
             self::KEY_STATUS  => self::STATUS_OK,
