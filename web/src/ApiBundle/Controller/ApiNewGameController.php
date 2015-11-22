@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Zantolov\AppBundle\Controller\API\ApiController;
 
 
 /**
@@ -16,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Route("/api")
  */
-class ApiNewGameController extends \Zantolov\AppBundle\Controller\API\ApiLoginController
+class ApiNewGameController extends ApiController
 {
 
     private function getQueue()
