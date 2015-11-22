@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Game;
 use AppBundle\Entity\Player;
+use AppBundle\Entity\Team;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -189,7 +190,16 @@ class SiteController extends Controller
      */
     public function leaderboardAction(Request $request)
     {
-        return [];
+        $teams = $this->getDoctrine()->getManager()->getRepository('AppBundle:Team')->findAll();
+
+        uasort($teams, function (Team $a, Team $b) {
+            if ($a->getPoints() == $b->getPoints()) {
+                return 0;
+            }
+            return ($a->getPoints() > $b->getPoints()) ? -1 : 1;
+        });
+
+        return ['teams' => $teams];
     }
 
     /**
@@ -200,7 +210,16 @@ class SiteController extends Controller
      */
     public function leaderboardMobileAction(Request $request)
     {
-        return [];
+        $teams = $this->getDoctrine()->getManager()->getRepository('AppBundle:Team')->findAll();
+
+        uasort($teams, function (Team $a, Team $b) {
+            if ($a->getPoints() == $b->getPoints()) {
+                return 0;
+            }
+            return ($a->getPoints() > $b->getPoints()) ? -1 : 1;
+        });
+
+        return ['teams' => $teams];
     }
 
     /**

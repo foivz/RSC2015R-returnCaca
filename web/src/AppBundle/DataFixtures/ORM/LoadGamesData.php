@@ -77,7 +77,18 @@ class LoadGamesData extends AbstractDbFixture
         $manager->persist($queue);
 
         $manager->persist($game);
+
+
+        for ($i = 1; $i < 10; $i++) {
+            $team = new Team();
+            $team->setName($faker->word);
+            $team->setActive(true);
+            $team->setPoints(rand(10, 400));
+            $manager->persist($team);
+        }
+
         $manager->flush();
+
     }
 
     public function getOrder()
