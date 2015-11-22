@@ -79,7 +79,8 @@ div.ring {
 }
 
 #sidebar {
-	background-color: #000;
+	background-image: url('/bundles/app/images/pattern.png');
+	background-repeat: repeat;
 	width: 30%;
 	height: 100%;
 	float: right;
