@@ -6,13 +6,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.mapbox.mapboxsdk.views.MapView;
 
 import java.util.ArrayList;
 
+import andro.heklaton.rsc.R;
 import andro.heklaton.rsc.api.RestAPI;
 import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.MessageRequest;
@@ -29,6 +34,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
 
     public static final String COMMAND_FIRE = "fire";
     public static final String COMMAND_HELP = "help";
+    public static final String COMMAND_WARNING = "warning";
     public static final String TAG = "Voice";
 
     protected SpeechRecognizer mSpeechRecognizer;
@@ -187,8 +193,124 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
         );
     }
 
+    protected void sendFire(Double lat, Double lng) {
+        Log.d("Voice command", "Help");
+
+        MessageRequest request = new MessageRequest();
+        request.setMessage(COMMAND_HELP);
+
+        request.setLat(lat);
+        request.setLng(lng);
+
+        RestHelper.getRestApi().sendMessage(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                request,
+                new Callback<LocationSendResponse>() {
+                    @Override
+                    public void success(LocationSendResponse locationSendResponse, Response response) {
+                        Log.d("Voice command", locationSendResponse.getStatus());
+                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (error.getMessage() != null) {
+                            Log.d("Voice command", error.getMessage());
+                        }
+                    }
+                }
+        );
+    }
+
+    protected void sendWarning(Double lat, Double lng) {
+        Log.d("Voice command", "Warning");
+
+        MessageRequest request = new MessageRequest();
+        request.setMessage(COMMAND_WARNING);
+
+        request.setLat(lat);
+        request.setLng(lng);
+
+        RestHelper.getRestApi().sendMessage(
+                RestAPI.HEADER,
+                PrefsHelper.getToken(this),
+                request,
+                new Callback<LocationSendResponse>() {
+                    @Override
+                    public void success(LocationSendResponse locationSendResponse, Response response) {
+                        Log.d("Voice command", locationSendResponse.getStatus());
+                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        if (error.getMessage() != null) {
+                            Log.d("Voice command", error.getMessage());
+                        }
+                    }
+                }
+        );
+    }
+
+    protected GestureDetectorCompat mDetector;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDetector = new GestureDetectorCompat(this, this);
+        mDetector.setOnDoubleTapListener(this);
+    }
+
     @Override
     public void onRmsChanged(float rmsdB) {
     }
 
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        Log.d("single tap", "confirmed");
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Log.d("double tap", "confirmed");
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        Log.d("double tap event", "confirmed");
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
 }

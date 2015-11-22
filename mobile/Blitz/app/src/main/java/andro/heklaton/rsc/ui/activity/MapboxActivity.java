@@ -17,6 +17,9 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -125,6 +128,20 @@ public class MapboxActivity extends VoiceControlActivity {
 
         startSendingLocation();
         startReceivingStats();
+
+        mapView.setOnMapLongClickListener(new MapView.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng point) {
+                sendFire(point.getLatitude(), point.getLongitude());
+            }
+        });
+
+        mapView.setOnMapClickListener(new MapView.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng point) {
+                sendWarning(point.getLatitude(), point.getLongitude());
+            }
+        });
     }
 
     private void getPlayerStatus() {
