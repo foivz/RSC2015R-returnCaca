@@ -19,6 +19,14 @@
         android:background="@android:color/black"
         android:layout_height="match_parent">
 
+        <ImageButton
+            android:id="@+id/voice"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="72dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_mic_none_24dp"/>
+
         <Button
             android:id="@+id/btn_dead"
             android:layout_width="match_parent"

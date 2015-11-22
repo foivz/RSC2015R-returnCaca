@@ -39,7 +39,7 @@ import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.MessageRequest;
 import andro.heklaton.rsc.api.request.PlayerDeadRequest;
-import andro.heklaton.rsc.model.location.LocationSendResponse;
+import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
@@ -236,34 +236,42 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
     private void updateZones(Game game) {
         if (player != null) {
             if (game.getOwnerRegion1() != null) {
-                if (game.getOwnerRegion1().getId().equals(player.getData().getTeam())) {
-                    markZone(1, COLOR_GREEN);
-                } else {
-                    markZone(1, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion1().getId().equals(player.getData().getTeam())) {
+                        markZone(1, COLOR_GREEN);
+                    } else {
+                        markZone(1, COLOR_RED);
+                    }
                 }
             }
 
             if (game.getOwnerRegion2() != null) {
-                if (game.getOwnerRegion2().getId().equals(player.getData().getTeam())) {
-                    markZone(2, COLOR_GREEN);
-                } else {
-                    markZone(2, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion2().getId().equals(player.getData().getTeam())) {
+                        markZone(2, COLOR_GREEN);
+                    } else {
+                        markZone(2, COLOR_RED);
+                    }
                 }
             }
 
             if (game.getOwnerRegion3() != null) {
-                if (game.getOwnerRegion3().getId().equals(player.getData().getTeam())) {
-                    markZone(3, COLOR_GREEN);
-                } else {
-                    markZone(3, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion3().getId().equals(player.getData().getTeam())) {
+                        markZone(3, COLOR_GREEN);
+                    } else {
+                        markZone(3, COLOR_RED);
+                    }
                 }
             }
 
             if (game.getOwnerRegion4() != null) {
-                if (game.getOwnerRegion4().getId().equals(player.getData().getTeam())) {
-                    markZone(4, COLOR_GREEN);
-                } else {
-                    markZone(4, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion4().getId().equals(player.getData().getTeam())) {
+                        markZone(4, COLOR_GREEN);
+                    } else {
+                        markZone(4, COLOR_RED);
+                    }
                 }
             }
         }
@@ -345,10 +353,10 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Capture", locationSendResponse.getMessage());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Capture", baseResponse.getMessage());
                     }
 
                     @Override
@@ -370,9 +378,9 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                     RestAPI.HEADER,
                     PrefsHelper.getToken(this),
                     request,
-                    new Callback<LocationSendResponse>() {
+                    new Callback<BaseResponse>() {
                         @Override
-                        public void success(LocationSendResponse locationSendResponse, Response response) {
+                        public void success(BaseResponse baseResponse, Response response) {
 
                         }
 
@@ -400,10 +408,10 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
                 RestAPI.HEADER,
                 PrefsHelper.getToken(this),
                 request,
-                new Callback<LocationSendResponse>() {
+                new Callback<BaseResponse>() {
                     @Override
-                    public void success(LocationSendResponse locationSendResponse, Response response) {
-                        Log.d("Voice command", locationSendResponse.getStatus());
+                    public void success(BaseResponse baseResponse, Response response) {
+                        Log.d("Voice command", baseResponse.getStatus());
                         mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
                     }
 

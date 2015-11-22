@@ -21,7 +21,7 @@ public class SplashActivity extends BaseSplash {
     @Override
     public Class getNextClassActivity() {
         if (PrefsHelper.getUsername(this) != null) {
-            return MainActivity.class;
+            return JoinGameActivity.class;
         } else {
             return LoginActivity.class;
         }
