@@ -162,19 +162,18 @@ table.stats {
 }
 
 .logo {
-    position: fixed;
-    top: 50px;
-    left: 50px;
-    z-index: 1000;
+	position: fixed;
+	top: 50px;
+	left: 50px;
+	z-index: 1000;
 }
 
 #placeBet {
-    font-size: 30px;
-    cursor: pointer;
-    padding: 5px 15px;
+	background-color: #eb7f00;
+	padding: 10px 10px;
+	font-size: 30px;
 }
 
-#placeBet:hover {
-    background: #eb7f00;
-
+.bold {
+	font-weight: 600;
 }

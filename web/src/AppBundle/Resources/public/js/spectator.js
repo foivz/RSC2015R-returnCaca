@@ -346,6 +346,7 @@ function fillZone(id, team) {
 
 function showSummary() {
     window.clearInterval(updateTimer);
+    $(".delete").remove();
 }
 
 function placeBet() {
