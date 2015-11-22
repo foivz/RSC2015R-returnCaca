@@ -1,12 +1,14 @@
 body {
 	width: 100%;
 	height: 100%;
-}
-#map {
-	width: 100%;
-	height: 100%;
+	font-family: 'Lato', sans-serif;
 }
 
+#map {
+	width: 70%;
+	height: 100%;
+	float: left;
+}
 .marker {
 	height: 50px;
 	width: 50px;
@@ -74,4 +76,56 @@ div.ring {
 		/* Firefox */
 		opacity: 0;
 	}
+}
+
+#sidebar {
+	background-color: #000;
+	width: 30%;
+	height: 100%;
+	float: right;
+}
+.time-label {
+	color: #FFF;
+	font-size: 30px;
+	text-align: center;
+	width: 100%;
+	line-height: 30px;
+	padding-top: 20px;
+}
+.time {
+	color: #FFF;
+	font-size: 80px;
+	text-align: center;
+	width: 100%;
+	font-weight: 200;
+	line-height: 75px;
+}
+th {
+	text-align: center;
+}
+td {
+	font-size: 40px;
+	font-weight: 300;
+}
+table.stats {
+	width: 100%;
+	color: #fff;
+	font-size: 20px;
+	text-align: center;
+	margin-top: 50px;
+}
+.green {
+	color: #bceb00;
+	fill: #bceb00;
+}
+.orange {
+	color: #eb7f00;
+	fill: #eb7f00;
+}
+
+.logo {
+	position: fixed;
+	top: 50px;
+	left: 50px;
+	z-index: 1000;
 }
