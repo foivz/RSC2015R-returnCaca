@@ -1,54 +1,53 @@
 <div class="bs-component">
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button"
-                class="navbar-toggle collapsed"
-                data-toggle="collapse"
-                data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">bliTZ</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button"
+                        class="navbar-toggle collapsed"
+                        data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">bliTZ</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
 
-        <a class="navbar-brand" href="{{ url('homepage') }}">
-          <img src="{{ asset('bundles/app/img/logo-2.svg') }}" class="hidden-xs hidden-sm" height="44">
-        </a>
-      </div>
-
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li>
-            <a href="{{ url('spectate') }}">Spectate</a>
-          </li>
-          <li>
-            <a href="{{ url('leaderboard') }}">Rankings</a>
-          </li>
-        </ul>
-
-        <ul class="nav navbar-nav navbar-right">
-          {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-            <li>
-              <div class="col-xs-12">
-                <br>
-                <a href="{{ url('judge.new.game') }}">Dashboard</a>
-              </div>
-            </li>
-          {% endif %}
-
-          <li>
-            <div class="col-xs-12">
-              <br>
-              {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                <a class="btn btn-primary" href="{{ url('fos_user_security_logout') }}">Logout</a>
-              {% else %}
-                <a class="btn btn-primary" href="{{ url('fos_user_security_login') }}">Try it out</a>
-              {% endif %}
+                <a class="navbar-brand" href="{{ url('homepage') }}">
+                    <img src="{{ asset('bundles/app/img/logo-2.svg') }}" class="hidden-xs hidden-sm" height="44">
+                </a>
             </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="{{ url('spectate') }}">Spectate</a>
+                    </li>
+                    <li>
+                        <a href="{{ url('leaderboard') }}">Rankings</a>
+                    </li>
+                    {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+                        <li>
+                            <a href="{{ url('judge.new.game') }}">
+                                <i class="fa fa-plus"></i>
+                                New Game
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <div class="col-xs-12">
+                            <br>
+                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                <a class="btn btn-primary" href="{{ url('fos_user_security_logout') }}">Logout</a>
+                            {% else %}
+                                <a class="btn btn-primary" href="{{ url('fos_user_security_login') }}">Try it out</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </div>

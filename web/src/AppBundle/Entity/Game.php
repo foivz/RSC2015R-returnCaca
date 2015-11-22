@@ -404,5 +404,18 @@ class Game implements \JsonSerializable
         ];
     }
 
+    public function isGameActive()
+    {
+        if ($this->getActive() == false) {
+            return false;
+        }
+
+        if ($this->endTimestamp < new \DateTime()){
+            return false;
+        }
+
+        return true;
+    }
+
 
 }

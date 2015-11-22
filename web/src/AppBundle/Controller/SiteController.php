@@ -2,15 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Game;
+use AppBundle\Entity\Player;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Zantolov\AppBundle\Entity\User;
 use Zantolov\BlogBundle\Entity\Category;
 use Zantolov\BlogBundle\Entity\Post;
 use Zantolov\BlogBundle\Repository\PostRepository;
@@ -156,7 +155,8 @@ class SiteController extends Controller
      */
     public function judgeIndexAction(Request $request)
     {
-        return [];
+        $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Game')->find(1);
+        return compact('game');
     }
 
     /**
@@ -213,6 +213,55 @@ class SiteController extends Controller
     {
         $player = $this->getDoctrine()->getManager()->getRepository('AppBundle:Player')->findOneBy(['user' => $this->getUser()]);
         return compact('player');
+    }
+
+
+    /**
+     * @Route("/start-game", name="game.start")
+     * @Template
+     */
+    public function startGameAction(Request $request)
+    {
+        /** @var Game $game */
+        $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Game')->find(1);
+        $game->setOwnerRegion1(null);
+        $game->setOwnerRegion2(null);
+        $game->setOwnerRegion3(null);
+        $game->setOwnerRegion4(null);
+        $game->setWinner(null);
+        $game->setActive(true);
+
+        $dt = new \DateTime();
+        $duration = $game->getDuration();
+        $dt2 = $dt->add(new \DateInterval('PT' . $duration . 'M'));
+        $game->setEndTimeStamp($dt2);
+
+        /** @var Player $player */
+        foreach ($game->getTeam1()->getPlayers() as $player) {
+            $player->setIsLive(true);
+        }
+
+        /** @var Player $player */
+        foreach ($game->getTeam2()->getPlayers() as $player) {
+            $player->setIsLive(true);
+        }
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('spectate');
+    }
+
+    /**
+     * @Route("/stop-game", name="game.stop")
+     * @Template
+     */
+    public function stopGameAction(Request $request)
+    {
+        /** @var Game $game */
+        $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Game')->find(1);
+        $game->setActive(false);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('judge.new.game');
     }
 
     /**

@@ -32,8 +32,17 @@
                 <div class="col-md-12" id="selectionNav">
                     <ul class="list-inline">
                         <li>
-                            <a class="btn btn-warning" id="randomize">Randomize</a>
-                            <a class="btn btn-success" id="randomize">Start <i class="fa fa-arrow-right"></i></a>
+                            Game in progress: {{ game.isGameActive|fontAwesome() }}
+                        </li>
+                        <li>
+                            {% if game.isGameActive == false %}
+                                <a class="btn btn-warning" id="randomize">Randomize</a>
+                                <a href="{{ url('game.start') }}"
+                                   class="btn btn-success" id="randomize">Start <i class="fa fa-arrow-right"></i></a>
+                            {% else %}
+                                <a href="{{ url('game.stop') }}"
+                                   class="btn btn-danger" id="randomize">Stop <i class="fa fa-times"></i></a>
+                            {% endif %}
                         </li>
                     </ul>
                 </div>
