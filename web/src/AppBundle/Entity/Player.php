@@ -208,13 +208,15 @@ class Player implements \JsonSerializable
 
     function jsonSerialize()
     {
+
+        $image = $this->getImage();
         return [
             'id'     => $this->getId(),
             'alias'  => $this->getAlias(),
             'level'  => $this->getLevel(),
             'team'   => $this->getTeam()->getId(),
             'isLive' => $this->isLive(),
-            'image' => $this->getImage()->getImageName(),
+            'image'  => (!empty($image) ? $image : null),
         ];
     }
 
