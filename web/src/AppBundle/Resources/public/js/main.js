@@ -187,38 +187,123 @@ $(document).ready(function () {
         }
 
 
+        var obsticleId = 0;
         if ($('#map-canvas-show').length > 0) {
 
             //obsticles
-            $('#obsticle-tab').on('click', function () {
-                initMapObsticles();
-            });
-
             function initMapObsticles() {
-                console.log('adding obsticle');
                 var markers = [];
-                var markerId = 0;
+
+                var obsticleMap = new google.maps.Map(document.getElementById('map-canvas-show-obsticle'), {
+                    zoom: 19,
+                    center: new google.maps.LatLng(46.306390, 16.339145)
+                });
+
+                var mapPins =
+                    [
+                        new google.maps.LatLng(46.305797691189404, 16.33825644850731)
+                    ];
+
+                for (i = 0; i < mapPins.length; i++) {
+
+                    start = new google.maps.Marker({
+                        position: new google.maps.LatLng(mapPins[i]['lat'], mapPins[i]['lng']),
+                        map: obsticleMap,
+                        draggable: true,
+                        id: obsticleId++,
+                        icon: '/bundles/app/img/house.png'
+                    });
+
+                    var locations = [];
+                    locations.push({lat: start.getPosition().lat(), lng: start.getPosition().lng()});
+                    localStorage.setItem("obsticle-" + start.id, JSON.stringify(locations));
+                    locations = [];
+
+                    start.addListener('dragend', function (e) {
+                            var locations = [];
+                            locations.push({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                            localStorage.setItem("obsticle-" + start.id, JSON.stringify(locations));
+                            locations = [];
+
+                        }
+                    );
+                }
+
+                google.maps.event.addListener(obsticleMap, 'click', function (event) {
+                    placeMarker(event.latLng);
+                });
+
+                function placeMarker(location) {
+                    console.log('test')
+
+                    var obsticle = new google.maps.Marker({
+                        id: obsticleId++,
+                        position: location,
+                        map: obsticleMap,
+                        draggable: true,
+                        icon: '/bundles/app/img/house.png'
+                    });
+
+                    //saving obsticle when added
+                    var locations = [];
+                    locations.push({lat: start.getPosition().lat(), lng: start.getPosition().lng()});
+                    localStorage.setItem("obsticle-" + obsticle.id, JSON.stringify(locations));
+                    locations = [];
+
+                    obsticle.addListener('click', function (e) {
+                            console.log(obsticle.id)
+                            var locations = [];
+                            locations.push({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                            localStorage.setItem("obsticle-" + obsticle.id, JSON.stringify(locations));
+                            locations = [];
+                        }
+                    );
+
+                    obsticle.addListener('dragend', function (e) {
+                            console.log(obsticle.id)
+                            var locations = [];
+                            locations.push({lat: e.latLng.lat(), lng: e.latLng.lng()});
+                            localStorage.setItem("obsticle-" + obsticle.id, JSON.stringify(locations));
+                            locations = [];
+                        }
+                    );
+
+                }
+
+
             }
 
+
+            //flags
             function initMap() {
                 var markers = [];
                 var markerId = 0;
 
                 var map = new google.maps.Map(document.getElementById('map-canvas-show'), {
-                    zoom: 12,
-                    center: new google.maps.LatLng(46.301406, 16.341476)
+                    zoom: 19,
+                    center: new google.maps.LatLng(46.306390, 16.339145)
                 });
 
                 var triangleCoords =
                     [
-                        {lat: 46.31468715855948, lng: 16.252330541610718},
-                        {lat: 46.30757273562989, lng: 16.281169652938843},
-                        {lat: 46.29808539982842, lng: 16.252330541610718}
+                        new google.maps.LatLng(46.30585513089814, 16.33860781788826),
+                        new google.maps.LatLng(46.305797691189404, 16.33825644850731),
+                        new google.maps.LatLng(46.30604041987027, 16.338068693876266),
+                        new google.maps.LatLng(46.30619050347798, 16.3380928337574),
+                        new google.maps.LatLng(46.30644620052856, 16.33825108408928),
+                        new google.maps.LatLng(46.30651290391055, 16.338331550359726),
+                        new google.maps.LatLng(46.30642396604984, 16.3385970890522),
+                        new google.maps.LatLng(46.30639246718954, 16.338741928339005),
+                        new google.maps.LatLng(46.30640173156209, 16.33883848786354),
+                        new google.maps.LatLng(46.30632020502972, 16.33889749646187),
+                        new google.maps.LatLng(46.30617382754188, 16.338841170072556),
+                        new google.maps.LatLng(46.30604597852974, 16.33871242403984),
+                        new google.maps.LatLng(46.30594036390321, 16.338621228933334)
                     ];
 
                 var mapPins =
                     [
-                        {lat: 46.29808539982842, lng: 16.252330541610718}
+                        new google.maps.LatLng(46.305797691189404, 16.33825644850731)
                     ];
 
 
@@ -271,6 +356,12 @@ $(document).ready(function () {
                         icon: '/bundles/app/img/flag-icon.png'
                     });
 
+                    //saving obsticle when added
+                    var locations = [];
+                    locations.push({lat: marker.getPosition().lat(), lng: marker.getPosition().lng()});
+                    localStorage.setItem("marker-" + marker.id, JSON.stringify(locations));
+                    locations = [];
+
                     var markers = [];
                     marker.addListener('dragend', function (e) {
                             console.log(marker.id)
@@ -284,22 +375,36 @@ $(document).ready(function () {
                 }
 
                 $('#mapSave').on('click', function () {
+                    console.log('saveClick')
                     var values = [];
+                    var obsticles = [];
 
                     //saving flags
-                    if (typeof(Storage) !== "undefined") {
-                        for (var b = 0; b < markerId; b++) {
-                            name = "marker-" + b;
-                            values.push(localStorage.getItem(name));
-                            localStorage.removeItem(name);
-                        }
+                    for (var b = 0; b < markerId; b++) {
+                        name = "marker-" + b;
+                        console.log(name);
+                        values.push(localStorage.getItem(name));
+                        localStorage.removeItem(name);
+                    }
+
+                    //saving obsticles
+                    for (var k = 0; k < obsticleId; k++) {
+                        var obsticle = "obsticle-" + k;
+                        console.log(obsticle)
+
+                        obsticles.push(localStorage.getItem(obsticle));
+                        localStorage.removeItem(obsticle);
                     }
                     $('#map-values-flags').val(values);
+                    $('#map-obsticle').val(obsticles);
+
+
                 });
                 triangle.setMap(map);
             }
 
             google.maps.event.addDomListener(window, "load", initMap);
+            google.maps.event.addDomListener(window, "load", initMapObsticles);
         }
 
 
