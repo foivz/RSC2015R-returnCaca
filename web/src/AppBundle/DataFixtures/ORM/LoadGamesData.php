@@ -8,6 +8,8 @@ use AppBundle\Entity\Team;
 use Zantolov\AppBundle\DataFixtures\ORM\AbstractDbFixture;
 
 use Zantolov\AppBundle\Entity\User;
+use DateTime;
+use DateInterval;
 
 class LoadGamesData extends AbstractDbFixture
 {
