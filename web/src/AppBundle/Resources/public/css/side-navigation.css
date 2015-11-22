@@ -27,6 +27,7 @@
  *    border-right: 1px solid #e7e7e7;
  *} */
 .side-menu {
+  background: url("/bundles/app/img/photography.png") repeat;
   position: fixed;
   width: 15% !important;
   height: 100%; }

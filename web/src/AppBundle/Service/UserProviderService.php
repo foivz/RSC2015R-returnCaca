@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Player;
 use Doctrine\ORM\EntityRepository;
 use FOS\UserBundle\Security\EmailUserProvider;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Zantolov\AppBundle\Entity\User;
+use Zantolov\MediaBundle\Entity\Image;
 
 class UserProviderService implements OAuthAwareUserProviderInterface, ContainerAwareInterface
 {
@@ -59,15 +61,17 @@ class UserProviderService implements OAuthAwareUserProviderInterface, ContainerA
         try {
             $user = $this->fosService->loadUserByUsername($response->getUsername());
         } catch (UsernameNotFoundException $e) {
-            $user = $this->createNewUser($response->getUsername(), $response->getEmail());
+            $user = $this->createNewUser($response->getUsername(), $response->getEmail(), $response);
         }
 
         return $user;
     }
 
-    public function createNewUser($token, $email)
+    public function createNewUser($token, $email, UserResponseInterface $response)
     {
         $userManager = $this->container->get('fos_user.user_manager');
+
+        $image = $response->getProfilePicture();
 
         /** @var User $user */
         $user = $userManager->createUser();
@@ -77,7 +81,28 @@ class UserProviderService implements OAuthAwareUserProviderInterface, ContainerA
         $user->setEnabled(true);
         $user->setRoles(array('ROLE_USER'));
         $userManager->updateUser($user, true);
+
+        $img = new Image();
+        $img->setActive(true);
+        $name = time() . '.jpg';
+        $img->setImageName($name);
+
+        $imgFile = realpath(__DIR__ . '/../../../web/uploads/images/default/') . '/' . $name;
+        file_put_contents($imgFile, file_get_contents($image));
+
+        $player = new Player();
+        $player->setImage($img);
+        $player->setActive(true);
+        $player->setAlias($response->getRealName());
+        $player->setUser($user);
+
+        $this->container->get('doctrine')->getManager()->persist($img);
+        $this->container->get('doctrine')->getManager()->persist($player);
+        $this->container->get('doctrine')->getManager()->flush();
+
         return $user;
+
+
     }
 
 

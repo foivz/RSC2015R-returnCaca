@@ -35,6 +35,8 @@ class LoadGamesData extends AbstractDbFixture
             $player->setAlias($faker->name);
             $player->setUser($user);
             $this->addReference('player' . $i, $player);
+            $player->setImage($this->getReference('image' . rand(1, 19)));
+
             $manager->persist($player);
             $team->addPlayer($player);
         };
@@ -68,6 +70,12 @@ class LoadGamesData extends AbstractDbFixture
 
         $manager->persist($team1);
         $manager->persist($team2);
+
+        $queue = new Team();
+        $queue->setActive(true);
+        $queue->setName('queue');
+        $manager->persist($queue);
+
         $manager->persist($game);
         $manager->flush();
     }
