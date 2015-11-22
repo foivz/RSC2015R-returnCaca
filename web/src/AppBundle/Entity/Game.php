@@ -253,6 +253,29 @@ class Game implements \JsonSerializable
         ];
     }
 
+    function getRegionCount()
+    {
+        $result = [
+            'team1' => 0,
+            'team2' => 0,
+        ];
+
+        $owners = $this->getRegionOwners();
+        foreach($owners as $zone => $owner) {
+            switch($owner) {
+                case 1:
+                    $result['team1'] += 1;
+                    break;
+                case 2:
+                    $result['team2'] += 1;
+                    break;
+            }
+        }
+
+        return $result;
+
+    }
+
     function getScore()
     {
         $result = [
@@ -281,6 +304,16 @@ class Game implements \JsonSerializable
         return $result;
     }
 
+    function getOdds()
+    {
+        $count = $this->getKillCount();
+        $result = [
+            'team1' => round(0.1 + ($count['team2']['alive'] / $count['team1']['alive']) * 2, 2),
+            'team2' => round(0.1 + ($count['team1']['alive'] / $count['team2']['alive']) * 2, 2),
+        ];
+        return $result;
+    }
+
     function jsonSerialize()
     {
 
@@ -295,9 +328,11 @@ class Game implements \JsonSerializable
             'ownerRegion3' => $this->getOwnerRegion3(),
             'ownerRegion4' => $this->getOwnerRegion4(),
             'regions'      => $this->getRegionOwners(),
+            'regionCount'  => $this->getRegionCount(),
             'playerCount'  => $this->getKillCount(),
             'score'        => $this->getScore(),
             'endTimeStamp' => $this->getEndTimestamp()->getTimestamp(),
+            'odds'         => $this->getOdds(),
         ];
     }
 
