@@ -1,0 +1,18 @@
+{% extends "ZantolovAppBundle:Layout:adminAppLayout.html.twig" %}
+
+{% block customStylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/zantolovmedia/css/mediaBundle.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block customJsPlugins -%}
+    {{ parent() }}
+    <script src="{{ asset('bundles/zantolovmedia/js/imageChooser.js') }}"></script>
+    <script>
+        $(function () {
+            var item = $('#admin-navbar-collapse-1 > ul > li.last > a');
+            item.html(item.html() + '<small>({{ app.user }})</small>');
+
+        });
+    </script>
+{% endblock %}

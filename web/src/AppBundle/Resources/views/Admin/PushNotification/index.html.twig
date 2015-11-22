@@ -1,0 +1,18 @@
+{% extends 'AppBundle::baseAdmin.html.twig' %}
+
+    {% block body -%}
+
+        {% embed 'ZantolovAppBundle:Admin/partials:crudHeader.html.twig'  with { ignoreTabs: [""]} %}
+            {% block entityTitle %}
+                Push Notifications
+            {% endblock %}
+            {% block actionPanel %}
+            {% endblock %}
+            {% block filterPanel %}
+            {% endblock %}
+        {% endembed %}
+
+
+        FOO
+
+    {% endblock %}

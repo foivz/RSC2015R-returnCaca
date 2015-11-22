@@ -1,0 +1,77 @@
+{% extends 'AppBundle:Layout:frontAppLayout.html.twig' %}
+
+
+{% block body %}
+  <div class="container">
+    <div class="row-centered user-page">
+      <div class="col-md-10">
+        <div class="col-md-2">
+          {% if player.image is defined and player.image is not null %}
+
+            <img class="img-responsive img-circle"
+                 src="{{ zantolov_uploader_asset(player.image, 'imageFile', null, false) | imagine_filter('postLeadingImageBig') }}">
+
+          {% else %}
+            <img class="img-responsive img-circle"
+                 src="{{ asset('bundles/app/img/logo-icon-2.svg') }}" height="80">
+
+          {% endif %}
+
+        </div>
+        <div class="col-md-4 text-left col-sm-12">
+          <h5>User name</h5>
+
+          <cite>Terminator</cite>
+
+          <p>
+            <i class="fa fa-envelope"></i>
+            user@mail.com
+          </p>
+
+          <p>
+            <i class="fa fa-trophy"></i>
+            950 pts
+          </p>
+
+          <p>
+            <i class="fa fa-heart"></i>
+            18 km
+          </p>
+
+          <p>
+            <i class="fa fa-bar-chart"></i>
+            6700 cal
+          </p>
+
+          <p>
+            <span>
+              <a href="http://www.facebook.com/share.php?u=Username"
+                 class="social-icon"
+                 target="_blank">
+                <i class="fa fa-2x fa-facebook"></i>
+              </a>
+            </span>
+            <span>
+               <a href="http://twitter.com/share?text='Profile'&url=username"
+                  class="social-icon"
+                  target="_blank">
+                 <i class="fa fa-2x fa-twitter"></i>
+               </a>
+            </span>
+          </p>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="bs-component">
+            <blockquote>
+              <p>I hate campers.</p>
+              <small>By:
+                <cite title="Source Title">
+                  Dan Biltzerian</cite>
+              </small>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
