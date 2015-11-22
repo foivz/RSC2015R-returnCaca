@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#00796B</color>
+    <color name="colorAccent">#FFC107</color>
+    <color name="lightPrimary">#B2DFDB</color>
+
+    <color name="gray_background">#ddd</color>
+    <color name="gray_hint">#88dddddd</color>
+    <color name="gray_fab">#ccc</color>
+
+    <integer-array name="colors">
+        <item>@color/colorPrimary</item>
+        <item>@color/lightPrimary</item>
+        <item>@color/colorAccent</item>
+    </integer-array>
+
+</resources>
