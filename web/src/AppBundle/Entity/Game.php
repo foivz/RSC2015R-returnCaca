@@ -301,18 +301,18 @@ class Game implements \JsonSerializable
 
         // Kill score
         $killCount = $this->getKillCount();
-        $result['team1'] = $killCount['team2']['dead'] * 2;
-        $result['team2'] = $killCount['team1']['dead'] * 2;
+        $result['team1'] = $killCount['team2']['dead'] * $this->getKillPoints();
+        $result['team2'] = $killCount['team1']['dead'] * $this->getKillPoints();
 
         // Zone score
         $owners = $this->getRegionOwners();
         foreach ($owners as $zone => $owner) {
             switch ($owner) {
                 case 1:
-                    $result['team1'] += 5;
+                    $result['team1'] += $this->getFlagPoints();
                     break;
                 case 2:
-                    $result['team2'] += 5;
+                    $result['team2'] += $this->getFlagPoints();
                     break;
             }
         }
@@ -411,7 +411,7 @@ class Game implements \JsonSerializable
             return false;
         }
 
-        if ($this->endTimestamp < new \DateTime()){
+        if ($this->endTimestamp < new \DateTime()) {
             return false;
         }
 

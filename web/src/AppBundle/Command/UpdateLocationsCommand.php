@@ -36,7 +36,8 @@ class UpdateLocationsCommand extends ContainerAwareCommand
         $manager = $this->getContainer()->get('doctrine')->getManager();
 
         $getData = function ($player) use ($manager, $game) {
-
+            $manager->refresh($player);
+            
             /** @var Player $player */
             if (!$player->isLive()) {
                 return;
@@ -65,6 +66,7 @@ class UpdateLocationsCommand extends ContainerAwareCommand
         };
 
         while (true) {
+            $stat = array();
             /** @var Player $player */
             foreach ($game->getTeam1()->getPlayers() as $player) {
                 $stat[] = $getData($player);

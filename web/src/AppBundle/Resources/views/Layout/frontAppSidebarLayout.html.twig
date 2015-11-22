@@ -2,62 +2,38 @@
 
 
 {% block navigation %}
-    <nav class="navbar navbar-default navbar-default-custom">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button"
-                        class="navbar-toggle collapsed"
-                        data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">bliTZ</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand hidden-sm hidden-xs" href="{{ url('homepage')  }}">
-                    <img src="{{ asset('bundles/app/img/logo-2.svg') }}" height="70">
-                </a>
-            </div>
-
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <div class="col-xs-12">
-                        <br>
-                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                            <a class="btn btn-primary" href="{{ url('fos_user_security_logout') }}">Logout</a>
-                        {% else %}
-                            <a class="btn btn-primary" href="{{ url('fos_user_security_login') }}">Try it out</a>
-                        {% endif %}
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
 {% endblock %}
 
 {% block body %}
     <div class="container-fluid">
         <div class="col-md-2">
-            <div class="side-menu">
+            <div class="side-menu hidden-sm hidden-xs">
+
                 <nav class="navbar navbar-default" role="navigation">
+
                     <div class="side-menu-container">
-                        <ul class="nav navbar-nav">
+                        <ul class="nav navbar-nav " style="float:none;">
+                            <div class="navbar-header">
+                                <button type="button"
+                                        class="navbar-toggle collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#bs-example-navbar-collapse-1">
+                                    <span class="sr-only">bliTZ</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+
+                            <li>
+                                <a href="{{ url('homepage') }}">
+                                    <img src="{{ asset('bundles/app/img/logo-2.svg') }}" height="70">
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ url('judge.new.game') }}">
                                     <span class="fa fa-plus fa-2x"></span>
                                     New game
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="fa fa-user-secret fa-2x"></span>
-                                    Teams
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <span class="fa fa-bomb fa-2x"></span>
-                                    Games
                                 </a>
                             </li>
                             <li>
@@ -69,16 +45,26 @@
                             <li>
                                 <a href="{{ url('judge.map.drawer') }}">
                                     <span class="fa fa-map-marker fa-2x"></span>
-                                    Draw map
+                                    Map
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ url('judge.map') }}">
-                                    <span class="fa fa-map-marker fa-2x"></span>
-                                    Map
+                                    <span class="fa fa-cog fa-2x"></span>
+                                    Markers
                                 </a>
                             </li>
+
                         </ul>
+                        <div style="margin-top: 10px;padding: 10px;">
+                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                <a class="btn btn-primary btn-block"
+                                   href="{{ url('fos_user_security_logout') }}">Logout</a>
+                            {% else %}
+                                <a class="btn btn-default btn-block" href="{{ url('fos_user_security_login') }}">Try it
+                                    out</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </nav>
             </div>
