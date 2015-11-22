@@ -67,8 +67,24 @@ class Game implements \JsonSerializable
      */
     protected $endTimestamp;
 
+    /**
+     * @var integer
+     * @ORM\Column(type="integer")
+     */
+    private $duration;
 
-    private $gameDuration;
+
+    /**
+     * @var integer
+     * @ORM\Column(type="integer")
+     */
+    private $killPoints;
+
+    /**
+     * @var integer
+     * @ORM\Column(type="integer")
+     */
+    private $flagPoints;
 
     public function __construct()
     {
@@ -109,7 +125,7 @@ class Game implements \JsonSerializable
         if ($team2 instanceof Team) {
             $team2->setGame($this);
         }
-        
+
         $this->team2 = $team2;
     }
 
@@ -217,25 +233,25 @@ class Game implements \JsonSerializable
         $result = [
             'team1' => [
                 'total' => 0,
-                'dead' => 0,
+                'dead'  => 0,
                 'alive' => 0,
             ],
             'team2' => [
                 'total' => 0,
-                'dead' => 0,
+                'dead'  => 0,
                 'alive' => 0,
             ],
         ];
-        foreach($this->getTeam1()->getPlayers() as $player) {
+        foreach ($this->getTeam1()->getPlayers() as $player) {
             $result['team1']['total']++;
-            if($player->isLive() == true)
+            if ($player->isLive() == true)
                 $result['team1']['alive']++;
             else
                 $result['team1']['dead']++;
         }
-        foreach($this->getTeam2()->getPlayers() as $player) {
+        foreach ($this->getTeam2()->getPlayers() as $player) {
             $result['team2']['total']++;
-            if($player->isLive() == true)
+            if ($player->isLive() == true)
                 $result['team2']['alive']++;
             else
                 $result['team2']['dead']++;
@@ -261,8 +277,8 @@ class Game implements \JsonSerializable
         ];
 
         $owners = $this->getRegionOwners();
-        foreach($owners as $zone => $owner) {
-            switch($owner) {
+        foreach ($owners as $zone => $owner) {
+            switch ($owner) {
                 case 1:
                     $result['team1'] += 1;
                     break;
@@ -290,8 +306,8 @@ class Game implements \JsonSerializable
 
         // Zone score
         $owners = $this->getRegionOwners();
-        foreach($owners as $zone => $owner) {
-            switch($owner) {
+        foreach ($owners as $zone => $owner) {
+            switch ($owner) {
                 case 1:
                     $result['team1'] += 5;
                     break;
@@ -314,6 +330,55 @@ class Game implements \JsonSerializable
         return $result;
     }
 
+    /**
+     * @return int
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param int $duration
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getKillPoints()
+    {
+        return $this->killPoints;
+    }
+
+    /**
+     * @param int $killPoints
+     */
+    public function setKillPoints($killPoints)
+    {
+        $this->killPoints = $killPoints;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFlagPoints()
+    {
+        return $this->flagPoints;
+    }
+
+    /**
+     * @param int $flagPoints
+     */
+    public function setFlagPoints($flagPoints)
+    {
+        $this->flagPoints = $flagPoints;
+    }
+
+
     function jsonSerialize()
     {
 
@@ -333,6 +398,9 @@ class Game implements \JsonSerializable
             'score'        => $this->getScore(),
             'endTimeStamp' => $this->getEndTimestamp()->getTimestamp(),
             'odds'         => $this->getOdds(),
+            'duration'     => $this->getDuration(),
+            'killPoints'   => $this->getKillPoints(),
+            'flagPoints'   => $this->getFlagPoints(),
         ];
     }
 

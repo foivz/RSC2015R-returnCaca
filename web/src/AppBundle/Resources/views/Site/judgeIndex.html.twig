@@ -76,21 +76,27 @@
                 <div class="col-md-12">
                     <h2>Rules</h2>
 
-                    <div class="form-group">
-                        <label for="inputLength">Game length</label>
-                        <input type="number" class="form-control" id="inputLength" placeholder="Game lenght">
-                    </div>
+                    <form id="rulesForm" method="POST" action="{{ url('api.game.setup') }}">
+                        <div class="alert alert-success" style="display: none"></div>
+                        <div class="form-group">
+                            <label for="inputLength">Game duration</label>
+                            <input min="1" type="number" name="duration" class="form-control" id="inputLength"
+                                   placeholder="Game duration">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="inputLength">Kill points</label>
-                        <input type="number" class="form-control" id="inputLength" placeholder="points">
-                    </div>
+                        <div class="form-group">
+                            <label for="inputLength">Kill points</label>
+                            <input min="1" type="number" name="killPoints" class="form-control" id="inputLength"
+                                   placeholder="points">
+                        </div>
 
-                    <div class="form-group">
-                        <label for="inputLength">Flag points</label>
-
-                        <input type="number" class="form-control" id="inputLength" placeholder="points">
-                    </div>
+                        <div class="form-group">
+                            <label for="inputLength">Flag points</label>
+                            <input min="1" type="number" name="flagPoints" class="form-control" id="inputLength"
+                                   placeholder="points">
+                        </div>
+                        <input type="submit" class="btn btn-success btn-lg" value="Submit">
+                    </form>
 
                 </div>
             </div>
@@ -171,7 +177,6 @@
                 }
             });
         }
-        ;
 
         $(function () {
 
@@ -182,6 +187,24 @@
             joinTeam($("#sortable2"));
             joinTeam($("#sortable3"));
             joinTeam($("#sortable1"));
+
+            $("#rulesForm").on("submit", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var data = $(this).serialize();
+                $.ajax({
+                    url: "{{ url('api.game.setup') }}",
+                    type: 'POST',
+                    data: data,
+                    dataType: 'JSON'
+                }).done(function (data) {
+                    if (data.status == 'ok') {
+                        $("#rulesForm").children('.alert').text(data.message).fadeIn();
+                    }
+                });
+
+            })
 
 
         });

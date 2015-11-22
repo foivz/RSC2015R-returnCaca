@@ -3,6 +3,7 @@
 namespace ApiBundle\Controller;
 
 
+use AppBundle\Entity\Game;
 use AppBundle\Entity\Team;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -110,5 +111,30 @@ class ApiNewGameController extends \Zantolov\AppBundle\Controller\API\ApiLoginCo
         ]);
     }
 
+
+    /**
+     * @Route("/game/setup", name="api.game.setup")
+     * @Method("POST")
+     */
+    public function setupGameAction(Request $request)
+    {
+        /** @var Game $game */
+        $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Game')->find(1);
+
+        $duration = $request->get('duration');
+        $killPoints = $request->get('killPoints');
+        $flagPoints = $request->get('flagPoints');
+
+        $game->setDuration($duration);
+        $game->setKillPoints($killPoints);
+        $game->setFlagPoints($flagPoints);
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->createResponse([
+            self::KEY_STATUS  => self::STATUS_OK,
+            self::KEY_MESSAGE => 'Updated',
+        ]);
+    }
 
 }
