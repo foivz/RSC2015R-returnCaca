@@ -20,6 +20,7 @@ import android.widget.TextView;
 import andro.heklaton.rsc.interfrace.InflateDrawerActivityLayout;
 import andro.heklaton.rsc.interfrace.NavigationItemPosition;
 import andro.heklaton.rsc.R;
+import andro.heklaton.rsc.ui.activity.JoinGameActivity;
 import andro.heklaton.rsc.ui.activity.LoginActivity;
 import andro.heklaton.rsc.ui.activity.MainActivity;
 import andro.heklaton.rsc.ui.activity.MapboxActivity;
@@ -105,7 +106,7 @@ public abstract class DrawerActivity extends AppCompatActivity implements
 
             switch (id) {
                 case R.id.nav_map: {
-                    intent.setClass(DrawerActivity.this, MainActivity.class);
+                    intent.setClass(DrawerActivity.this, JoinGameActivity.class);
                     startActivity(intent);
                     break;
                 }
