@@ -236,34 +236,42 @@ public class MapboxJudgeActivity extends VoiceControlActivity {
     private void updateZones(Game game) {
         if (player != null) {
             if (game.getOwnerRegion1() != null) {
-                if (game.getOwnerRegion1().getId().equals(player.getData().getTeam())) {
-                    markZone(1, COLOR_GREEN);
-                } else {
-                    markZone(1, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion1().getId().equals(player.getData().getTeam())) {
+                        markZone(1, COLOR_GREEN);
+                    } else {
+                        markZone(1, COLOR_RED);
+                    }
                 }
             }
 
             if (game.getOwnerRegion2() != null) {
-                if (game.getOwnerRegion2().getId().equals(player.getData().getTeam())) {
-                    markZone(2, COLOR_GREEN);
-                } else {
-                    markZone(2, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion2().getId().equals(player.getData().getTeam())) {
+                        markZone(2, COLOR_GREEN);
+                    } else {
+                        markZone(2, COLOR_RED);
+                    }
                 }
             }
 
             if (game.getOwnerRegion3() != null) {
-                if (game.getOwnerRegion3().getId().equals(player.getData().getTeam())) {
-                    markZone(3, COLOR_GREEN);
-                } else {
-                    markZone(3, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion3().getId().equals(player.getData().getTeam())) {
+                        markZone(3, COLOR_GREEN);
+                    } else {
+                        markZone(3, COLOR_RED);
+                    }
                 }
             }
 
             if (game.getOwnerRegion4() != null) {
-                if (game.getOwnerRegion4().getId().equals(player.getData().getTeam())) {
-                    markZone(4, COLOR_GREEN);
-                } else {
-                    markZone(4, COLOR_RED);
+                if (player.getData() != null) {
+                    if (game.getOwnerRegion4().getId().equals(player.getData().getTeam())) {
+                        markZone(4, COLOR_GREEN);
+                    } else {
+                        markZone(4, COLOR_RED);
+                    }
                 }
             }
         }

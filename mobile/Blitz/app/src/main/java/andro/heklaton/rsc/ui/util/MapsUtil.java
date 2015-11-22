@@ -6,6 +6,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Andro on 11/21/2015.
@@ -205,6 +206,37 @@ public class MapsUtil {
         polygons.add(zone4);
 
         return polygons;
+    }
+
+    public static LatLng getRandomLocation() {
+
+        List<LatLng> latLngs = new ArrayList<>();
+
+        latLngs.add( new LatLng(46.306527726873306, 16.33835032582283));
+        latLngs.add(new LatLng(46.306496228072696, 16.338425427675247));
+        latLngs.add(new LatLng(46.306435083290324, 16.33860245347023));
+        latLngs.add(new LatLng(46.30640358443641, 16.338782161474228));
+        latLngs.add(new LatLng(46.306407290184886, 16.33882775902748));
+        latLngs.add(new LatLng(46.30644249478276, 16.33893772959709));
+        latLngs.add(new LatLng(46.306464729253946, 16.339020878076553));
+        latLngs.add(new LatLng(46.306492522330245, 16.33919522166252));
+        latLngs.add(new LatLng(46.306514756781105, 16.33931592106819));
+        latLngs.add(new LatLng(46.30650549242769, 16.339439302682877));
+        latLngs.add(new LatLng(46.30650178668588, 16.33946880698204));
+        latLngs.add(new LatLng(46.306579607211276, 16.339535862207413));
+        latLngs.add(new LatLng(46.30668336773971, 16.339592188596725));
+        latLngs.add(new LatLng(46.30685383103802, 16.339680701494217));
+        latLngs.add(new LatLng(46.30687235962541, 16.339428573846817));
+        latLngs.add(new LatLng(46.306801950959965, 16.339297145605087));
+        latLngs.add(new LatLng(46.30671301356885, 16.339101344347));
+        latLngs.add(new LatLng(46.30665928049171, 16.33894845843315));
+        latLngs.add(new LatLng(46.306596283023765, 16.338704377412796));
+        latLngs.add(new LatLng(46.30656663713139, 16.338422745466232));
+        latLngs.add(new LatLng(46.306527726873306, 16.33835032582283));
+
+        Random random = new Random();
+
+        return latLngs.get(random.nextInt(latLngs.size() - 1));
     }
 
 }

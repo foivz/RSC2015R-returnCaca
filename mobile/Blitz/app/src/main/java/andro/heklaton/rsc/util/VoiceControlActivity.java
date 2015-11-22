@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.views.MapView;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import andro.heklaton.rsc.api.RestHelper;
 import andro.heklaton.rsc.api.request.MessageRequest;
 import andro.heklaton.rsc.model.location.BaseResponse;
 import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
+import andro.heklaton.rsc.ui.util.MapsUtil;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -36,6 +38,8 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
     protected SpeechRecognizer mSpeechRecognizer;
     protected Intent mSpeechRecognizerIntent;
     protected MapView mapView;
+
+    protected boolean listening = false;
 
     public VoiceControlActivity() {
     }
@@ -57,26 +61,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
 
     @Override
     public void onError(int error) {
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    synchronized(this){
-                        wait(1000);
-                    }
-                }
-                catch(InterruptedException ex){
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                    }
-                });
-            }
-        };
-
-        thread.start();
+        listening = false;
     }
 
     @Override
@@ -96,6 +81,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
 
     @Override
     public void onResults(Bundle results) {
+        listening = false;
         Log.d(TAG, "onResults"); //$NON-NLS-1$
         ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
@@ -115,85 +101,21 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
         }
 
         Log.d("Voice command", "Fire");
+        LatLng latLng = MapsUtil.getRandomLocation();
 
         if (matchesFire) {
-            sendFire();
+            sendFire(latLng.getLatitude(), latLng.getLongitude());
         } else if (matchesHelp) {
-            sendHelp();
+            sendWarning(latLng.getLatitude(), latLng.getLongitude());
         }
     }
 
-    private void sendFire() {
-        Log.d("Voice command", "Fire");
-        final Location location = mapView.getMyLocation();
-
-        MessageRequest request = new MessageRequest();
-        request.setMessage(COMMAND_FIRE);
-
-        if (location != null) {
-            request.setLat(location.getLatitude());
-            request.setLng(location.getLongitude());
-        }
-
-        RestHelper.getRestApi().sendMessage(
-                RestAPI.HEADER,
-                PrefsHelper.getToken(this),
-                request,
-                new Callback<BaseResponse>() {
-                    @Override
-                    public void success(BaseResponse baseResponse, Response response) {
-                        Log.d("Voice command", baseResponse.getStatus());
-                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        if (error.getMessage() != null) {
-                            Log.d("Voice command", error.getMessage());
-                        }
-                    }
-                }
-        );
-    }
-
-    private void sendHelp() {
-        Log.d("Voice command", "Help");
-        final Location location = mapView.getMyLocation();
-
-        MessageRequest request = new MessageRequest();
-        request.setMessage(COMMAND_HELP);
-
-        if (location != null) {
-            request.setLat(location.getLatitude());
-            request.setLng(location.getLongitude());
-        }
-
-        RestHelper.getRestApi().sendMessage(
-                RestAPI.HEADER,
-                PrefsHelper.getToken(this),
-                request,
-                new Callback<BaseResponse>() {
-                    @Override
-                    public void success(BaseResponse baseResponse, Response response) {
-                        Log.d("Voice command", baseResponse.getStatus());
-                        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        if (error.getMessage() != null) {
-                            Log.d("Voice command", error.getMessage());
-                        }
-                    }
-                }
-        );
-    }
 
     protected void sendFire(Double lat, Double lng) {
         Log.d("Voice command", "Help");
 
         MessageRequest request = new MessageRequest();
-        request.setMessage(COMMAND_HELP);
+        request.setMessage(COMMAND_FIRE);
 
         request.setLat(lat);
         request.setLng(lng);
@@ -223,7 +145,7 @@ public abstract class VoiceControlActivity extends DrawerActivity implements Rec
         Log.d("Voice command", "Warning");
 
         MessageRequest request = new MessageRequest();
-        request.setMessage(COMMAND_FIRE);
+        request.setMessage(COMMAND_HELP);
 
         request.setLat(lat);
         request.setLng(lng);

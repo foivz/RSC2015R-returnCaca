@@ -26,7 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -36,7 +36,6 @@ import com.mapbox.mapboxsdk.annotations.SpriteFactory;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.views.MapView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,8 +109,6 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
 
         mSpeechRecognizer.setRecognitionListener(this);
 
-        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setStyleUrl(Style.DARK);
         mapView.setCenterCoordinate(new LatLng(46.306390, 16.339145));
@@ -165,7 +162,7 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
             public void onClick(View v) {
                 markPlayerDead();
 
-                if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null){
+                if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
                     mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                     mSensorManager.registerListener(MapboxActivity.this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
                 } else {
@@ -177,6 +174,17 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
                 View view = inflater.inflate(R.layout.dialog_image, null);
                 builder.setView(view);
                 builder.show();
+            }
+        });
+
+        ImageButton btnVoiceControl = (ImageButton) findViewById(R.id.voice);
+        btnVoiceControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!listening) {
+                    listening = true;
+                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                }
             }
         });
     }
@@ -485,6 +493,9 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
     public void onPause()  {
         super.onPause();
         mapView.onPause();
+        if (mNfcAdapter != null) {
+            mNfcAdapter.disableForegroundDispatch(this);
+        }
     }
 
     @Override
@@ -504,9 +515,6 @@ public class MapboxActivity extends VoiceControlActivity implements SensorEventL
         timer2.cancel();
         if (mSpeechRecognizer != null) {
             mSpeechRecognizer.destroy();
-        }
-        if (mNfcAdapter != null) {
-            mNfcAdapter.disableForegroundDispatch(this);
         }
         mSensorManager.unregisterListener(this);
     }
