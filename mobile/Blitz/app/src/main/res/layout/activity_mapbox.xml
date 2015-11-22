@@ -13,4 +13,20 @@
         android:layout_height="fill_parent"
         mapbox:access_token="pk.eyJ1IjoiYWtyZXppYyIsImEiOiJjaWg5YjFoM2IwMDRvdm5tM2plY2VwMmV5In0.N8Zzc1NvRaWk-2vYdGoCwg"/>
 
+    <RelativeLayout
+        android:layout_gravity="end"
+        android:layout_width="128dp"
+        android:background="@android:color/black"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btn_dead"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="4dp"
+            android:text="@string/player_dead"/>
+
+    </RelativeLayout>
+
 </FrameLayout>

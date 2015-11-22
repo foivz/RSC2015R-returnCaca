@@ -3,6 +3,8 @@ package andro.heklaton.rsc.api;
 import andro.heklaton.rsc.api.request.CaptureRequest;
 import andro.heklaton.rsc.api.request.LocationSendRequest;
 import andro.heklaton.rsc.api.request.LoginRequest;
+import andro.heklaton.rsc.api.request.MessageRequest;
+import andro.heklaton.rsc.api.request.PlayerDeadRequest;
 import andro.heklaton.rsc.api.request.SocialLoginRequest;
 import andro.heklaton.rsc.model.location.LocationSendResponse;
 import andro.heklaton.rsc.model.login.User;
@@ -67,6 +69,22 @@ public interface RestAPI {
             @Header("Content-Type") String contentType,
             @Header("X-Api-Token") String token,
             Callback<PlayerStatus> response
+    );
+
+    @POST("/msg")
+    void sendMessage(
+            @Header("Content-Type") String contentType,
+            @Header("X-Api-Token") String token,
+            @Body MessageRequest request,
+            Callback<LocationSendResponse> response
+    );
+
+    @POST("/stats")
+    void markPlayerDead(
+            @Header("Content-Type") String contentType,
+            @Header("X-Api-Token") String token,
+            @Body PlayerDeadRequest request,
+            Callback<LocationSendResponse> response
     );
 
 }
