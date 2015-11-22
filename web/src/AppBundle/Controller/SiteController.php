@@ -229,6 +229,7 @@ class SiteController extends Controller
         $game->setOwnerRegion3(null);
         $game->setOwnerRegion4(null);
         $game->setWinner(null);
+        $game->setActive(true);
 
         $dt = new \DateTime();
         $duration = $game->getDuration();
@@ -248,6 +249,19 @@ class SiteController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         return $this->redirectToRoute('spectate');
+    }
+
+    /**
+     * @Route("/stop-game", name="game.stop")
+     * @Template
+     */
+    public function stopGameAction(Request $request)
+    {
+        /** @var Game $game */
+        $game = $this->getDoctrine()->getManager()->getRepository('AppBundle:Game')->find(1);
+        $game->setActive(false);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('judge.new.game');
     }
 
 }
