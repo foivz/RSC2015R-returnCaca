@@ -13,18 +13,16 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.content.ContextCompat;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.mapbox.mapboxsdk.annotations.Annotation;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.annotations.PolygonOptions;
 import com.mapbox.mapboxsdk.annotations.PolylineOptions;
-import com.mapbox.mapboxsdk.annotations.Sprite;
 import com.mapbox.mapboxsdk.annotations.SpriteFactory;
-import com.mapbox.mapboxsdk.constants.MyLocationTracking;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.views.MapView;
@@ -44,10 +42,9 @@ import andro.heklaton.rsc.model.player.PlayerStatus;
 import andro.heklaton.rsc.model.stats.Game;
 import andro.heklaton.rsc.model.stats.Stat;
 import andro.heklaton.rsc.model.stats.Stats;
-import andro.heklaton.rsc.ui.activity.base.DrawerActivity;
-import andro.heklaton.rsc.ui.util.ImageUtil;
 import andro.heklaton.rsc.ui.util.MapsUtil;
 import andro.heklaton.rsc.util.PrefsHelper;
+import andro.heklaton.rsc.util.VoiceControlActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -55,12 +52,11 @@ import retrofit.client.Response;
 /**
  * Created by Andro on 11/21/2015.
  */
-public class MapboxActivity extends DrawerActivity {
+public class MapboxActivity extends VoiceControlActivity {
 
     public static final String COLOR_GREEN = "#00FF00";
     public static final String COLOR_RED = "#FF0000";
 
-    private MapView mapView;
     private List<MarkerOptions> markers;
     private List<PolylineOptions> zones;
     private SpriteFactory spriteFactory;
@@ -79,11 +75,24 @@ public class MapboxActivity extends DrawerActivity {
 
     private PlayerStatus player;
 
+    boolean activityActive;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getPlayerStatus();
+
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
+
+        mSpeechRecognizer.setRecognitionListener(this);
+
+        mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
 
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setStyleUrl(Style.DARK);
@@ -125,7 +134,9 @@ public class MapboxActivity extends DrawerActivity {
                 new Callback<PlayerStatus>() {
                     @Override
                     public void success(PlayerStatus playerStatus, Response response) {
-                        player = playerStatus;
+                        if (activityActive) {
+                            player = playerStatus;
+                        }
                     }
 
                     @Override
@@ -158,8 +169,8 @@ public class MapboxActivity extends DrawerActivity {
                     new Callback<LocationSendResponse>() {
                         @Override
                         public void success(LocationSendResponse locationSendResponse, Response response) {
-                            Log.d("Status", locationSendResponse.getStatus());
-                            Log.d("Message", locationSendResponse.getMessage());
+                            //Log.d("Status", locationSendResponse.getStatus());
+                            //Log.d("Message", locationSendResponse.getMessage());
                         }
 
                         @Override
@@ -181,14 +192,16 @@ public class MapboxActivity extends DrawerActivity {
                             @Override
                             public void success(Stats stats, Response response) {
                                 Log.d("Success", response.getReason());
-                                updateStats(stats.getData().getStats());
-                                updateZones(stats.getData().getGame());
+                                if (activityActive) {
+                                    updateStats(stats.getData().getStats());
+                                    updateZones(stats.getData().getGame());
+                                }
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
                                 if (error.getMessage() != null) {
-                                    Log.d("Stats fail", error.getMessage());
+                                    //Log.d("Stats fail", error.getMessage());
                                 }
                             }
                         });
@@ -198,7 +211,9 @@ public class MapboxActivity extends DrawerActivity {
 
     private void updateStats(final List<Stat> stats) {
         markers.clear();
-        mapView.removeAllAnnotations();
+        if (mapView != null) {
+            mapView.removeAllAnnotations();
+        }
 
         redrawPolygons();
 
@@ -368,12 +383,14 @@ public class MapboxActivity extends DrawerActivity {
     protected void onStart() {
         super.onStart();
         mapView.onStart();
+        activityActive = true;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mapView.onStop();
+        activityActive = false;
     }
 
     @Override
@@ -395,6 +412,10 @@ public class MapboxActivity extends DrawerActivity {
         mapView.onDestroy();
         timer.cancel();
         timer2.cancel();
+        if (mSpeechRecognizer != null) {
+            mSpeechRecognizer.destroy();
+        }
+
     }
 
     @Override

@@ -40,21 +40,17 @@ import andro.heklaton.rsc.model.login.Data;
 import andro.heklaton.rsc.model.login.User;
 import andro.heklaton.rsc.ui.activity.base.AccountActivity;
 import andro.heklaton.rsc.util.PrefsHelper;
-import andro.heklaton.rsc.util.VoiceControlHelper;
+import andro.heklaton.rsc.util.VoiceControlActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class LoginActivity extends AccountActivity implements VoiceControlHelper.OnVoiceControlEnd {
+public class LoginActivity extends AccountActivity {
 
     private LoginButton fbLogin;
     private CallbackManager callbackManager;
     private AccessToken fbAccessToken;
     private TextView tvLogin;
-
-    private SpeechRecognizer mSpeechRecognizer;
-    private Intent mSpeechRecognizerIntent;
-    private boolean mIslistening = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,14 +74,6 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
         llRegister.setOnClickListener(registrationClickListener);
 
         tvLogin = (TextView) findViewById(R.id.tv_login);
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!mIslistening) {
-                    mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
-                }
-            }
-        });
 
         fbLogin = (LoginButton) findViewById(R.id.fb_login);
         fbLogin.setReadPermissions(Arrays.asList("email"));
@@ -129,17 +117,6 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
             }
         });
 
-
-        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                this.getPackageName());
-
-
-        VoiceControlHelper listener = new VoiceControlHelper(this);
-        mSpeechRecognizer.setRecognitionListener(listener);
     }
 
     private void registerSocial(String email) {
@@ -159,14 +136,6 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
 
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mSpeechRecognizer != null) {
-            mSpeechRecognizer.destroy();
-        }
     }
 
     @Override
@@ -248,8 +217,4 @@ public class LoginActivity extends AccountActivity implements VoiceControlHelper
         }
     };
 
-    @Override
-    public void onVoiceControlEnd(String text) {
-        tvLogin.setText(text);
-    }
 }
