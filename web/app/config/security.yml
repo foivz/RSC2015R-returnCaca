@@ -91,7 +91,6 @@ security:
         - { path: ^/app/api/v\d+/logout(?:\/)?$, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
 
-        - { path: ^/api/user, role: [ROLE_USER, ROLE_AUTHORITY] }
-        - { path: ^/blog, role: [ROLE_ADMIN, ROLE_AUTHORITY] }
-        - { path: ^/admin, role: [ROLE_ADMIN, ROLE_AUTHORITY] }
-        - { path: ^/authority, role: ROLE_AUTHORITY }
+        - { path: ^/api/user, role: [ROLE_USER] }
+        - { path: ^/admin, role: [ROLE_ADMIN] }
+        - { path: ^/judge, role: [ROLE_ADMIN] }

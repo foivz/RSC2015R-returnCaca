@@ -9,8 +9,13 @@
   margin: 15px 0;
   background: #F3F0F0; }
 
+#sortable1 .player-card {
+  background: #E5E5E5; }
+
 .player-card {
   background: #F3F0F0;
+  padding: 5px 0;
+  cursor: move;
   margin: 10px 0; }
   .player-card .img {
     margin: 10px 0; }
@@ -18,16 +23,23 @@
 .team-selection {
   color: #F3F0F0;
   min-height: 240px;
-  overflow: auto;
-  margin-left: -20px; }
+  overflow: auto; }
   .team-selection .player-card {
     background: #2196f3;
     color: #fff; }
     .team-selection .player-card h5 {
       color: #fff; }
 
+#blue-team .player-card {
+  background: #4CB67E; }
+
+#red-team .player-card {
+  background: #ED5767; }
+
 .connectedSortable {
-  padding-bottom: 10px; }
+  min-height: 400px;
+  padding: 10px 0;
+  background: #F1F1F1; }
 
 /* Map builder */
 #map-canvas {
@@ -50,5 +62,9 @@
 
 .saveButton {
   margin: 5px 0; }
+
+#selectionNav {
+  text-align: right;
+  margin: 10px 0; }
 
 /*# sourceMappingURL=judge.css.map */

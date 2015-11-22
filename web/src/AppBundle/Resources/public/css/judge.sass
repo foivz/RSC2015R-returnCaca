@@ -15,9 +15,15 @@ $gray-dark: #666666
   margin: 15px 0
   background: $gray
 
+#sortable1 .player-card
+  background: #E5E5E5
+
 .player-card
   background: $gray
+  padding: 5px 0
+  cursor: move
   margin: 10px 0
+
   .img
     margin: 10px 0
 
@@ -25,15 +31,23 @@ $gray-dark: #666666
   color: $gray
   min-height: 240px
   overflow: auto
-  margin-left: -20px
+
   .player-card
     background: $blue
     color: $white
     h5
       color: $white
 
+#blue-team .player-card
+  background: #4CB67E
+
+#red-team .player-card
+  background: #ED5767
+
 .connectedSortable
-  padding-bottom: 10px
+  min-height: 400px
+  padding: 10px 0
+  background: #F1F1F1
 
 /* Map builder*/
 #map-canvas
@@ -56,3 +70,8 @@ $gray-dark: #666666
 
 .saveButton
   margin: 5px 0
+
+
+#selectionNav
+  text-align: right
+  margin: 10px 0
