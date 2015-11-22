@@ -10,78 +10,83 @@ function pad (str, max) {
 }
 // Data
 var zone1 = [
-    new google.maps.LatLng(46.30585513089814, 16.33860781788826),
-    new google.maps.LatLng(46.305797691189404, 16.33825644850731),
-    new google.maps.LatLng(46.30604041987027, 16.338068693876266),
-    new google.maps.LatLng(46.30619050347798, 16.3380928337574),
-    new google.maps.LatLng(46.30644620052856, 16.33825108408928),
-    new google.maps.LatLng(46.30651290391055, 16.338331550359726),
-    new google.maps.LatLng(46.30642396604984, 16.3385970890522),
-    new google.maps.LatLng(46.30639246718954, 16.338741928339005),
-    new google.maps.LatLng(46.30640173156209, 16.33883848786354),
-    new google.maps.LatLng(46.30632020502972, 16.33889749646187),
-    new google.maps.LatLng(46.30617382754188, 16.338841170072556),
-    new google.maps.LatLng(46.30604597852974, 16.33871242403984),
-    new google.maps.LatLng(46.30594036390321, 16.338621228933334)
+    new google.maps.LatLng(46.30581436724008, 16.3382725417614),
+    new google.maps.LatLng(46.305862542469036, 16.33858099579811),
+    new google.maps.LatLng(46.30593387878791, 16.338588371872902),
+    new google.maps.LatLng(46.30596259857836, 16.33860982954502),
+    new google.maps.LatLng(46.30605246363175, 16.33867956697941),
+    new google.maps.LatLng(46.30617475398291, 16.338839158415794),
+    new google.maps.LatLng(46.30632298434532, 16.33888877928257),
+    new google.maps.LatLng(46.30637764419018, 16.338853910565376),
+    new google.maps.LatLng(46.30636560050022, 16.338765397667885),
+    new google.maps.LatLng(46.30638876144005, 16.3386058062315),
+    new google.maps.LatLng(46.306448979837775, 16.338434144854546),
+    new google.maps.LatLng(46.30649159589459, 16.338340267539024),
+    new google.maps.LatLng(46.30643137754375, 16.338271871209145),
+    new google.maps.LatLng(46.30628777967058, 16.33816994726658),
+    new google.maps.LatLng(46.3061710482187, 16.338125690817833),
+    new google.maps.LatLng(46.3060700660476, 16.33809618651867),
+    new google.maps.LatLng(46.30601725878305, 16.338104233145714),
+    new google.maps.LatLng(46.305932952342815, 16.338177993893623),
+    new google.maps.LatLng(46.30581449036345, 16.338273324426495)
 ];
 var zone2 = [
-    new google.maps.LatLng(46.30584216064658, 16.33861653506756),
-    new google.maps.LatLng(46.3059236878909, 16.339091286063194),
-    new google.maps.LatLng(46.30603578765362, 16.339087262749672),
-    new google.maps.LatLng(46.306093227112484, 16.339170411229134),
-    new google.maps.LatLng(46.30615437227667, 16.339216008782387),
-    new google.maps.LatLng(46.306193282800166, 16.339254900813103),
-    new google.maps.LatLng(46.30647399361428, 16.339498311281204),
-    new google.maps.LatLng(46.30650363955681, 16.33934274315834),
-    new google.maps.LatLng(46.30650549242769, 16.339283734560013),
-    new google.maps.LatLng(46.30645175914686, 16.339066475629807),
-    new google.maps.LatLng(46.30644620052856, 16.33899673819542),
-    new google.maps.LatLng(46.30643323041708, 16.338918954133987),
-    new google.maps.LatLng(46.30640173156209, 16.33887603878975),
-    new google.maps.LatLng(46.30637023268899, 16.338902860879898),
-    new google.maps.LatLng(46.306329469414514, 16.338927000761032),
-    new google.maps.LatLng(46.30628129459646, 16.338913589715958),
-    new google.maps.LatLng(46.3061682688954, 16.33888140320778),
-    new google.maps.LatLng(46.3060867420153, 16.338776797056198),
-    new google.maps.LatLng(46.30598668613292, 16.338680237531662),
-    new google.maps.LatLng(46.30593109945254, 16.338631957769394)
+    new google.maps.LatLng(46.30587180693131, 16.338621228933334),
+    new google.maps.LatLng(46.30594592257285, 16.339058429002762),
+    new google.maps.LatLng(46.306038566983666, 16.339053735136986),
+    new google.maps.LatLng(46.30620532652801, 16.33922405540943),
+    new google.maps.LatLng(46.30647028787033, 16.339449360966682),
+    new google.maps.LatLng(46.306479552229725, 16.339402422308922),
+    new google.maps.LatLng(46.30647769935798, 16.339295133948326),
+    new google.maps.LatLng(46.30644064190974, 16.339143589138985),
+    new google.maps.LatLng(46.306419333865634, 16.338975951075554),
+    new google.maps.LatLng(46.30638505569034, 16.338884755969048),
+    new google.maps.LatLng(46.30633039585292, 16.338922306895256),
+    new google.maps.LatLng(46.3061691953365, 16.338871344923973),
+    new google.maps.LatLng(46.306038566983666, 16.33871041238308),
+    new google.maps.LatLng(46.30593480523301, 16.338623240590096),
+    new google.maps.LatLng(46.30587180693131, 16.338617876172066)
 ];
 var zone3 = [
-    new google.maps.LatLng(46.306527726873306, 16.33835032582283),
-    new google.maps.LatLng(46.306496228072696, 16.338425427675247),
-    new google.maps.LatLng(46.306435083290324, 16.33860245347023),
-    new google.maps.LatLng(46.30640358443641, 16.338782161474228),
-    new google.maps.LatLng(46.306407290184886, 16.33882775902748),
-    new google.maps.LatLng(46.30644249478276, 16.33893772959709),
-    new google.maps.LatLng(46.306464729253946, 16.339020878076553),
-    new google.maps.LatLng(46.306492522330245, 16.33919522166252),
-    new google.maps.LatLng(46.306514756781105, 16.33931592106819),
-    new google.maps.LatLng(46.30650549242769, 16.339439302682877),
-    new google.maps.LatLng(46.30650178668588, 16.33946880698204),
-    new google.maps.LatLng(46.306579607211276, 16.339535862207413),
-    new google.maps.LatLng(46.30668336773971, 16.339592188596725),
-    new google.maps.LatLng(46.30685383103802, 16.339680701494217),
-    new google.maps.LatLng(46.30687235962541, 16.339428573846817),
-    new google.maps.LatLng(46.306801950959965, 16.339297145605087),
-    new google.maps.LatLng(46.30671301356885, 16.339101344347),
-    new google.maps.LatLng(46.30665928049171, 16.33894845843315),
-    new google.maps.LatLng(46.306596283023765, 16.338704377412796),
-    new google.maps.LatLng(46.30656663713139, 16.338422745466232)
+    new google.maps.LatLng(46.30650734529849, 16.338371112942696),
+    new google.maps.LatLng(46.306430451107076, 16.338561549782753),
+    new google.maps.LatLng(46.3063998786877, 16.33868359029293),
+    new google.maps.LatLng(46.30638876144005, 16.338772103190422),
+    new google.maps.LatLng(46.3063998786877, 16.338833793997765),
+    new google.maps.LatLng(46.30643230398043, 16.338931694626808),
+    new google.maps.LatLng(46.30646287638169, 16.3391100615263),
+    new google.maps.LatLng(46.306506418863094, 16.33928708732128),
+    new google.maps.LatLng(46.30650363955681, 16.33941449224949),
+    new google.maps.LatLng(46.306488816587546, 16.339465454220772),
+    new google.maps.LatLng(46.30655737278673, 16.339543238282204),
+    new google.maps.LatLng(46.30682881743509, 16.33968137204647),
+    new google.maps.LatLng(46.30684734603096, 16.339441314339638),
+    new google.maps.LatLng(46.30674358581333, 16.33924014866352),
+    new google.maps.LatLng(46.30663889896588, 16.3389839977026),
+    new google.maps.LatLng(46.306572195737445, 16.33872516453266),
+    new google.maps.LatLng(46.3065434762668, 16.338471695780754),
+    new google.maps.LatLng(46.30652216826275, 16.33839525282383),
+    new google.maps.LatLng(46.306508271733875, 16.338372454047203)
 ];
 var zone4 = [
-    new google.maps.LatLng(46.30592554078143, 16.339104026556015),
-    new google.maps.LatLng(46.30603300832342, 16.33910670876503),
-    new google.maps.LatLng(46.306081183359964, 16.339184492826462),
-    new google.maps.LatLng(46.30618309195145, 16.33927032351494),
-    new google.maps.LatLng(46.30651290391055, 16.339557319879532),
-    new google.maps.LatLng(46.30684641960131, 16.339734345674515),
-    new google.maps.LatLng(46.306814920984074, 16.339903324842453),
-    new google.maps.LatLng(46.30643323041708, 16.34014204144478),
-    new google.maps.LatLng(46.306103417977944, 16.340343207120895),
-    new google.maps.LatLng(46.30605339007484, 16.34031906723976),
-    new google.maps.LatLng(46.30599039190959, 16.339871138334274),
-    new google.maps.LatLng(46.30594541114172, 16.33934267033817)
+    new google.maps.LatLng(46.305950554797114, 16.3390926271677),
+    new google.maps.LatLng(46.30601725878305, 16.339836940169334),
+    new google.maps.LatLng(46.3060784040321, 16.340287551283836),
+    new google.maps.LatLng(46.30609230067009, 16.34030230343342),
+    new google.maps.LatLng(46.306285000353206, 16.340166851878166),
+    new google.maps.LatLng(46.30637579131494, 16.34008638560772),
+    new google.maps.LatLng(46.30643137754375, 16.340105161070824),
+    new google.maps.LatLng(46.306487890151836, 16.34007029235363),
+    new google.maps.LatLng(46.30678990736337, 16.339883878827095),
+    new google.maps.LatLng(46.30682418528515, 16.339716240763664),
+    new google.maps.LatLng(46.30656849000013, 16.339584812521935),
+    new google.maps.LatLng(46.306216443812886, 16.339276358485222),
+    new google.maps.LatLng(46.3060987857666, 16.33917309343815),
+    new google.maps.LatLng(46.3060543165179, 16.339118108153343),
+    new google.maps.LatLng(46.30604041987027, 16.339085921645164),
+    new google.maps.LatLng(46.305952407686696, 16.3390926271677)
 ];
+var zoneFill = [];
 
 var team1Locations = [];
 var team2Locations = [];
@@ -168,15 +173,14 @@ function init() {
     map = new google.maps.Map(mapElement, mapOptions);
 
     // Zone
-    var polyline;
-    polyline = new google.maps.Polygon({path:zone1, strokeColor: "#FF0000", strokeOpacity: 1.0, strokeWeight: 2});
-    polyline.setMap(map);
-    polyline = new google.maps.Polygon({path:zone2, strokeColor: "#0077FF", strokeOpacity: 1.0, strokeWeight: 2});
-    polyline.setMap(map);
-    polyline = new google.maps.Polygon({path:zone3, strokeColor: "#FFDD00", strokeOpacity: 1.0, strokeWeight: 2});
-    polyline.setMap(map);
-    polyline = new google.maps.Polygon({path:zone4, strokeColor: "#9900FF", strokeOpacity: 1.0, strokeWeight: 2});
-    polyline.setMap(map);
+    zoneFill[1] = new google.maps.Polygon({path:zone1, strokeColor: "#FF0000", strokeOpacity: 1.0, strokeWeight: 2});
+    zoneFill[1].setMap(map);
+    zoneFill[2] = new google.maps.Polygon({path:zone2, strokeColor: "#0077FF", strokeOpacity: 1.0, strokeWeight: 2});
+    zoneFill[2].setMap(map);
+    zoneFill[3] = new google.maps.Polygon({path:zone3, strokeColor: "#FFDD00", strokeOpacity: 1.0, strokeWeight: 2});
+    zoneFill[3].setMap(map);
+    zoneFill[4] = new google.maps.Polygon({path:zone4, strokeColor: "#9900FF", strokeOpacity: 1.0, strokeWeight: 2});
+    zoneFill[4].setMap(map);
 
     // Countdown
     $.get( "api/stats/1", function(data) {
@@ -259,4 +263,11 @@ function showPing(marker, lat, lng) {
             }
         }
     }, 11000);
+}
+
+function fillZone(id, team) {
+    var color;
+    if(team == 1) color = '#bceb00';
+    else color = '#eb7f00';
+    zoneFill[id].setOptions({fillColor: color});
 }
