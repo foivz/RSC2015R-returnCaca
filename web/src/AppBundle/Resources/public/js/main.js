@@ -136,8 +136,8 @@ $(document).ready(function () {
 
             function initialize() {
                 var mapOptions = {
-                    center: new google.maps.LatLng(46.301406, 16.341476),
-                    zoom: 11
+                    center: new google.maps.LatLng(46.305797691189404, 16.33825644850731),
+                    zoom: 17
                 };
                 var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
